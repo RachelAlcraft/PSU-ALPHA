@@ -1,2 +1,2 @@
 # PSU-ALPHA
- Protein Structure Utility Version 1
+ Protein Structure Utility Version Alpha
