@@ -33,3 +33,10 @@
 *.ipch
 *.db
 *.opendb
+.vs/PSU-ALPHA/v16/.suo
+*.ilk
+Psu-Alpha Documentation.docx
+*.tlog
+*.idb
+*.pdb
+PSU-ALPHA/Debug/PSU-ALPHA.log

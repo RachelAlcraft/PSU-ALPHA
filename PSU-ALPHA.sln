@@ -5,7 +5,29 @@ VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSU-ALPHA", "PSU-ALPHA\PSU-ALPHA.vcxproj", "{4D312E7A-2F28-411E-9232-97467E6D54E6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSULibMaths", "PSULibMaths\PSULibMaths.vcxitems", "{F14A751F-2A3B-46F9-8341-A3277AE83E29}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSULibAlgorithms", "PSULibAlgorithms\PSULibAlgorithms.vcxitems", "{E1B09BCF-7AB9-41B5-9F55-22ECD42BEBFE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSULibProteins", "PSULibProteins\PSULibProteins.vcxitems", "{BD4D8915-EE81-4EFA-A220-E5D604CC2C92}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSULibReports", "PSULibReports\PSULibReports.vcxitems", "{099C5818-8F67-483C-8FCA-590C50F70BC4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSULibManagers", "PSULibManagers\PSULibManagers.vcxitems", "{37002173-9797-454C-92DE-005680D3C501}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		PSULibReports\PSULibReports.vcxitems*{099c5818-8f67-483c-8fca-590c50f70bc4}*SharedItemsImports = 9
+		PSULibManagers\PSULibManagers.vcxitems*{37002173-9797-454c-92de-005680d3c501}*SharedItemsImports = 9
+		PSULibAlgorithms\PSULibAlgorithms.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
+		PSULibManagers\PSULibManagers.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
+		PSULibMaths\PSULibMaths.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
+		PSULibProteins\PSULibProteins.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
+		PSULibReports\PSULibReports.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
+		PSULibProteins\PSULibProteins.vcxitems*{bd4d8915-ee81-4efa-a220-e5d604cc2c92}*SharedItemsImports = 9
+		PSULibAlgorithms\PSULibAlgorithms.vcxitems*{e1b09bcf-7ab9-41b5-9f55-22ecd42bebfe}*SharedItemsImports = 9
+		PSULibMaths\PSULibMaths.vcxitems*{f14a751f-2a3b-46f9-8341-a3277ae83e29}*SharedItemsImports = 9
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
