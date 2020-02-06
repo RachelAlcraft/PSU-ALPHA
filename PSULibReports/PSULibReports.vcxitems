@@ -2,6 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
     <ItemsProjectGuid>{099c5818-8f67-483c-8fca-590c50f70bc4}</ItemsProjectGuid>
   </PropertyGroup>
   <ItemDefinitionGroup>
