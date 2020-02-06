@@ -5,6 +5,7 @@
 #include "LogFile.h"
 #include "InputParams.h"
 #include "ProteinManager.h"
+#include <RamaReport.h>
 
 using namespace std;
 
@@ -40,19 +41,32 @@ int main()
 
 
 		//// INPUT CONSTRUCTION ////
-		string inConfig = INPATH + "input\\Config\\";
-		string inPDB = INPATH + "input\\PDB\\" + PDB1 + ".pdb";
-		string ramareport = INPATH + "output\\Reports\\" + PDB1 + "_torsion.txt";
-		string calphareport = INPATH + "output\\Reports\\" + PDB1 + "_calpha.txt";
+		string inConfig = INPATH;
+		string inPDB = INPATH + "PDB\\" + PDB1 + ".pdb";
+		string ramareport = OUTPATH + "Reports\\" + PDB1 + "_torsion.txt";
+		string calphareport = OUTPATH + "Reports\\" + PDB1 + "_calpha.txt";
 
 		// Set up data manager config ////////////////////
 		ProteinManager::getInstance()->createConfigData(inConfig);
 
+		//Load pdb data if we have it first
+		PDBFile* pdb1 = nullptr;
+		if (PDB1 != "")
+		{
+			LogFile::getInstance()->writeMessage("Loading data fro PDB1, file=" + inPDB);
+			pdb1 = ProteinManager::getInstance()->getOrAddPDBFile(PDB1, inPDB);
+			pdb1->loadData();
+		}
 
 		//Shall we run a ramachandran report?
 		if (PDB1 != "" && RAMA == "TRUE")
 		{
 			LogFile::getInstance()->writeMessage("RAMACHANDRAN PLOT REPORT, outfile=" + ramareport);
+			
+			RamaReport rr;
+			rr.printReport(pdb1, ramareport);
+
+			
 
 		}
 		//Shall we run a CAlpha report

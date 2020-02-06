@@ -1,10 +1,10 @@
 library(ggplot2)
 
-setwd("C:/Users/Rache/OneDrive/dev/CPP_PDBStructuralViewer/data/")
+setwd("F:\\PSUA\\Output\\20_2_6_16_6_39\\Reports\\")
 
 ############### USER INPUTS ##########################
 
-pdbname <- "2vb1"
+pdbname <- "6j4a"
 
 ############### USER INPUTS ##########################
 

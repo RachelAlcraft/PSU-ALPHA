@@ -19,6 +19,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Chain.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)FASTAFile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)PDBFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Torsion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)AminoAcid.h" />
@@ -26,5 +27,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Chain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)FASTAFile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)PDBFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Torsion.h" />
   </ItemGroup>
 </Project>

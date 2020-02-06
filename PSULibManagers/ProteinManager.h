@@ -8,9 +8,12 @@ Pointers are created and deleted just once in the program not really dynamically
 */
 #include <string>
 #include <map>
+#include <set>
+#include <vector>
 #include <AminoAcid.h>
 #include <Chain.h>
 #include <Atom.h>
+#include <PDBFile.h>
 
 using namespace std;
 class ProteinManager
@@ -18,6 +21,7 @@ class ProteinManager
 private:
 	static ProteinManager* instance;
 	ProteinManager();
+	string _configPath;
 
 	//DATA HIERARCHY//////////////////////////////////////////
 	//Amino acids have general data
@@ -29,15 +33,19 @@ private:
 
 	
 	//PROTEIN HIERARCHY////////////////////////////////////
+	//a pdb file has
+		//chains
+			//which have amino acids
+				//which have atoms
+	//There are also bonds, torsions angles and angles
 
 	//PDBFile has chains
-	map<string, Chain*> _chains; //id = PDBCODE 
-	
+	map<string,PDBFile*> _pdbfiles;
+	//map<string, vector<Chain*>> _chains; //id = PDBCODE 		
 	//Chains have amino acids
-	map<string, AminoAcid*> _aminos; //id = PDBCODE_chainNo 
-
+	//map<string, vector<AminoAcid*>> _aminos; //id = PDBCODE_chainNo 
 	//amino acids have atoms (which may be shifted in optimisation algorithms)
-	map<string, Atom*> _atoms; //id = PDBCODE_chainNo_aminoNo
+	//map<string, vector<Atom*>> _atoms; //id = PDBCODE_chainNo_aminoNo
 
 	//amino acids have bonds
 
@@ -52,8 +60,16 @@ private:
 public:
 	static ProteinManager* getInstance();
 	void createConfigData(string path);
+	vector<string> getAminoData(string aminoCode);
+	void addAtom(string pdbCode, string chainId, int aminoId, Atom* atm);
+	PDBFile* getOrAddPDBFile(string pdbCode, string filename);
+	AminoAcid* getOrAddAminoAcid(string pdbCode, string chainId, int aminoId, string amino_code);		
+	Chain* getOrAddChain(string pdbCode, string chainId);
+	map<string, Chain*> getChains(string pdbCode);	
+	map<int, AminoAcid*> getAminoAcids(string pdbCode, string chainId);		
 
 private:
+	vector<string> stringToVector(string input, string delim);
 
 
 
