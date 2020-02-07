@@ -69,6 +69,7 @@ public:
 	map<string, Chain*> getChains(string pdbCode);	
 	map<int, AminoAcid*> getAminoAcids(string pdbCode, string chainId);		
 	vector<Atom*> getCAlphas(string pdbCode, string chainId);
+	vector<Atom*> getCAlphas(string pdbCode);
 
 private:
 	//vector<string> stringToVector(string input, string delim);

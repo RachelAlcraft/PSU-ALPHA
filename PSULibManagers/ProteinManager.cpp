@@ -158,6 +158,21 @@ vector<Atom*>  ProteinManager::getCAlphas(string pdbCode, string chainId)
 	return chain->getCAlphas();	
 }
 
+vector<Atom*> ProteinManager::getCAlphas(string pdbCode)
+{
+	vector<Atom*> calphas;
+	PDBFile* pdb = _pdbfiles[pdbCode];
+	map<string,Chain*> chains = pdb->getChains();
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		vector<Atom*> cas = ch->getCAlphas();
+		for (unsigned int i = 0; i < cas.size(); ++i)
+			calphas.push_back(cas[i]);
+	}	
+	return calphas;
+}
+
 
 
 

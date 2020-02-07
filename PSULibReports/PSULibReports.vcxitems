@@ -16,9 +16,11 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CAlphaReport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)RamaReport.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)RMSDReport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CAlphaReport.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RamaReport.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)RMSDReport.h" />
   </ItemGroup>
 </Project>

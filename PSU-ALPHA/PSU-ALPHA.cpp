@@ -7,6 +7,9 @@
 #include "ProteinManager.h"
 #include <RamaReport.h>
 #include <CAlphaReport.h>
+#include <FASTAFile.h>
+#include <RMSD.h>
+#include <RMSDReport.h>
 
 using namespace std;
 
@@ -64,7 +67,7 @@ int main()
 		if (PDB2 != "")
 		{
 			LogFile::getInstance()->writeMessage("Loading data for PDB2, file=" + inPDB2);
-			pdb2 = ProteinManager::getInstance()->getOrAddPDBFile(PDB1, inPDB);
+			pdb2 = ProteinManager::getInstance()->getOrAddPDBFile(PDB2, inPDB2);
 			pdb2->loadData();
 		}
 
@@ -86,18 +89,29 @@ int main()
 		//Shall we run an RMSD report between 2 structures with fixed positions?
 		if (PDB1 != "" && PDB2 != "" && RMSDFIX == "TRUE")
 		{
+			string rmsdreport = OUTPATH + "Reports\\" + PDB1 + "_rmsdfixed.txt";
+			LogFile::getInstance()->writeMessage("Running RMSD fixed report to file=" + rmsdreport);
+
+			bool alignment = false;
+			FastaFile* ff = nullptr;
 			if (ALIGNMENT != "")//whether a fixed calpha or a pairing needed
 			{
-
+				alignment = true;
+				//and create the ff
 			}
-			else
-			{
+			
+			RMSD* rmsd = new RMSD(pdb1, pdb2, ff, alignment, false);
+			RMSDReport rrmsd;
+			rrmsd.printReport(rmsd, rmsdreport);
 
-			}
+			
 		}
 		//Shall we run an RMSD report between 2 structures optimising the alignments?
 		if (PDB1 != "" && PDB2 != "" && RMSDOPT == "TRUE")
 		{
+			string rmsdreportopt = OUTPATH + "Reports\\" + PDB1 + "_rmsdoptimised.txt";
+			LogFile::getInstance()->writeMessage("Running RMSD fixed report to file=" + rmsdreportopt);
+
 			if (ALIGNMENT != "")//whether a fixed calpha or a pairing needed
 			{
 
