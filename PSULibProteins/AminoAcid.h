@@ -58,10 +58,16 @@ public:
 	//do the atoms need to be here or ok just in the manager?
 public:
 	AminoAcid(string pdb_code, string chain_id, int amino_id, string aminoCode);
+	~AminoAcid(); //responsible for the torsions
 	void createBonds(AminoAcid* aaP, AminoAcid* aaPP);
 	void add(Atom*);
 	BackboneTorsion* getBackboneTorsion() { return _torsion; }
 	SidechainTorsion* getSidechainTorsion() { return _sideTorsion; }
+	Atom* getCAlpha() { return _atoms["CA"]; }//obviously this needs error checking, but the whole system fails if there are no CA on each aa so it doesn't matter how badly it crashes TODO
+
+private: //Helper functions
+	vector<Atom*> atomsFromString(string atomstring); //we pass around atom strings like N-CA-C and would like to be able to turn those into acrual atoms
+	
 
 };
 

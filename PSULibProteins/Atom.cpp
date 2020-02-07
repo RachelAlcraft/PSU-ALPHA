@@ -3,34 +3,39 @@
 #include <string>
 #include <sstream>
 #include "LogFile.h"
+#include <StringManip.h>
 
 Atom::Atom(string pdb_code, string atom_string)
 {		
 	pdbCode = pdb_code;
 	// 7 - 11        Integer       serial       Atom  serial number.
-	atomId = atol(trim(atom_string.substr(6, 5)).c_str());
+	atomId = atol(StringManip::trim(atom_string.substr(6, 5)).c_str());
 	//13 - 16        Atom          name         Atom name.
-	elementName = trim(atom_string.substr(12, 4));
+	elementName = StringManip::trim(atom_string.substr(12, 4));
 	//18 - 20        Residue name  resName      Residue name.
-	aminoCode = trim(atom_string.substr(17, 3));
+	aminoCode = StringManip::trim(atom_string.substr(17, 3));
 	//22             Character     chainID      Chain identifier.
-	chainId = trim(atom_string.substr(21, 1));	
+	chainId = StringManip::trim(atom_string.substr(21, 1));
 	//23 - 26        Integer       resSeq       Residue sequence number.
-	aminoId = atol(trim(atom_string.substr(22, 5)).c_str());
+	aminoId = atol(StringManip::trim(atom_string.substr(22, 5)).c_str());
 	//31 - 38        Real(8.3)     x            Orthogonal coordinates for X in Angstroms.
 	//39 - 46        Real(8.3)     y            Orthogonal coordinates for Y in Angstroms.
 	//47 - 54        Real(8.3)     z            Orthogonal coordinates for Z in Angstroms.
-	string x_c = trim(atom_string.substr(30, 8));
-	string y_c = trim(atom_string.substr(38, 8));
-	string z_c = trim(atom_string.substr(46, 8));
+	string x_c = StringManip::trim(atom_string.substr(30, 8));	
+	string y_c = StringManip::trim(atom_string.substr(38, 8));
+	string z_c = StringManip::trim(atom_string.substr(46, 8));
 	coords = Coordinates(atof(x_c.c_str()), atof(y_c.c_str()), atof(z_c.c_str()));
 	shifted_coords = Coordinates(atof(x_c.c_str()), atof(y_c.c_str()), atof(z_c.c_str()));
 	//77 - 78        LString(2)    element      Element symbol, right-justified.
-	elementType = trim(atom_string.substr(76, 2));
+	elementType = StringManip::trim(atom_string.substr(76, 2));
 
 	stringstream di;
 	di << pdbCode << chainId << aminoId;
 	dataId = di.str();
+}
+Atom::~Atom()
+{
+	_bonds.clear();
 }
 
 void Atom::applyShift(double x_shift, double y_shift, double z_shift, bool applyToOriginal)
@@ -50,7 +55,7 @@ void Atom::applyShift(double x_shift, double y_shift, double z_shift, bool apply
 
 }
 
-string Atom::trim(string string_to_trim)
+/*string Atom::trim(string string_to_trim)
 {
 	string string_trimmed = string_to_trim;
 	size_t startpos = string_trimmed.find_first_not_of(" ");
@@ -62,7 +67,7 @@ string Atom::trim(string string_to_trim)
 	else
 		string_trimmed = string_trimmed.substr(startpos, endpos - startpos + 1);
 	return string_trimmed;
-}
+}*/
 
 void Atom::printAtom()
 {

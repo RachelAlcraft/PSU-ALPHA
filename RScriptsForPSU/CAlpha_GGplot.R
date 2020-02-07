@@ -1,33 +1,31 @@
 library(ggplot2)
 
-setwd("C:/Users/Rache/OneDrive/dev/CPP_PDBStructuralViewer/data/")
+#################################################################
+# RELIES ON VALUES SET IN SCRIPT PSU_NamesPaths
+#################################################################
 
-############### USER INPUTS ##########################
+#!!!!! Warning the heat map can be slow  !!!! ##
 
-pdbname <- "6j4a"
-#pdbname <- "1lyz"
-#pdbname <- "2qip"
-#pdbname <- "2vb1"
+#################### USER INPUT ################################
+# Enter angstrom cut off for contact map
+angstrom = 10
+# The data has been created with an arbirary cutoff of 25A
+# This is nice for a heat map, but not for a more recognisable contact map
+################################################################
 
-############### USER INPUTS ##########################
 
 
-
-#Load data fram created from C++ project
-calphaname <- paste(pdbname,"_calpha.txt",sep="")
-data <- read.csv(calphaname)
-sub_data <- subset(data,Distance <  10) 
+data <- read.csv(calpha_report)
+sub_data <- subset(data,Distance <  angstrom) 
 
 #CAlpha Distance Map
-par(mfrow=c(2,2))
-
 ggplot(sub_data, aes(x=Id1, y=Id2,color=Chemical1)) + 
-  ggtitle(paste(pdbname,"C-Alpha Contact Map by PSU:RAlcraft")) + 
+  ggtitle(paste(PDBFILE,"C-Alpha Contact Map by PSU:RAlcraft")) + 
   geom_point()  
 
-
+#CAlpha Heat Contact Map
 ggplot(data, aes(x=Id1, y=Id2,color=Distance)) + 
-  ggtitle(paste(pdbname,"C-Alpha Contact Map by PSU:RAlcraft")) + 
+  ggtitle(paste(PDBFILE,"C-Alpha Heat Contact Map by PSU:RAlcraft")) + 
   scale_colour_gradient(low = "darkgreen", high = "lightgrey", 
                         space = "Lab", na.value = "grey50", 
                         guide = "colourbar",  aesthetics = "colour") + 

@@ -1,5 +1,5 @@
 #The Strucutre of data is fixed once the config location and output location are given
-PDB1=6j4a
+PDB1=1d3k
 OUTPUTPATH=F:\\PSUA\\Output\\
 CONFIGPATH=F:\\PSUA\\Code\\PSU-ALPHA\\Config\\
 RAMA=TRUE

@@ -5,6 +5,7 @@
 #include <map>
 #include "PDBFile.h"
 #include <LogFile.h>
+#include <StringManip.h>
 
 
 using namespace std;
@@ -14,6 +15,14 @@ ProteinManager* ProteinManager::instance = 0;
 ProteinManager::ProteinManager()
 {
 
+}
+ProteinManager::~ProteinManager() //responsible for pdbs
+{
+	for (map<string, PDBFile*>::iterator iter = _pdbfiles.begin(); iter != _pdbfiles.end(); ++iter)
+	{
+		delete iter->second;
+	}
+	_pdbfiles.clear();
 }
 
 ProteinManager* ProteinManager::getInstance()
@@ -74,7 +83,7 @@ PDBFile* ProteinManager::getOrAddPDBFile(string pdbCode, string filename)
 
 vector<string> ProteinManager::getAminoData(string aminoCode)
 {
-	return stringToVector(_aa_generaldata[aminoCode],",");//unvalidated. Whole system relies on data being good for now.
+	return StringManip::stringToVector(_aa_generaldata[aminoCode],",");//unvalidated. Whole system relies on data being good for now.
 }
 
 void ProteinManager::addAtom(string pdbCode, string chainId, int aminoId, Atom* atm)
@@ -142,21 +151,13 @@ map<int, AminoAcid*> ProteinManager::getAminoAcids(string pdbCode, string chainI
 
 }
 
-
-
-vector<string> ProteinManager::stringToVector(string input, string delim)
+vector<Atom*>  ProteinManager::getCAlphas(string pdbCode, string chainId)
 {
-	string newin = input;	
-	vector<string> vals;
-	int pos = newin.find_first_of(delim);
-	while (pos > 0)
-	{
-		string val = newin.substr(0, pos);
-		vals.push_back(val);
-		newin = newin.substr(pos + 1);
-		pos = newin.find_first_of(delim);
-	}
-	
-	vals.push_back(newin);
-	return vals;
+	PDBFile* pdb = _pdbfiles[pdbCode];
+	Chain* chain = pdb->getChain(chainId);
+	return chain->getCAlphas();	
 }
+
+
+
+

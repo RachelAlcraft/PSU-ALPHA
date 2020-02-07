@@ -9,24 +9,21 @@ public:
 	int id;
 	string aa;
 protected:
-	Atom* _N;
-	Atom* _CA;
-	Atom* _C;
-
+	
 public: //methods
-	Torsion(string, int, Atom*, Atom*, Atom*);
-	double getDihedralAngle(Atom*, Atom*, Atom*, Atom*);
+	Torsion(string, int);
+	double getDihedralAngle(vector<Atom*>);
 
 };
 
 class BackboneTorsion : public Torsion
 {
 protected:
-	Atom* _Cp;
-	Atom* _Npp;
-	Atom* _CApp;
+	vector<Atom*> _Phi;
+	vector<Atom*> _Psi;
+	vector<Atom*> _Omega;
 public:
-	BackboneTorsion(string, int,Atom*,Atom*,Atom*,Atom*,Atom*,Atom*);
+	BackboneTorsion(string, int,vector<Atom*>);
 	double getPhi();
 	double getPsi();
 	double getOmega();
@@ -36,13 +33,19 @@ public:
 class SidechainTorsion : public Torsion
 {
 protected:
-	Atom* _AG1;
-	Atom* _AD1;
+	vector<Atom*> _Chi1;
+	vector<Atom*> _Chi2;
+	vector<Atom*> _Chi3;
+	vector<Atom*> _Chi4;
+	vector<Atom*> _Chi5;
 
 public:
-	SidechainTorsion(string, int, Atom*, Atom*, Atom*, Atom*, Atom*);
+	SidechainTorsion(string, int, vector<vector<Atom*>>);
 	double getChi1();
 	double getChi2();
+	double getChi3();
+	double getChi4();
+	double getChi5();
 
 };
 

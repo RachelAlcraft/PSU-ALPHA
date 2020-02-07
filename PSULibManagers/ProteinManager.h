@@ -59,6 +59,7 @@ private:
 
 public:
 	static ProteinManager* getInstance();
+	~ProteinManager(); //responsible for pdbs
 	void createConfigData(string path);
 	vector<string> getAminoData(string aminoCode);
 	void addAtom(string pdbCode, string chainId, int aminoId, Atom* atm);
@@ -67,9 +68,10 @@ public:
 	Chain* getOrAddChain(string pdbCode, string chainId);
 	map<string, Chain*> getChains(string pdbCode);	
 	map<int, AminoAcid*> getAminoAcids(string pdbCode, string chainId);		
+	vector<Atom*> getCAlphas(string pdbCode, string chainId);
 
 private:
-	vector<string> stringToVector(string input, string delim);
+	//vector<string> stringToVector(string input, string delim);
 
 
 

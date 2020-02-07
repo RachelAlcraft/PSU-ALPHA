@@ -6,7 +6,7 @@ GLU,Glutamate,E,-3.5,Phil,138.4,Acceptor,Acidic,Acidic,-1,T,HOOC-(CH2)2-CH(NH2)-
 PHE,Phenylalanine,F,2.8,Phob,189.9,None,Aromatic,F,0,F,Ph-CH2-CH(NH2)-COOH,N-CA-C-O-CB-CG-CD1-CD2-CE1-CE2,N-CA-CB-CG,CA-CB-CG-CD1,None,None,None,
 GLY,Glycine,G,-0.4,Neutral,60.1,None,Aliphatic,G,0,F,NH2-CH2-COOH,N-CA-C-O,None,None,None,None,None,
 HIS,Histidine,H,2.5,Neutral,108.5,Both,Basic,Basic,1,T,NH-CH=N-CH=C-CH2-CH(NH2)-COOH,N-CA-C-O-CB-CG-ND1-CD2-CE1-NE2,N-CA-CB-CG,CA-CB-CG-ND1,None,None,None,
-ILE,Isoleucine,I,4.5,Phob,166.7,None,Aliphatic,Aliphatic,0,F,CH3-CH2-CH(CH3)-CH(NH2)-COOH,N-CA-C-O-CB-CG1-CG2-CD1,N-CA-CB-CG1,CA-CB-CG1-CD,None,None,None,
+ILE,Isoleucine,I,4.5,Phob,166.7,None,Aliphatic,Aliphatic,0,F,CH3-CH2-CH(CH3)-CH(NH2)-COOH,N-CA-C-O-CB-CG1-CG2-CD1,N-CA-CB-CG1,CA-CB-CG1-CD1,None,None,None,
 LYS,Lysine,K,-3.9,Phil,168.6,Donor,Basic,Basic,1,T,H2N-(CH2)4-CH(NH2)-COOH,N-CA-C-O-CB-CG-CD-CE-NZ,N-CA-CB-CG,CA-CB-CG-CD,CB-CG-CD-CE,CG-CD-CE-NZ,None,
 LEU,Leucine,L,3.5,Phob,166.7,None,Aliphatic,Aliphatic,0,F,(CH3)2-CH-CH2-CH(NH2)-COOH,N-CA-C-O-CB-CG-CD1-CD2,N-CA-CB-CG,CA-CB-CG-CD1,None,None,None,
 MET,Methionine,M,1.9,Phob,162.9,None,Sulfur,Sulfur,0,F,CH3-S-(CH2)2-CH(NH2)-COOH,N-CA-C-O-CB-CG-SD-CE,N-CA-CB-CG,CA-CB-CG-SD,CB-CG-SD-CE,None,None,

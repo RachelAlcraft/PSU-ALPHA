@@ -10,7 +10,7 @@ void RamaReport::printReport(PDBFile* pdb, string fileName)
 	LogFile::getInstance()->writeMessage("Starting Torsion report");
 
 	stringstream report;
-	report << "Chain,AminoAcid,Id,Hydrophobocity,Hydropathy,Volume,Donicity,Chemical,Physio,Charge,Polar,Phi,Psi,Omega,Chi1,Chi2\n";
+	report << "Chain,AminoAcid,Id,Hydrophobocity,Hydropathy,Volume,Donicity,Chemical,Physio,Charge,Polar,Phi,Psi,Omega,Chi1,Chi2,Chi3,Chi4,Chi5\n";
 	map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdb->pdbCode);
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
@@ -24,6 +24,9 @@ void RamaReport::printReport(PDBFile* pdb, string fileName)
 			double omega = 0;
 			double chi1 = 0;
 			double chi2 = 0;
+			double chi3 = 0;
+			double chi4 = 0;
+			double chi5 = 0;
 
 			AminoAcid* aa = iter->second;
 			BackboneTorsion* torsion = aa->getBackboneTorsion();
@@ -32,6 +35,9 @@ void RamaReport::printReport(PDBFile* pdb, string fileName)
 			{
 				chi1 = sidetorsion->getChi1();
 				chi2 = sidetorsion->getChi2();
+				chi3 = sidetorsion->getChi3();
+				chi4 = sidetorsion->getChi4();
+				chi5 = sidetorsion->getChi5();
 			}
 			if (torsion)
 			{
@@ -49,7 +55,7 @@ void RamaReport::printReport(PDBFile* pdb, string fileName)
 				report << aa->Charge << ",";
 				report << aa->Polar << ",";
 				report << phi << "," << psi << "," << omega << ",";
-				report << chi1 << "," << chi2 << "\n";
+				report << chi1 << "," << chi2 << "," << chi3 << "," << chi4 << "," << chi5 << "\n";
 			}
 		}
 	}

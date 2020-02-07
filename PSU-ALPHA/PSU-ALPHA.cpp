@@ -6,6 +6,7 @@
 #include "InputParams.h"
 #include "ProteinManager.h"
 #include <RamaReport.h>
+#include <CAlphaReport.h>
 
 using namespace std;
 
@@ -43,6 +44,7 @@ int main()
 		//// INPUT CONSTRUCTION ////
 		string inConfig = INPATH;
 		string inPDB = INPATH + "PDB\\" + PDB1 + ".pdb";
+		string inPDB2 = INPATH + "PDB\\" + PDB2 + ".pdb";
 		string ramareport = OUTPATH + "Reports\\" + PDB1 + "_torsion.txt";
 		string calphareport = OUTPATH + "Reports\\" + PDB1 + "_calpha.txt";
 
@@ -53,26 +55,32 @@ int main()
 		PDBFile* pdb1 = nullptr;
 		if (PDB1 != "")
 		{
-			LogFile::getInstance()->writeMessage("Loading data fro PDB1, file=" + inPDB);
+			LogFile::getInstance()->writeMessage("Loading data for PDB1, file=" + inPDB);
 			pdb1 = ProteinManager::getInstance()->getOrAddPDBFile(PDB1, inPDB);
 			pdb1->loadData();
+		}
+
+		PDBFile* pdb2 = nullptr;
+		if (PDB2 != "")
+		{
+			LogFile::getInstance()->writeMessage("Loading data for PDB2, file=" + inPDB2);
+			pdb2 = ProteinManager::getInstance()->getOrAddPDBFile(PDB1, inPDB);
+			pdb2->loadData();
 		}
 
 		//Shall we run a ramachandran report?
 		if (PDB1 != "" && RAMA == "TRUE")
 		{
-			LogFile::getInstance()->writeMessage("RAMACHANDRAN PLOT REPORT, outfile=" + ramareport);
-			
+			LogFile::getInstance()->writeMessage("RAMACHANDRAN PLOT REPORT, outfile=" + ramareport);			
 			RamaReport rr;
 			rr.printReport(pdb1, ramareport);
-
-			
-
 		}
 		//Shall we run a CAlpha report
 		if (PDB1 != "" && CALPHA == "TRUE")
 		{
 			LogFile::getInstance()->writeMessage("CALPHA Contact Map REPORT, outfile=" + calphareport);
+			CAlphaReport ca;
+			ca.printReport(pdb1, calphareport);
 
 		}
 		//Shall we run an RMSD report between 2 structures with fixed positions?

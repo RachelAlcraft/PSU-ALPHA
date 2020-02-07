@@ -23,11 +23,12 @@ public: //public struct
 	
 	//Geometric Info	
 	Coordinates coords;
-	Coordinates shifted_coords;
+	Coordinates shifted_coords; // alternatively I could store a vector of shifts which could be animated - TODO
 private:
 	vector<Atom*> _bonds;
 public:
 	Atom(string,string);
+	~Atom();
 	void applyShift(double, double, double, bool);
 	void printAtom();
 	string getDescription();
@@ -35,7 +36,7 @@ public:
 	double atomicDistance(Atom*);
 
 private:
-	string trim(string);
+	//string trim(string);
 
 };
 

@@ -41,3 +41,5 @@ Psu-Alpha Documentation.docx
 *.pdb
 PSU-ALPHA/Debug/PSU-ALPHA.log
 Config/data_aminoinfo.xlsx
+PSU-ALPHA/Debug/PSU-ALPHA.Build.CppClean.log
+PSU-ALPHA/Debug/PSU-ALPHA.vcxproj.FileListAbsolute.txt

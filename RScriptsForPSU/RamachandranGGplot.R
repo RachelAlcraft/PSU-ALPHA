@@ -1,20 +1,11 @@
 library(ggplot2)
 
-setwd("F:\\PSUA\\Output\\20_2_6_16_6_39\\Reports\\")
-
-############### USER INPUTS ##########################
-
-pdbname <- "6j4a"
-
-############### USER INPUTS ##########################
-
-#Load data fram created from C++ project
-ramaname <- paste(pdbname,"_torsion.txt",sep="")
-data <- read.csv(ramaname)
+#################################################################
+# RELIES ON VALUES SET IN SCRIPT PSU_NamesPaths
+#################################################################
+data <- read.csv(rama_report)
 
 #Phi/Psi
-par(mfrow=c(1,1))
-
 ggplot(data, aes(x=Phi, y=Psi,color=Chemical)) + 
   ggtitle("Ramachandran by PSU:RAlcraft") + 
   geom_point(size=4) + 
