@@ -24,8 +24,8 @@ Atom::Atom(string pdb_code, string atom_string)
 	string x_c = StringManip::trim(atom_string.substr(30, 8));	
 	string y_c = StringManip::trim(atom_string.substr(38, 8));
 	string z_c = StringManip::trim(atom_string.substr(46, 8));
-	coords = Coordinates(atof(x_c.c_str()), atof(y_c.c_str()), atof(z_c.c_str()));
-	shifted_coords = Coordinates(atof(x_c.c_str()), atof(y_c.c_str()), atof(z_c.c_str()));
+	coords = GeoCoords(atof(x_c.c_str()), atof(y_c.c_str()), atof(z_c.c_str()));
+	shifted_coords = GeoCoords(atof(x_c.c_str()), atof(y_c.c_str()), atof(z_c.c_str()));
 	//77 - 78        LString(2)    element      Element symbol, right-justified.
 	elementType = StringManip::trim(atom_string.substr(76, 2));
 
@@ -94,4 +94,10 @@ double Atom::atomicDistance(Atom* comp)
 {
 	GeoVector v = GeoVector(comp->coords.x - coords.x, comp->coords.y - coords.y, comp->coords.z - coords.z);
 	return v.getMagnitude();
+}
+
+void Atom::applyTransformation(GeoTransformation trans)
+{
+	GeoCoords newCoords = trans.applyTransformation(coords);
+	shifted_coords = newCoords;
 }

@@ -14,13 +14,19 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Coordinates.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GeoCloud.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GeoCoords.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GeoShape.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GeoPlane.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GeoTransformation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GeoVector.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Coordinates.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GeoCloud.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GeoCoords.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GeoShape.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)GeoPlane.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GeoTransformation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)GeoVector.h" />
   </ItemGroup>
 </Project>

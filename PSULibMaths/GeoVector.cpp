@@ -1,11 +1,24 @@
 #include "GeoVector.h"
 #include <math.h>
 
+GeoVector::GeoVector()
+{
+	x = 0;
+	y = 0;
+	z = 0;
+}
 GeoVector::GeoVector(double X, double Y, double Z)
 {
 	x = X;
 	y = Y;
 	z = Z;
+}
+
+GeoVector::GeoVector(GeoCoords a, GeoCoords b)
+{
+	x = b.x - a.x;
+	y = b.y - a.y;
+	z = b.z - a.z;
 }
 
 double GeoVector::angle(GeoVector b)
@@ -51,6 +64,23 @@ double GeoVector::getDotProduct(GeoVector B)
 	double dot = (A.x * B.x) + (A.y * B.y) + (A.z * B.z);
 	return dot;
 }
+
+double GeoVector::getOrthogonalDistance(GeoCoords p)
+{
+	return 0.0;
+}
+
+/*double GeoVector::getOrthogonalDistance(GeoCoord a, GeoCoord b, GeoCoord c)
+{//http://mathworld.wolfram.com/Point-LineDistance3-Dimensional.html
+	GeoVector ca = GeoVector(c,a);
+	GeoVector cb = GeoVector(c,b);
+	GeoVector ba = GeoVector(b,a);
+	GeoVector caDOTcb = ca.getCrossProduct(cb);
+	double mag = ba.getMagnitude();
+	double distance = caDOTcb.getMagnitude();
+	distance = distance / mag;
+	return distance;
+}*/
 
 double GeoVector::getMagnitude()
 {

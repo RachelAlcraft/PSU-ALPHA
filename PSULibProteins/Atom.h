@@ -1,8 +1,9 @@
 #pragma once
-#include "Coordinates.h"
+#include "GeoCoords.h"
 #include "GeoVector.h"
 #include <string>
 #include <vector>
+#include <GeoTransformation.h>
 
 
 using namespace std;
@@ -22,8 +23,8 @@ public: //public struct
 	int aminoId;
 	
 	//Geometric Info	
-	Coordinates coords;
-	Coordinates shifted_coords; // alternatively I could store a vector of shifts which could be animated - TODO
+	GeoCoords coords;
+	GeoCoords shifted_coords; // alternatively I could store a vector of shifts which could be animated - TODO
 private:
 	vector<Atom*> _bonds;
 public:
@@ -34,6 +35,7 @@ public:
 	string getDescription();
 	GeoVector vectorDifference(Atom*);
 	double atomicDistance(Atom*);
+	void applyTransformation(GeoTransformation trans);
 
 private:
 	//string trim(string);

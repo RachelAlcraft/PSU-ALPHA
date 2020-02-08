@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include "AminoAcid.h"
+#include <GeoTransformation.h>
 //#include "Bond.h"
 #include "Atom.h"
 #include "Chain.h"
@@ -29,6 +30,7 @@ public:
 	Chain* getChain(string chainId);
 	void addChain(Chain* ch);
 	void loadData();
+	void applyTransformation(GeoTransformation trans);
 
 
 private:

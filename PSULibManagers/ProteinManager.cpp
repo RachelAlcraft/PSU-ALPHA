@@ -173,6 +173,26 @@ vector<Atom*> ProteinManager::getCAlphas(string pdbCode)
 	return calphas;
 }
 
+vector<Atom*>  ProteinManager::getAtoms(string pdbCode)
+{
+	vector<Atom*> vecatoms;
+	PDBFile* pdb = _pdbfiles[pdbCode];
+	map<string, Chain*> chains = pdb->getChains();
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		map<int, AminoAcid*> aminos = ch->getAminoAcids();
+		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
+		{
+			map<string,Atom*> atoms = biter->second->getAtoms();
+			for (map<string, Atom*>::iterator citer = atoms.begin(); citer != atoms.end(); ++citer)			
+				vecatoms.push_back(citer->second);
+		}
+		
+	}
+	return vecatoms;	
+}
+
 
 
 

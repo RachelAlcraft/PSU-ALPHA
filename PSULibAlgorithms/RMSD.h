@@ -3,6 +3,8 @@
 #include<PDBFile.h>
 #include<FASTAFile.h>
 #include<string>
+#include <GeoCloud.h>
+#include <GeoCoords.h>
 
 using namespace std;
 
@@ -30,11 +32,14 @@ public:
 
 private:
 	vector<CAlphaPair> _calphaPairs;
+	GeoCloud _geo1;
+	GeoCloud _geo2;
 public:
 	RMSD();
 	RMSD(PDBFile* pdb1, PDBFile* pdb2, FastaFile* fasta, bool alignment, bool optimise);
 	void SetupCAlphaPairs();
 	double calculateRMSD();
+	double calculateOptimalRMSD();
 	string getAtomMatches();
 };
 

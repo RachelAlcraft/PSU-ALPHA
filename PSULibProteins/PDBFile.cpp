@@ -48,6 +48,15 @@ void PDBFile::loadData()
 	addLinks();
 }
 
+void PDBFile::applyTransformation(GeoTransformation trans)
+{
+	vector<Atom*> atoms = ProteinManager::getInstance()->getAtoms(pdbCode);
+	for (unsigned int i = 0; i < atoms.size(); ++i)
+	{
+		atoms[i]->applyTransformation(trans);
+	}
+}
+
 string PDBFile::getFileString()
 {
 	string wholefile = "";
