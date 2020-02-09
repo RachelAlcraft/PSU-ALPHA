@@ -71,7 +71,7 @@ string RMSD::calculateRMSD() // this may be iteratively called from an optimise 
 						for (unsigned int orient = 1; orient < 5; ++orient)
 						{
 							double rmsd = calculateOptimalRMSD(h, i, j, k, orient);
-							ss << "Opt: h=" << h << " i=" << i << " j=" << j << " k=" << k << " orientation=" << orient << " rmsd=" << rmsd; "\n";
+							ss << "Opt: h=" << h << " i=" << i << " j=" << j << " k=" << k << " orientation=" << orient << " rmsd=" << rmsd << "\n";
 							if (ival == 0 || rmsd < best)
 							{
 								hval = h;
