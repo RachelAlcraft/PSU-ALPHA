@@ -57,6 +57,55 @@ void PDBFile::applyTransformation(GeoTransformation trans)
 	}
 }
 
+void PDBFile::printShiftedFile(string fileRoot)
+{
+	string fileName = fileRoot + pdbCode + ".pdb";
+	map<int,Atom*> atoms = ProteinManager::getInstance()->getAtomsMap(pdbCode);
+	ofstream outfile(fileName);
+	if (outfile.is_open())
+	{
+		for (unsigned int i = 0; i < _file.size(); ++i)
+		{
+			string line = _file[i];
+			int pos = line.find("ATOM");
+			if (pos == 0)
+			{
+				Atom* dummy = new Atom(pdbCode,line);
+				int id = dummy->atomId;
+				map<int, Atom*>::iterator atom_iter = atoms.find(id);
+				if (atom_iter != atoms.end())
+				{
+					//31 - 38        Real(8.3)     x            Orthogonal coordinates for X in Angstroms.
+					//39 - 46        Real(8.3)     y            Orthogonal coordinates for Y in Angstroms.
+					//47 - 54        Real(8.3)     z            Orthogonal coordinates for Z in Angstroms.
+					stringstream ssx, ssy, ssz;
+					ssx << setprecision(3) << fixed << atom_iter->second->shifted_coords.x;
+					ssy << setprecision(3) << fixed << atom_iter->second->shifted_coords.y;
+					ssz << setprecision(3) << fixed << atom_iter->second->shifted_coords.z;
+					while (ssx.str().length() < 8)
+						ssx << " ";
+					while (ssy.str().length() < 8)
+						ssy << " ";
+					while (ssz.str().length() < 8)
+						ssz << " ";
+					line.replace(31, 8, ssx.str());
+					line.replace(39, 8, ssy.str());
+					line.replace(47, 8, ssz.str());
+					outfile << line << '\n';
+				}
+				else
+				{
+					outfile << _file[i] << '\n'; //just print out what we have or should I error ? TODO
+				}
+			}
+			else
+			{
+				outfile << _file[i] << '\n'; //just print out what we have or should I error ? TODO
+			}
+		}
+	}
+}
+
 string PDBFile::getFileString()
 {
 	string wholefile = "";
@@ -116,6 +165,18 @@ Chain* PDBFile::getChain(string chainId)
 		return nullptr;
 	else
 		return iter->second;
+}
+
+map<int, Atom*> PDBFile::getAtoms(string pdbCode)
+{
+	map<int, Atom*> atoms;
+	for (map<string, Chain*>::iterator iter = _chains.begin(); iter != _chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+
+	}
+	
+	return atoms;
 }
 
 void PDBFile::addChain(Chain* ch)

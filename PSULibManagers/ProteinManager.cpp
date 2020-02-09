@@ -193,6 +193,26 @@ vector<Atom*>  ProteinManager::getAtoms(string pdbCode)
 	return vecatoms;	
 }
 
+map<int,Atom*>  ProteinManager::getAtomsMap(string pdbCode)
+{
+	map<int,Atom*> mapatoms;
+	PDBFile* pdb = _pdbfiles[pdbCode];
+	map<string, Chain*> chains = pdb->getChains();
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		map<int, AminoAcid*> aminos = ch->getAminoAcids();
+		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
+		{
+			map<string, Atom*> atoms = biter->second->getAtoms();
+			for (map<string, Atom*>::iterator citer = atoms.begin(); citer != atoms.end(); ++citer)
+				mapatoms.insert(pair<int,Atom*>(citer->second->atomId,citer->second));
+		}
+
+	}
+	return mapatoms;
+}
+
 
 
 

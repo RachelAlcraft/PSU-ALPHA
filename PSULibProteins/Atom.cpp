@@ -87,12 +87,12 @@ string Atom::getDescription()
 
 GeoVector Atom::vectorDifference(Atom* comp)
 {
-	return GeoVector(comp->coords.x - coords.x, comp->coords.y - coords.y, comp->coords.z - coords.z);
+	return GeoVector(coords, comp->coords);
 }
 
 double Atom::atomicDistance(Atom* comp)
 {
-	GeoVector v = GeoVector(comp->coords.x - coords.x, comp->coords.y - coords.y, comp->coords.z - coords.z);
+	GeoVector v = GeoVector(coords, comp->coords);
 	return v.getMagnitude();
 }
 

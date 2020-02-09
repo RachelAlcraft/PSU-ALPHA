@@ -11,6 +11,7 @@ public:
 public:
 	GeoCoords(double, double, double);
 	GeoCoords();
-	//GeoCoords applyTransformation(GeoTransformation trans);
+
+
 };
 

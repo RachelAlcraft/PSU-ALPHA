@@ -35,7 +35,7 @@ void RMSD::SetupCAlphaPairs()
 		{			
 			_calphaPairs.push_back(CAlphaPair(calphas1[i],calphas2[i]));
 			_geo1.addCoords(calphas1[i]->shifted_coords);
-			_geo1.addCoords(calphas2[i]->shifted_coords);
+			_geo2.addCoords(calphas2[i]->shifted_coords);
 			LogFile::getInstance()->writeMessage("RMSD Match: " + calphas1[i]->getDescription() + " " + calphas2[i]->getDescription());
 		}
 	}
@@ -45,21 +45,69 @@ void RMSD::SetupCAlphaPairs()
 	}
 }
 
-double RMSD::calculateOptimalRMSD()
-{
-	//First calculation is after the most obvious spatial alignment		
-	GeoTripod tri1 = _geo1.getTripod(1,1); // 1 is the best solution
-	GeoTripod tri2 = _geo2.getTripod(1,1);// 1 is the best solution
-	GeoTransformation gt = tri1.getTransformation(tri2);
-	PDB2->applyTransformation(gt);	
-	
-	return calculateRMSD();
-	
-	//TODO later I can apply more shifts and see if this is not optimal
-	// Do this by iterating through the tripod solutions
-}
 
-double RMSD::calculateRMSD() // this may be iteratively called from an optimise function and needs to be fast
+
+string RMSD::calculateRMSD() // this may be iteratively called from an optimise function and needs to be fast
+{
+	stringstream ss;
+	if (Optimise)
+	{
+		ss << "Optimised report\n" << calculateOneRMSD();
+		//Dummy attempt at optimisation TODO ALSO TODO if any ever come back as 0 we can stop!
+		double best = 0;
+		unsigned int hval = 0;
+		unsigned int ival = 0;
+		unsigned int jval = 0;
+		unsigned int kval = 0;
+		unsigned int orientation = 0;
+		for (unsigned int h = 1; h < 5; ++h)
+		{
+			for (unsigned int i = 1; i < 5; ++i)
+			{
+				for (unsigned int j = 1; j < 5; ++j)
+				{
+					for (unsigned int k = 1; k < 5; ++k)
+					{
+						for (unsigned int orient = 1; orient < 5; ++orient)
+						{
+							double rmsd = calculateOptimalRMSD(h, i, j, k, orient);
+							ss << "Opt: h=" << h << " i=" << i << " j=" << j << " k=" << k << " orientation=" << orient << " rmsd=" << rmsd; "\n";
+							if (ival == 0 || rmsd < best)
+							{
+								hval = h;
+								ival = i;
+								jval = j;
+								kval = k;
+								orientation = orient;
+								best = rmsd;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		//So we have done a minimum optimisation and we will take the best, calculating it again TODO because I haven't saved it
+		double rmsd = calculateOptimalRMSD(hval,ival, jval,kval,orientation);		
+		ss << "Optimised report: RMSD Value=" << rmsd;
+	}
+	else
+	{
+		ss << "Non optimised report: RMSD Value=" << calculateOneRMSD();
+	}
+	return ss.str();	
+}
+double RMSD::calculateOptimalRMSD(int h,int i, int j, int k, int orientation)
+{	
+	GeoTripod tri1, tri2;
+	_geo1.makeTripod(tri1,h, i); // 1 is the best solution
+	_geo2.makeTripod(tri2,j, k);// 1 is the best solution
+	GeoTransformation gt = tri1.getTransformation(tri2,orientation);	
+	PDB2->applyTransformation(gt);
+	double val = calculateOneRMSD();	
+	return val;
+}
+double RMSD::calculateOneRMSD() // this may be iteratively called from an optimise function and needs to be fast
 {			
 	double rmsd = 0.0;
 	for (unsigned int i = 0; i < _calphaPairs.size(); ++i)

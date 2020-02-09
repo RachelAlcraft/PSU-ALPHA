@@ -10,6 +10,6 @@ using namespace std;
 class RMSDReport
 {
 public:
-	void printReport(RMSD* rmsd, string fileName);
+	void printReport(RMSD* rmsd, string fileName, bool optimised, string fileroot);
 };
 

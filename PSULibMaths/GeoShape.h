@@ -12,12 +12,14 @@ class GeoCuboid
 
 class GeoTripod
 {
-private:
-	GeoCoords _anchor;
-	GeoCoords _axisFar;
-	GeoCoords _perpFar;
+public://lazy public interface TODO
+	GeoCoords anchor;
+	GeoCoords axisFar;
+	GeoCoords perpFar;
 public:
+	GeoTripod() {}
 	GeoTripod(GeoCoords anchor, GeoCoords axisFar, GeoCoords perpFar);
-	GeoTransformation getTransformation(GeoTripod tri);
+	GeoTransformation getTransformation(GeoTripod tri, int orientation);
+	GeoTripod operator = (GeoTripod const& obj);
 
 };

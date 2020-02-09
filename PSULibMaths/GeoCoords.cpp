@@ -7,6 +7,8 @@ GeoCoords::GeoCoords()
 	z = 0;
 }
 
+
+
 GeoCoords::GeoCoords(double x_coord, double y_coord, double z_coord)
 {
 	x = x_coord;

@@ -1,11 +1,12 @@
 #The Strucutre of data is fixed once the config location and output location are given
-PDB1=1d3k
-PDB2=1lyz
+RUNID=TEST1
+PDB1=test
+PDB2=test_shift
 OUTPUTPATH=F:\\PSUA\\Output\\
 CONFIGPATH=F:\\PSUA\\Code\\PSU-ALPHA\\Config\\
-RAMA=TRUE
-CALPHA=TRUE
-RMSDFIX=TRUE
-RMSDOPT=FALSE
+#RAMA=TRUE
+#CALPHA=TRUE
+#RMSDFIX=FALSE
+RMSDOPT=TRUE
 #the alignment file for 2 proteins is used for rmsd c alphas, in FASTA Format, name only, in PDB folder .fasta implied
-ALIGNMENT
+#ALIGNMENT

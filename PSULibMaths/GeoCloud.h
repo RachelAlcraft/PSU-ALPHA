@@ -15,6 +15,6 @@ private:
 public:
 	GeoCloud();
 	void addCoords(GeoCoords coord);
-	GeoTripod getTripod(unsigned int best1, unsigned int best2); //the bests params control whether it is the first best or second best etc to allow iteration through the possibilities
+	void makeTripod(GeoTripod& tri, unsigned int best1, unsigned int best2); //the bests params control whether it is the first best or second best etc to allow iteration through the possibilities
 };
 

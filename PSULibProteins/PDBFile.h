@@ -28,9 +28,11 @@ public:
 	void addLinks();
 	map<string, Chain*> getChains() { return _chains; }
 	Chain* getChain(string chainId);
+	map<int, Atom*> getAtoms(string pdbCode);
 	void addChain(Chain* ch);
 	void loadData();
 	void applyTransformation(GeoTransformation trans);
+	void printShiftedFile(string);
 
 
 private:

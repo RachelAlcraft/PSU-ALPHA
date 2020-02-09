@@ -69,7 +69,7 @@ bool LogFile::CreateFolder(string path)
 			success = false;		
 	}
 	else	
-		success = false;
+		success = true; //TODO need to check if the directory exists
 	
 	return success;
 }

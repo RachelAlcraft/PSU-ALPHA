@@ -11,9 +11,10 @@ GeoCloud::GeoCloud()
 
 void GeoCloud::addCoords(GeoCoords coord)
 {
+	_coords.push_back(coord);
 }
 
-GeoTripod GeoCloud::getTripod(unsigned int best1, unsigned int best2)
+void GeoCloud::makeTripod(GeoTripod& geo, unsigned int best1, unsigned int best2)
 {
 	//First we need to do a distance map and find the furthest points :-(
 	vector<double> farmag;
@@ -25,26 +26,27 @@ GeoTripod GeoCloud::getTripod(unsigned int best1, unsigned int best2)
 		{
 			GeoVector gv(_coords[i], _coords[j]);
 			double mag = gv.getMagnitude();
-			bool inserted = true;
-			for (unsigned int j = 0; j < farmag.size(); ++j)
+			bool inserted = false;
+			for (unsigned int k = 0; k < farmag.size(); ++k)
 			{
-				double dd = farmag[j];
+				double dd = farmag[k];
 				if (mag > dd && !inserted)
-				{//biggest at the front
-					farmag.insert(farmag.begin() + j, mag);
-					farcoords.insert(farcoords.begin() + j, pair<GeoCoords, GeoCoords>(_coords[i], _coords[j]));
+				{//biggest at the front					
+					farmag.insert(farmag.begin() + k, mag);
+					farcoords.insert(farcoords.begin() + k, pair<GeoCoords, GeoCoords>(_coords[i], _coords[j]));
+					inserted = true;
 				}
-				if (!inserted && farmag.size() < best1)
-				{
-					farmag.insert(farmag.end() + j, mag);
-					farcoords.insert(farcoords.end() + j, pair<GeoCoords, GeoCoords>(_coords[i], _coords[j]));
-				}
-				if (farmag.size() > best1)
-				{
-					farmag.pop_back();
-					farcoords.pop_back();
-				}
-			}						
+			}
+			if (!inserted && farmag.size() < best1)
+			{
+				farmag.push_back(mag);
+				farcoords.push_back(pair<GeoCoords, GeoCoords>(_coords[i], _coords[j]));
+			}
+			if (farmag.size() > best1)
+			{
+				farmag.pop_back();
+				farcoords.pop_back();
+			}									
 		}
 	}
 
@@ -62,8 +64,8 @@ GeoTripod GeoCloud::getTripod(unsigned int best1, unsigned int best2)
 	double furthest2 = 0;
 	for (unsigned int i = 0; i < _coords.size(); ++i)
 	{
-		double distance = 0;// = GeoVector::getOrthogonalDistance(_furthestPoints1.first, _furthestPoints1.second, _coords[i]);
-		bool inserted = true;
+		double distance = ortho1.getOrthogonalDistance(_coords[i]);
+		bool inserted = false;
 		for (unsigned int j = 0; j < farmag2.size(); ++j)
 		{
 			double dd = farmag2[j];
@@ -71,22 +73,25 @@ GeoTripod GeoCloud::getTripod(unsigned int best1, unsigned int best2)
 			{//biggest at the front
 				farmag2.insert(farmag2.begin() + j, distance);
 				farcoord2.insert(farcoord2.begin() + j, _coords[i]);
-			}
-			if (!inserted && farmag2.size() < best2)
-			{
-				farmag2.insert(farmag2.end() + j, distance);
-				farcoord2.insert(farcoord2.end() + j, _coords[i]);
-			}
-			if (farmag2.size() > best2)
-			{
-				farmag2.pop_back();
-				farcoord2.pop_back();
+				inserted = true;
 			}
 		}
+		if (!inserted && farmag2.size() < best2)
+		{
+			farmag2.push_back(distance);
+			farcoord2.push_back(_coords[i]);
+		}
+		if (farmag2.size() > best2)
+		{
+			farmag2.pop_back();
+			farcoord2.pop_back();
+		}		
 	}
 	_furthestPoint2 = farcoord2[0];
 	//This should fully define what we need for a transformation for this cloud. We have an axis along the furthyest 2 pointsd
 	// Orthogonal to that we have the next furthest point
 	// Our transformations of clouds will match anchor points along the axis and then rotate to the plane
-	return GeoTripod(_furthestPoints1.first, _furthestPoints1.second, _furthestPoint2);
+	geo.anchor = _furthestPoints1.first;
+	geo.axisFar = _furthestPoints1.second;
+	geo.perpFar = _furthestPoint2;
 }

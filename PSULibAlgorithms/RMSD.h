@@ -38,8 +38,9 @@ public:
 	RMSD();
 	RMSD(PDBFile* pdb1, PDBFile* pdb2, FastaFile* fasta, bool alignment, bool optimise);
 	void SetupCAlphaPairs();
-	double calculateRMSD();
-	double calculateOptimalRMSD();
+	string calculateRMSD();
+	double calculateOneRMSD();
+	double calculateOptimalRMSD(int h, int i, int j, int k, int orientation);
 	string getAtomMatches();
 };
 

@@ -20,10 +20,12 @@ int main()
 	InputParams::getInstance()->setInputFile("InputParams.txt");
 	string OUTPATH = InputParams::getInstance()->getParam("OUTPUTPATH");
 	string INPATH = InputParams::getInstance()->getParam("CONFIGPATH");
+	string RUNID = InputParams::getInstance()->getParam("RUNID");
 
 	// Set up log file for output
-	string runId = LogFile::getInstance()->runId();
-	OUTPATH = OUTPATH + runId + "\\";	
+	if (RUNID == "")
+		RUNID = LogFile::getInstance()->runId();
+	OUTPATH = OUTPATH + RUNID + "\\";
 	bool success = LogFile::getInstance()->setLogFile(OUTPATH + "logger.pdb",OUTPATH);
 	if (success)
 	{
@@ -87,40 +89,32 @@ int main()
 
 		}
 		//Shall we run an RMSD report between 2 structures with fixed positions?
-		if (PDB1 != "" && PDB2 != "" && RMSDFIX == "TRUE")
+		if (PDB1 != "" && PDB2 != "" && (RMSDFIX == "TRUE" || RMSDOPT == "TRUE"))
 		{
-			string rmsdreport = OUTPATH + "Reports\\" + PDB1 + "_rmsdfixed.txt";
-			LogFile::getInstance()->writeMessage("Running RMSD fixed report to file=" + rmsdreport);
+			string rmsdreport = OUTPATH + "Reports\\" + PDB1 + "_" + PDB2 + "_rmsd.txt";
+			string fileroot = OUTPATH + "Reports\\" + PDB1 + "_" + PDB2 + "_";
+			LogFile::getInstance()->writeMessage("Running RMSD report to file=" + rmsdreport);
 
 			bool alignment = false;
+			bool optimised = false;
 			FastaFile* ff = nullptr;
 			if (ALIGNMENT != "")//whether a fixed calpha or a pairing needed
 			{
 				alignment = true;
 				//and create the ff
 			}
+			if (RMSDOPT != "")//whether a fixed calpha or a pairing needed
+			{
+				optimised = true;
+				//and create the ff
+			}
 			
-			RMSD* rmsd = new RMSD(pdb1, pdb2, ff, alignment, false);
+			RMSD* rmsd = new RMSD(pdb1, pdb2, ff, alignment, optimised);
 			RMSDReport rrmsd;
-			rrmsd.printReport(rmsd, rmsdreport);
+			rrmsd.printReport(rmsd, rmsdreport,optimised,fileroot);
 
 			
-		}
-		//Shall we run an RMSD report between 2 structures optimising the alignments?
-		if (PDB1 != "" && PDB2 != "" && RMSDOPT == "TRUE")
-		{
-			string rmsdreportopt = OUTPATH + "Reports\\" + PDB1 + "_rmsdoptimised.txt";
-			LogFile::getInstance()->writeMessage("Running RMSD fixed report to file=" + rmsdreportopt);
-
-			if (ALIGNMENT != "")//whether a fixed calpha or a pairing needed
-			{
-
-			}
-			else
-			{
-
-			}
-		}
+		}		
 	}
 	else
 	{
