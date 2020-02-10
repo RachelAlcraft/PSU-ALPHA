@@ -2,46 +2,118 @@
 #include <math.h>
 
 
-GeoTransformation::GeoTransformation()
+GeoTransformations::GeoTransformations()
 {
 	
 
 }
-GeoTransformation::GeoTransformation(GeoCoords fixPointA, GeoCoords fixPointB, GeoCoords fixPointC, GeoCoords movPointA, GeoCoords movPointB, GeoCoords movPointC)
+GeoTransformations::~GeoTransformations()
+{	
+	for (unsigned int i = 0; i < transformations.size(); ++i)
+	{
+		if (transformations[i])
+			delete transformations[i];
+	}
+	transformations.clear();
+}
+GeoTransformations::GeoTransformations(GeoCoords A, GeoCoords B, GeoCoords C)
 {
-	FixedPointA = fixPointA;
-	FixedPointB = fixPointB;
-	FixedPointC = fixPointC;
-	MovePointA = movPointA;
-	MovePointB = movPointB;
-	MovePointC = movPointC;
+	//This is the constructor to create a transformation that maps the 3 given points 
+	//onto the origin and flat against the plane xz.
+	MapA = A;
+	MapB = B;
+	MapC = C;
+	TranslateRelativeToOrigin* t1 = new TranslateRelativeToOrigin(A);
+	A = t1->applyTransformation(A);
+	B = t1->applyTransformation(B);
+	C = t1->applyTransformation(C);
+	transformations.push_back(t1);
+
+	RotateTo_Y_Is_Zero_AboutOrigin* t2 = new RotateTo_Y_Is_Zero_AboutOrigin(B);
+	B = t2->applyTransformation(B);
+	C = t2->applyTransformation(C);
+	transformations.push_back(t2);
+
+	RotateTo_Z_Is_Zero_AboutOrigin* t3 = new RotateTo_Z_Is_Zero_AboutOrigin(B);
+	B = t3->applyTransformation(B);
+	C = t3->applyTransformation(C);
+	transformations.push_back(t3);
+
+	RotateTo_Y_Is_Zero_OverX_Axis* t4 = new RotateTo_Y_Is_Zero_OverX_Axis(C);
+	C = t4->applyTransformation(C);
+	transformations.push_back(t4);	
 }
 
-GeoCoords GeoTransformation::applyTransformation(GeoCoords point)
+GeoCoords GeoTransformations::applyTransformation(GeoCoords point)
 {
-	/*To describe the transformation all I need is the tripod.
-	To apply the transformation.... well...*/
-
-	//1) Total freedom, a translation to the anchor point
-	GeoCoords gc = translate(point, MovePointA,FixedPointA);
-
-	//2) 1 fixed point, a rotation about a fixed point onto a line
-	gc = rotateAboutPoint(gc, MovePointB, FixedPointA,FixedPointB);
-	
-	
-	//3) 2 fixed points, a rotation about a fixed line onto a plane
-	gc = rotateAboutLine(gc, MovePointC, FixedPointA, FixedPointB, FixedPointC);
-	
-	return gc;
+	GeoCoords movedPoint = point;
+	for (unsigned int i = 0; i < transformations.size(); ++i)
+	{
+		point = transformations[i]->applyTransformation(point);
+	}
+	return point;
 }
 
-GeoCoords GeoTransformation::translate(GeoCoords point, GeoCoords movePoint, GeoCoords fixPoint)
+//TRANSLATION///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TranslateRelativeToOrigin::TranslateRelativeToOrigin(GeoCoords A):GeoTransform()
 {
-	GeoVector v = GeoVector(movePoint, fixPoint);
-	v = v + point;
-	return GeoCoords(v.x, v.y, v.z);
+	//This finds the vector that translates a fixed boddy relative to tge origin for the reference point p
+	V = GeoVector(A, GeoCoords(0, 0, 0));
 }
-GeoCoords GeoTransformation::rotateAboutPoint(GeoCoords point, GeoCoords movePoint, GeoCoords fixPointA, GeoCoords fixPointB)
+GeoCoords TranslateRelativeToOrigin::applyTransformation(GeoCoords point)
+{	
+	return V.movePoint(point);
+}
+//ROTATION ABOUT THE ORIGIN////////////////////////////////////////////////////////////////////////////////////////////////////////////
+RotateTo_Y_Is_Zero_AboutOrigin::RotateTo_Y_Is_Zero_AboutOrigin(GeoCoords A) :GeoTransform()
+{
+	theta = 0;		
+}
+GeoCoords RotateTo_Y_Is_Zero_AboutOrigin::applyTransformation(GeoCoords point)
+{
+	return point;
+}
+RotateTo_Z_Is_Zero_AboutOrigin::RotateTo_Z_Is_Zero_AboutOrigin(GeoCoords A) :GeoTransform()
+{
+	theta = 0;	
+}
+GeoCoords RotateTo_Z_Is_Zero_AboutOrigin::applyTransformation(GeoCoords point)
+{
+	return point;
+}
+//ROTATION OVER THE X-Axis////////////////////////////////////////////////////////////////////////////////////////////////////////////
+RotateTo_Y_Is_Zero_OverX_Axis::RotateTo_Y_Is_Zero_OverX_Axis(GeoCoords A) :GeoTransform()
+{
+	theta = 0;	
+}
+GeoCoords RotateTo_Y_Is_Zero_OverX_Axis::applyTransformation(GeoCoords point)
+{
+	return point;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*GeoCoords GeoTransformations::rotateAboutPoint(GeoCoords point, GeoCoords movePoint, GeoCoords fixPointA, GeoCoords fixPointB)
 {
 	//It will rotate theta about the perpendicular axis to the plane by a length propertional to the distances of the template to the new from the perpendicular
 	GeoVector toCentre = GeoVector(movePoint, fixPointA);
@@ -64,8 +136,5 @@ GeoCoords GeoTransformation::rotateAboutPoint(GeoCoords point, GeoCoords movePoi
 	//move theta about perpendicular which will give newMag
 	return point;
 
-}
-GeoCoords GeoTransformation::rotateAboutLine(GeoCoords point, GeoCoords movePoint, GeoCoords fixPointA, GeoCoords fixPointB, GeoCoords fixPointC)
-{
-	return point;
-}
+}*/
+

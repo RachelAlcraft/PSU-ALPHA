@@ -96,8 +96,8 @@ double Atom::atomicDistance(Atom* comp)
 	return v.getMagnitude();
 }
 
-void Atom::applyTransformation(GeoTransformation trans)
+void Atom::applyTransformation(GeoTransformations* trans)
 {
-	GeoCoords newCoords = trans.applyTransformation(coords);
+	GeoCoords newCoords = trans->applyTransformation(coords);
 	shifted_coords = newCoords;
 }

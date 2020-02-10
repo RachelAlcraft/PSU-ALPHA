@@ -13,23 +13,23 @@ GeoVector::GeoVector(const GeoVector& copy)
 	x = copy.x;
 	y = copy.y;
 	z = copy.z;
-	_start = copy._start;
-	_end = copy._end;
+	//_start = copy._start;
+	//_end = copy._end;
 
 }
-GeoVector::GeoVector(double X, double Y, double Z, GeoCoords a, GeoCoords b)
+GeoVector::GeoVector(double X, double Y, double Z)
 {
 	x = X;
 	y = Y;
 	z = Z;
-	_start = a;
-	_end = b; 
+	//_start = a;
+	//_end = b; 
 }
 
 GeoVector::GeoVector(GeoCoords a, GeoCoords b)
 {
-	_start = a;
-	_end = b;
+	//_start = a;
+	//_end = b;
 	x = b.x - a.x;
 	y = b.y - a.y;
 	z = b.z - a.z;
@@ -47,7 +47,7 @@ GeoVector GeoVector::operator+(GeoVector const& obj)
 	x += obj.x;
 	y += obj.y;
 	z += obj.z;
-	return GeoVector(x, y, z, _start, _end);
+	return GeoVector(x, y, z);
 }
 
 GeoVector GeoVector::operator*(double mult)
@@ -55,7 +55,7 @@ GeoVector GeoVector::operator*(double mult)
 	x *= mult;
 	y *= mult;
 	z *= mult;
-	return GeoVector(x, y, z, _start, _end);
+	return GeoVector(x, y, z);
 }
 
 GeoVector GeoVector::operator/(double div)
@@ -63,7 +63,7 @@ GeoVector GeoVector::operator/(double div)
 	x /= div;
 	y /= div;
 	z /= div;	
-	return GeoVector(x, y, z, _start, _end);
+	return GeoVector(x, y, z);
 }
 
 GeoVector GeoVector::operator=(GeoVector const& obj)
@@ -71,16 +71,20 @@ GeoVector GeoVector::operator=(GeoVector const& obj)
 	x = obj.x;
 	y = obj.y;
 	z = obj.z;
-	_start = obj._start;
-	_end = obj._end;
-	return GeoVector(x,y,z,_start,_end);
+	//_start = obj._start;
+	//_end = obj._end;
+	return GeoVector(x,y,z);
 }
 GeoVector GeoVector::operator+(GeoCoords const& obj)
 {
 	x += obj.x;
 	y += obj.y;
 	z += obj.z;		
-	return GeoVector(x, y, z, _start, _end);
+	return GeoVector(x, y, z);
+}
+GeoCoords GeoVector::movePoint(GeoCoords p)
+{
+	return GeoCoords(x+p.x, y + p.y, z + p.z);
 }
 double GeoVector::angle(GeoVector b)
 {
@@ -116,7 +120,7 @@ GeoVector GeoVector::getCrossProduct(GeoVector B)
 	double px = (A.y * B.z) - (A.z * B.y);
 	double py = (A.z * B.x) - (A.x * B.z);
 	double pz = (A.x * B.y) - (A.y * B.x);
-	return GeoVector(px, py, pz,_start,_end);
+	return GeoVector(px, py, pz);
 }
 
 double GeoVector::getDotProduct(GeoVector B)
@@ -128,8 +132,8 @@ double GeoVector::getDotProduct(GeoVector B)
 
 double GeoVector::getOrthogonalDistance(GeoCoords p)
 {//http://mathworld.wolfram.com/Point-LineDistance3-Dimensional.html
-	GeoCoords a = _start;
-	GeoCoords b = _end;
+	GeoCoords a = GeoCoords(0, 0, 0);
+	GeoCoords b = GeoCoords(x, y, z);
 	GeoCoords c = p;
 	GeoVector ca = GeoVector(c,a);
 	GeoVector cb = GeoVector(c,b);

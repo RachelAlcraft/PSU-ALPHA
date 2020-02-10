@@ -91,7 +91,7 @@ void GeoCloud::makeTripod(GeoTripod& geo, unsigned int best1, unsigned int best2
 	//This should fully define what we need for a transformation for this cloud. We have an axis along the furthyest 2 pointsd
 	// Orthogonal to that we have the next furthest point
 	// Our transformations of clouds will match anchor points along the axis and then rotate to the plane
-	geo.anchor = _furthestPoints1.first;
-	geo.axisFar = _furthestPoints1.second;
-	geo.perpFar = _furthestPoint2;
+	geo.A = _furthestPoints1.first;
+	geo.B = _furthestPoints1.second;
+	geo.C = _furthestPoint2;
 }

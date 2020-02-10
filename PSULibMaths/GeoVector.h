@@ -10,12 +10,12 @@ public://lazy public interface
 	double y;
 	double z;
 	const double PI = 3.141592653589793238463;
-	GeoCoords _start;
-	GeoCoords _end; //lazy extra info for perpendiculars
+	//GeoCoords _start;
+	//GeoCoords _end; //lazy extra info for perpendiculars
 public:
 	GeoVector();
 	GeoVector(const GeoVector& copy);
-	GeoVector(double, double, double, GeoCoords a, GeoCoords b);
+	GeoVector(double, double, double);
 	GeoVector(GeoCoords a, GeoCoords b);
 	// Operator overloads	
 	GeoVector operator + (GeoVector const& obj);
@@ -24,6 +24,7 @@ public:
 	GeoVector operator = (GeoVector const& obj);
 	// Operator overloads	
 	GeoVector operator + (GeoCoords const& obj);
+	GeoCoords movePoint(GeoCoords p);
 
 	
 	double angle(GeoVector);//the angle this vector makes with another vector (can start anywhere)

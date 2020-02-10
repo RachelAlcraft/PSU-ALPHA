@@ -52,7 +52,8 @@ string RMSD::calculateRMSD() // this may be iteratively called from an optimise 
 	stringstream ss;
 	if (Optimise)
 	{
-		ss << "Optimised report\n" << calculateOneRMSD();
+		ss << "Optimised report\n";
+		ss << "Initial Value=" << calculateOneRMSD() << "\n";
 		//Dummy attempt at optimisation TODO ALSO TODO if any ever come back as 0 we can stop!
 		double best = 0;
 		unsigned int hval = 0;
@@ -102,8 +103,11 @@ double RMSD::calculateOptimalRMSD(int h,int i, int j, int k, int orientation)
 	GeoTripod tri1, tri2;
 	_geo1.makeTripod(tri1,h, i); // 1 is the best solution
 	_geo2.makeTripod(tri2,j, k);// 1 is the best solution
-	GeoTransformation gt = tri1.getTransformation(tri2,orientation);	
-	PDB2->applyTransformation(gt);
+	//For now I am moving both structures onto the orgin to compare them as I have failed to move one on to the other :-( TODO I could just also go backwards but for now this will do
+	GeoTransformations* gt1 = tri1.getTransformation(tri1,orientation);	
+	GeoTransformations* gt2 = tri2.getTransformation(tri2, orientation);
+	PDB1->applyTransformation(gt1);
+	PDB2->applyTransformation(gt2);
 	double val = calculateOneRMSD();	
 	return val;
 }

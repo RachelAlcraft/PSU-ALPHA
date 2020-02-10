@@ -35,7 +35,7 @@ public:
 	string getDescription();
 	GeoVector vectorDifference(Atom*);
 	double atomicDistance(Atom*);
-	void applyTransformation(GeoTransformation trans);
+	void applyTransformation(GeoTransformations* trans);
 
 private:
 	//string trim(string);
