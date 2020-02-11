@@ -67,7 +67,20 @@ GeoCoords TranslateRelativeToOrigin::applyTransformation(GeoCoords point)
 //ROTATION ABOUT THE ORIGIN////////////////////////////////////////////////////////////////////////////////////////////////////////////
 RotateTo_Y_Is_Zero_AboutOrigin::RotateTo_Y_Is_Zero_AboutOrigin(GeoCoords A) :GeoTransform()
 {
-	theta = 0;		
+	//Z will remain unchanged so make a temporary no z vector
+	GeoCoords pNoZ(A.x, A.y, 0);
+	//We are mapping from A to 0, then 0 to B, so we have an iscoseles triangle |AO|==|OB| and AB
+	GeoVector AO(pNoZ, GeoCoords(0, 0, 0));
+	double magAO = AO.getMagnitude();
+	GeoVector OB(magAO,0,0);//moving into +ve quadrant
+	GeoVector AB = OB - AO;
+	double magAB = AB.getMagnitude();
+	//use cosine rule
+	//Find theta with the cosine rule	
+	double magAO2 = pow(magAO, 2);
+	double magAB2 = pow(magAB, 2);
+	double costheta = 2 * magAO2 - magAB2 / (2 * magAO2);
+	theta = acos(costheta);// in radians	
 }
 GeoCoords RotateTo_Y_Is_Zero_AboutOrigin::applyTransformation(GeoCoords point)
 {

@@ -19,6 +19,7 @@ public:
 	GeoVector(GeoCoords a, GeoCoords b);
 	// Operator overloads	
 	GeoVector operator + (GeoVector const& obj);
+	GeoVector operator - (GeoVector const& obj);
 	GeoVector operator * (double);
 	GeoVector operator / (double);
 	GeoVector operator = (GeoVector const& obj);

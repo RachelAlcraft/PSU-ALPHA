@@ -50,6 +50,14 @@ GeoVector GeoVector::operator+(GeoVector const& obj)
 	return GeoVector(x, y, z);
 }
 
+GeoVector GeoVector::operator-(GeoVector const& obj)
+{
+	x -= obj.x;
+	y -= obj.y;
+	z -= obj.z;
+	return GeoVector(x, y, z);
+}
+
 GeoVector GeoVector::operator*(double mult)
 {
 	x *= mult;

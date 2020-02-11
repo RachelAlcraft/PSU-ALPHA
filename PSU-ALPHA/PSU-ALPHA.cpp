@@ -40,10 +40,13 @@ int main()
 		string PDB1 = InputParams::getInstance()->getParam("PDB1");
 		string PDB2 = InputParams::getInstance()->getParam("PDB2");
 		string RAMA = InputParams::getInstance()->getParam("RAMA");
-		string CALPHA = InputParams::getInstance()->getParam("CALPHA");
+		string CONTACT = InputParams::getInstance()->getParam("CONTACT");
+		string CONTACTCHAIN1 = InputParams::getInstance()->getParam("CONTACTCHAIN1");
+		string CONTACTCHAIN2 = InputParams::getInstance()->getParam("CONTACTCHAIN2");
 		string RMSDFIX = InputParams::getInstance()->getParam("RMSDFIX");
 		string RMSDOPT = InputParams::getInstance()->getParam("RMSDOPT");
 		string ALIGNMENT = InputParams::getInstance()->getParam("ALIGNMENT");
+		string RMSDCONTACT = InputParams::getInstance()->getParam("RMSDCONTACT");
 
 
 		//// INPUT CONSTRUCTION ////
@@ -81,18 +84,18 @@ int main()
 			rr.printReport(pdb1, ramareport);
 		}
 		//Shall we run a CAlpha report
-		if (PDB1 != "" && CALPHA == "TRUE")
+		if (PDB1 != "" && CONTACT == "TRUE")
 		{
 			LogFile::getInstance()->writeMessage("CALPHA Contact Map REPORT, outfile=" + calphareport);
 			CAlphaReport ca;
-			ca.printReport(pdb1, calphareport);
+			ca.printReport(pdb1, CONTACTCHAIN1, CONTACTCHAIN2, calphareport);
 
 		}
 		//Shall we run an RMSD report between 2 structures with fixed positions?
 		if (PDB1 != "" && PDB2 != "" && (RMSDFIX == "TRUE" || RMSDOPT == "TRUE"))
 		{
 			string rmsdreport = OUTPATH + "Reports\\" + PDB1 + "_" + PDB2 + "_rmsd.txt";
-			string fileroot = OUTPATH + "Reports\\" + PDB1 + "_" + PDB2 + "_";
+			string fileroot = OUTPATH + "Reports\\" + PDB1 + PDB2 + "_";
 			LogFile::getInstance()->writeMessage("Running RMSD report to file=" + rmsdreport);
 
 			bool alignment = false;
@@ -112,6 +115,14 @@ int main()
 			RMSD* rmsd = new RMSD(pdb1, pdb2, ff, alignment, optimised);
 			RMSDReport rrmsd;
 			rrmsd.printReport(rmsd, rmsdreport,optimised,fileroot);
+
+			if (RMSDCONTACT == "TRUE")
+			{
+				string rmsdcontact = OUTPATH + "Reports\\" + PDB1 + "_rmsdcontact.txt";
+				LogFile::getInstance()->writeMessage("RMSD CALPHA Contact Map REPORT, outfile=" + rmsdcontact);
+				CAlphaReport ca;
+				ca.printMultiReport(pdb1,pdb2, rmsdcontact,true);
+			}
 
 			
 		}		

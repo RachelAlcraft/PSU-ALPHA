@@ -90,10 +90,18 @@ GeoVector Atom::vectorDifference(Atom* comp)
 	return GeoVector(coords, comp->coords);
 }
 
-double Atom::atomicDistance(Atom* comp)
+double Atom::atomicDistance(Atom* comp, bool shifted)
 {
-	GeoVector v = GeoVector(coords, comp->coords);
-	return v.getMagnitude();
+	if (shifted)
+	{
+		GeoVector v = GeoVector(shifted_coords, comp->shifted_coords);
+		return v.getMagnitude();
+	}
+	else
+	{
+		GeoVector v = GeoVector(coords, comp->coords);
+		return v.getMagnitude();
+	}
 }
 
 void Atom::applyTransformation(GeoTransformations* trans)
