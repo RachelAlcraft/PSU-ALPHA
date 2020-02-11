@@ -1,7 +1,7 @@
 #The Strucutre of data is fixed once the config location and output location are given
-RUNID=test1
-PDB1=chains
-PDB2=shift
+RUNID=test2
+PDB1=tst1
+PDB2=rot1
 OUTPUTPATH=F:\\PSUA\\Output\\
 CONFIGPATH=F:\\PSUA\\Code\\PSU-ALPHA\\Config\\
 #RAMA=TRUE

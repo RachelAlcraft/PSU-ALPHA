@@ -20,8 +20,8 @@ public:
 	//virtual GeoCoords applyTransformation(GeoCoords point) { return GeoCoords(0, 0, 0); }; //won't let me =0 it ??? TODO
 	GeoTransform() {}
 	virtual GeoCoords applyTransformation(GeoCoords point) = 0;
-private:
-	
+protected:
+	const double PI = 3.141592653589793238463;
 
 };
 

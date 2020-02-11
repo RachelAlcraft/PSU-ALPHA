@@ -79,20 +79,88 @@ RotateTo_Y_Is_Zero_AboutOrigin::RotateTo_Y_Is_Zero_AboutOrigin(GeoCoords A) :Geo
 	//Find theta with the cosine rule	
 	double magAO2 = pow(magAO, 2);
 	double magAB2 = pow(magAB, 2);
-	double costheta = 2 * magAO2 - magAB2 / (2 * magAO2);
+	double costheta = ((2 * magAO2) - magAB2) / (2 * magAO2);
 	theta = acos(costheta);// in radians	
+	theta = PI/2; //TEST
 }
 GeoCoords RotateTo_Y_Is_Zero_AboutOrigin::applyTransformation(GeoCoords point)
 {
-	return point;
+	//Triangle has 2 sides length a and a side length b
+	GeoCoords pNoZ(point.x, point.y, 0);
+	GeoVector AO(pNoZ, GeoCoords(0, 0, 0));
+	double magAO = AO.getMagnitude();
+	if (abs(magAO) > 0.0000001)
+	{
+
+		//If this is now the hypotanuse of a right-angled triangle with the x-axis
+		double sinT = abs(point.y) / magAO;
+		double T = asin(sinT);
+		//Now we can subtract theta and we have the angle with the x-axis fort the lower side of the triangle (a diagram would help!)
+		double t = T - theta;
+		if ((point.y < 0 && point.x > 0) || (point.y > 0 && point.x < 0))
+			t = T + theta;
+		//The new x and y are the oints at the end of this new triangle
+		double newY = sin(t) * magAO;
+		if (point.y < 0)
+			newY *= 01;
+		double newX = cos(t) * magAO;
+		if (point.x < 0)
+			newX *= 01;
+		return GeoCoords(newX, newY, point.z);
+	}
+	else//TODO haven't sorted out the quadrants when x is negative
+	{
+		return point;
+	}
 }
 RotateTo_Z_Is_Zero_AboutOrigin::RotateTo_Z_Is_Zero_AboutOrigin(GeoCoords A) :GeoTransform()
 {
-	theta = 0;	
+	//Z will remain unchanged so make a temporary no z vector
+	GeoCoords pNoZ(A.x, 0, A.z);
+	//We are mapping from A to 0, then 0 to B, so we have an iscoseles triangle |AO|==|OB| and AB
+	GeoVector AO(pNoZ, GeoCoords(0, 0, 0));
+	double magAO = AO.getMagnitude();
+	GeoVector OB(magAO, 0, 0);//moving into +ve quadrant
+	GeoVector AB = OB - AO;
+	double magAB = AB.getMagnitude();
+	//use cosine rule
+	//Find theta with the cosine rule	
+	double magAO2 = pow(magAO, 2);
+	double magAB2 = pow(magAB, 2);
+	double costheta = ((2 * magAO2) - magAB2) / (2 * magAO2);
+	theta = acos(costheta);// in radians
+	theta = 0;
 }
 GeoCoords RotateTo_Z_Is_Zero_AboutOrigin::applyTransformation(GeoCoords point)
 {
-	return point;
+	//Triangle has 2 sides length a and a side length b
+	GeoCoords pNoZ(point.x, 0, point.z);
+	GeoVector AO(pNoZ, GeoCoords(0, 0, 0));
+	double magAO = AO.getMagnitude();
+	if (abs(magAO) > 0.0000001)
+	{
+
+
+		//If this is now the hypotanuse of a right-angled triangle with the x-axis
+		double sinT = abs(point.z) / magAO;
+		double T = asin(sinT);
+		//Now we can subtract theta and we have the angle with the x-axis fort the lower side of the triangle (a diagram would help!)
+		double t = T - theta;
+		if ((point.z < 0 && point.x > 0) || (point.z > 0 && point.x < 0))
+			t = T + theta;
+		//The new x and y are the oints at the end of this new triangle
+		double newZ = sin(t) * magAO;
+		if (point.z < 0)
+			newZ *= 01;
+		double newX = cos(t) * magAO;
+		if (point.x < 0)
+			newX *= 01;
+		return GeoCoords(newX, point.y, newZ);
+	}
+	else//TODO haven't sorted out the quadrants when x is negative
+	{
+		return point;
+	}
 }
 //ROTATION OVER THE X-Axis////////////////////////////////////////////////////////////////////////////////////////////////////////////
 RotateTo_Y_Is_Zero_OverX_Axis::RotateTo_Y_Is_Zero_OverX_Axis(GeoCoords A) :GeoTransform()
@@ -126,28 +194,5 @@ GeoCoords RotateTo_Y_Is_Zero_OverX_Axis::applyTransformation(GeoCoords point)
 
 
 
-/*GeoCoords GeoTransformations::rotateAboutPoint(GeoCoords point, GeoCoords movePoint, GeoCoords fixPointA, GeoCoords fixPointB)
-{
-	//It will rotate theta about the perpendicular axis to the plane by a length propertional to the distances of the template to the new from the perpendicular
-	GeoVector toCentre = GeoVector(movePoint, fixPointA);
-	double mag = toCentre.getMagnitude();
-	GeoVector fromCentre = GeoVector(fixPointA, fixPointB) * mag;
-	GeoVector moved = toCentre + point;
-	moved = moved + fromCentre;
-	//We now have 3 points of the template isoceles triangle
-	// 2 of the lengths are mag the top is
-	double tri_top = moved.getMagnitude();
-	//Find theta with the cosine rule
-	double mag2 = pow(mag, 2);
-	double tri2 = pow(tri_top, 2);
-	double costheta = 2*mag2 - tri2 / (2 * mag2);
-	double theta = acos(costheta);// in radians
-	//find the relative magnitudes to the perpendicular
-	GeoVector perp = GeoPlane(toCentre, fromCentre).getPerpendicular();
-	double templateMag = perp.getOrthogonalDistance(movePoint);
-	double newMag = perp.getOrthogonalDistance(point);
-	//move theta about perpendicular which will give newMag
-	return point;
 
-}*/
 

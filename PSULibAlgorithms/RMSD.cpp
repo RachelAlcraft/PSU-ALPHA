@@ -61,15 +61,17 @@ string RMSD::calculateRMSD() // this may be iteratively called from an optimise 
 		unsigned int jval = 0;
 		unsigned int kval = 0;
 		unsigned int orientation = 0;
-		for (unsigned int h = 1; h < 5; ++h)
+		unsigned int MAXITER = 2; //TESTING ONLY DO IT ONCE
+		unsigned int MAXORIENTATION = 2; // only once
+		for (unsigned int h = 1; h < MAXITER; ++h)
 		{
-			for (unsigned int i = 1; i < 5; ++i)
+			for (unsigned int i = 1; i < MAXITER; ++i)
 			{
-				for (unsigned int j = 1; j < 5; ++j)
+				for (unsigned int j = 1; j < MAXITER; ++j)
 				{
-					for (unsigned int k = 1; k < 5; ++k)
+					for (unsigned int k = 1; k < MAXITER; ++k)
 					{
-						for (unsigned int orient = 1; orient < 5; ++orient)
+						for (unsigned int orient = 1; orient < MAXORIENTATION; ++orient)
 						{
 							double rmsd = calculateOptimalRMSD(h, i, j, k, orient);
 							ss << "Opt: h=" << h << " i=" << i << " j=" << j << " k=" << k << " orientation=" << orient << " rmsd=" << rmsd << "\n";
