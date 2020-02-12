@@ -49,9 +49,9 @@ void CAlphaReport::printReport(PDBFile* pdb, string chain1, string chain2, strin
 						double distance = a->atomicDistance(b,false);
 						if (distance < 25) //TODO this should be configurable
 						{
-							report << getRow(aa, a, ab, b, distance) << "\n";							
+							report << getRow(aa, a, ab, b, distance,false) << "\n";							
 							if (!(chainself & (i == j)))//and reverse to halve the time														
-								report << getRow(ab, b, aa, a, distance) << "\n";							
+								report << getRow(ab, b, aa, a, distance,false) << "\n";							
 						}
 					}
 				}
@@ -92,7 +92,7 @@ void CAlphaReport::printSingleChainReport(PDBFile* pdb, string chain1, string ch
 			double distance = a->atomicDistance(b,false);
 			if (distance < 25) //TODO this should be configurable
 			{				
-				report << getRow(aa, a, ab, b, distance) << "\n";
+				report << getRow(aa, a, ab, b, distance,true) << "\n";
 			}
 		}			
 	}
@@ -140,7 +140,7 @@ void CAlphaReport::printMultiReport(PDBFile* pdb1, PDBFile* pdb2, string fileNam
 					AminoAcid* ab = aminosb[b->aminoId];
 					double distance = a->atomicDistance(b,shifted);
 					if (distance < 25) //TODO this should be configurable					
-						report << getRow(aa, a, ab, b, distance) << "\n";											
+						report << getRow(aa, a, ab, b, distance,false) << "\n";											
 				}
 			}
 		}
@@ -153,16 +153,23 @@ void CAlphaReport::printMultiReport(PDBFile* pdb1, PDBFile* pdb2, string fileNam
 	
 }
 
-string CAlphaReport::getRow(AminoAcid * aa, Atom* a, AminoAcid* ab, Atom* b, double distance)
+string CAlphaReport::getRow(AminoAcid * aa, Atom* a, AminoAcid* ab, Atom* b, double distance, bool singleChain)
 {
+	int aid = aa->structureAaId;
+	int bid = ab->structureAaId;
+	if (singleChain)
+	{
+		aid = aa->aminoId;
+		bid = ab->aminoId;
+	}
 	//The amino ID needs to be its place in the entire structure.
 	stringstream report;
-	report << a->aminoCode << "," << aa->structureAaId << ",";
+	report << a->aminoCode << "," << aid << ",";
 	report << aa->Hydro << ",";
 	report << aa->Donicity << ",";
 	report << aa->Chemical << ",";
 	report << aa->Polar << ",";
-	report << b->aminoCode << "," << ab->structureAaId << ",";
+	report << b->aminoCode << "," << bid << ",";
 	report << ab->Hydro << ",";
 	report << ab->Donicity << ",";
 	report << ab->Chemical << ",";
