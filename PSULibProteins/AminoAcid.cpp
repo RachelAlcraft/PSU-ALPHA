@@ -2,9 +2,10 @@
 #include "ProteinManager.h"
 #include <StringManip.h>
 
-AminoAcid::AminoAcid(string pdb_code, string chain_id, int amino_id, string amino_Code)
+AminoAcid::AminoAcid(string pdb_code, string chain_id, int amino_id, int structure_id, string amino_Code)
 {
 	aminoId = amino_id;	
+	structureAaId = structure_id;
 	pdbCode = pdb_code;
 	chainId = chain_id;
 	aminoCode = amino_Code;

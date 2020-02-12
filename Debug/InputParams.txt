@@ -1,16 +1,16 @@
 #The Strucutre of data is fixed once the config location and output location are given
-RUNID=test2
-PDB1=tst1
-PDB2=rot1
+RUNID=6J4A
+PDB1=6J4A
+#PDB2=rot2
 OUTPUTPATH=F:\\PSUA\\Output\\
 CONFIGPATH=F:\\PSUA\\Code\\PSU-ALPHA\\Config\\
-#RAMA=TRUE
-#CONTACT=TRUE
+RAMA=TRUE
+CONTACT=TRUE
 #We can add chains to the contact map report which are useful for looking at PPI in a complex, eg 1DFJ
-#CONTACTCHAIN1=I
-#CONTACTCHAIN2=E
+#CONTACTCHAIN1=A
+#CONTACTCHAIN2=A
 #RMSDFIX=FALSE
-RMSDOPT=TRUE
-RMSDCONTACT=TRUE
+#RMSDOPT=TRUE
+#RMSDCONTACT=TRUE
 #the alignment file for 2 proteins is used for rmsd c alphas, in FASTA Format, name only, in PDB folder .fasta implied
 #ALIGNMENT

@@ -155,13 +155,14 @@ void CAlphaReport::printMultiReport(PDBFile* pdb1, PDBFile* pdb2, string fileNam
 
 string CAlphaReport::getRow(AminoAcid * aa, Atom* a, AminoAcid* ab, Atom* b, double distance)
 {
+	//The amino ID needs to be its place in the entire structure.
 	stringstream report;
-	report << a->aminoCode << "," << aa->aminoId << ",";
+	report << a->aminoCode << "," << aa->structureAaId << ",";
 	report << aa->Hydro << ",";
 	report << aa->Donicity << ",";
 	report << aa->Chemical << ",";
 	report << aa->Polar << ",";
-	report << b->aminoCode << "," << ab->aminoId << ",";
+	report << b->aminoCode << "," << ab->structureAaId << ",";
 	report << ab->Hydro << ",";
 	report << ab->Donicity << ",";
 	report << ab->Chemical << ",";

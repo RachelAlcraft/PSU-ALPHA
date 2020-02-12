@@ -80,8 +80,7 @@ RotateTo_Y_Is_Zero_AboutOrigin::RotateTo_Y_Is_Zero_AboutOrigin(GeoCoords A) :Geo
 	double magAO2 = pow(magAO, 2);
 	double magAB2 = pow(magAB, 2);
 	double costheta = ((2 * magAO2) - magAB2) / (2 * magAO2);
-	theta = acos(costheta);// in radians	
-	theta = PI/2; //TEST
+	theta = acos(costheta);// in radians		
 }
 GeoCoords RotateTo_Y_Is_Zero_AboutOrigin::applyTransformation(GeoCoords point)
 {
@@ -91,21 +90,42 @@ GeoCoords RotateTo_Y_Is_Zero_AboutOrigin::applyTransformation(GeoCoords point)
 	double magAO = AO.getMagnitude();
 	if (abs(magAO) > 0.0000001)
 	{
+		int Qfrom = 1;
+		if (point.y < 0 && point.x > 0)
+			Qfrom = 4;
+		else if (point.y < 0 && point.x < 0)
+			Qfrom = 3;
+		else if (point.y > 0 && point.x < 0)
+			Qfrom = 2;
 
 		//If this is now the hypotanuse of a right-angled triangle with the x-axis
 		double sinT = abs(point.y) / magAO;
 		double T = asin(sinT);
 		//Now we can subtract theta and we have the angle with the x-axis fort the lower side of the triangle (a diagram would help!)
 		double t = T - theta;
-		if ((point.y < 0 && point.x > 0) || (point.y > 0 && point.x < 0))
+		if (Qfrom == 2 || Qfrom == 4)
 			t = T + theta;
 		//The new x and y are the oints at the end of this new triangle
-		double newY = sin(t) * magAO;
-		if (point.y < 0)
-			newY *= 01;
+		//but what if we move into another quadrant?
+		int Qto = Qfrom;
+		if (t < 0 && Qfrom == 1)
+		{
+			t = theta - T;
+			Qto = 4;
+		}//this can't be the best way to do this?
+		if (t < 0 && Qfrom == 3)
+		{
+			t = theta - T;
+			Qto = 2;
+		}
+
+		double newY = sin(t) * magAO;		
 		double newX = cos(t) * magAO;
-		if (point.x < 0)
-			newX *= 01;
+		if (Qto == 3 || Qto == 4)
+			newY *= 1;
+		if (Qto == 2 || Qto == 3)
+			newX *= 1;
+				
 		return GeoCoords(newX, newY, point.z);
 	}
 	else//TODO haven't sorted out the quadrants when x is negative
@@ -128,33 +148,52 @@ RotateTo_Z_Is_Zero_AboutOrigin::RotateTo_Z_Is_Zero_AboutOrigin(GeoCoords A) :Geo
 	double magAO2 = pow(magAO, 2);
 	double magAB2 = pow(magAB, 2);
 	double costheta = ((2 * magAO2) - magAB2) / (2 * magAO2);
-	theta = acos(costheta);// in radians
-	theta = 0;
+	theta = acos(costheta);// in radians	
 }
 GeoCoords RotateTo_Z_Is_Zero_AboutOrigin::applyTransformation(GeoCoords point)
 {
 	//Triangle has 2 sides length a and a side length b
-	GeoCoords pNoZ(point.x, 0, point.z);
-	GeoVector AO(pNoZ, GeoCoords(0, 0, 0));
+	GeoCoords pNoY(point.x, 0, point.z);
+	GeoVector AO(pNoY, GeoCoords(0, 0, 0));
 	double magAO = AO.getMagnitude();
 	if (abs(magAO) > 0.0000001)
 	{
-
+		int Qfrom = 1;
+		if (point.z < 0 && point.x > 0)
+			Qfrom = 4;
+		else if (point.z < 0 && point.x < 0)
+			Qfrom = 3;
+		else if (point.z > 0 && point.x < 0)
+			Qfrom = 2;
 
 		//If this is now the hypotanuse of a right-angled triangle with the x-axis
 		double sinT = abs(point.z) / magAO;
 		double T = asin(sinT);
 		//Now we can subtract theta and we have the angle with the x-axis fort the lower side of the triangle (a diagram would help!)
 		double t = T - theta;
-		if ((point.z < 0 && point.x > 0) || (point.z > 0 && point.x < 0))
+		if (Qfrom == 2 || Qfrom == 4)
 			t = T + theta;
 		//The new x and y are the oints at the end of this new triangle
+		//but what if we move into another quadrant?
+		int Qto = Qfrom;
+		if (t < 0 && Qfrom == 1)
+		{
+			t = theta - T;
+			Qto = 4;
+		}//this can't be the best way to do this?
+		if (t < 0 && Qfrom == 3)
+		{
+			t = theta - T;
+			Qto = 2;
+		}
+
 		double newZ = sin(t) * magAO;
-		if (point.z < 0)
-			newZ *= 01;
 		double newX = cos(t) * magAO;
-		if (point.x < 0)
-			newX *= 01;
+		if (Qto == 3 || Qto == 4)
+			newZ *= 1;
+		if (Qto == 2 || Qto == 3)
+			newX *= 1;
+
 		return GeoCoords(newX, point.y, newZ);
 	}
 	else//TODO haven't sorted out the quadrants when x is negative

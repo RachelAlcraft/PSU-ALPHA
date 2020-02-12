@@ -95,7 +95,7 @@ void ProteinManager::addAtom(string pdbCode, string chainId, int aminoId, Atom* 
 }
 
 
-AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int aminoId, string aminoCode)
+AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int aminoId, string aminoCode, int& structure_id)
 {
 	stringstream id;
 	id << pdbCode << chainId << aminoId;
@@ -107,8 +107,9 @@ AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int
 		AminoAcid* aa = chain->getAminoAcid(aminoId);		
 		if (!aa)
 		{
-			AminoAcid* aa = new AminoAcid(pdbCode, chainId, aminoId, aminoCode);
-			chain->addAminoAcid(aa);
+			structure_id += 1;
+			AminoAcid* aa = new AminoAcid(pdbCode, chainId, aminoId, structure_id,aminoCode);
+			chain->addAminoAcid(aa);			
 			return aa;
 		}
 		else
@@ -206,7 +207,10 @@ map<int,Atom*>  ProteinManager::getAtomsMap(string pdbCode)
 		{
 			map<string, Atom*> atoms = biter->second->getAtoms();
 			for (map<string, Atom*>::iterator citer = atoms.begin(); citer != atoms.end(); ++citer)
-				mapatoms.insert(pair<int,Atom*>(citer->second->atomId,citer->second));
+			{
+				if (citer->second)
+					mapatoms.insert(pair<int, Atom*>(citer->second->atomId, citer->second));
+			}
 		}
 
 	}

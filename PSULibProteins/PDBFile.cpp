@@ -25,6 +25,7 @@ void PDBFile::loadData()
 {	
 	createFileVector();
 	Chain* currentChain = NULL;
+	int structureId = 0;
 	//AminoAcid* currentAmino = NULL;	
 	for (unsigned int i = 0; i < _file.size(); ++i)
 	{
@@ -41,7 +42,7 @@ void PDBFile::loadData()
 			int amino_id = atom->aminoId;
 			string chain = atom->chainId;
 			Chain* pchain = ProteinManager::getInstance()->getOrAddChain(pdbCode, chain);
-			AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, chain, amino_id, amino);
+			AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, chain, amino_id, amino, structureId);
 			ProteinManager::getInstance()->addAtom(pdbCode,chain,amino_id,atom);															
 		}
 	}
@@ -53,7 +54,8 @@ void PDBFile::applyTransformation(GeoTransformations* trans)
 	vector<Atom*> atoms = ProteinManager::getInstance()->getAtoms(pdbCode);
 	for (unsigned int i = 0; i < atoms.size(); ++i)
 	{
-		atoms[i]->applyTransformation(trans);
+		if (atoms[i])
+			atoms[i]->applyTransformation(trans);
 	}
 }
 
@@ -70,7 +72,7 @@ void PDBFile::printShiftedFile(string fileRoot)
 			int pos = line.find("ATOM");
 			if (pos == 0)
 			{
-				Atom* dummy = new Atom(pdbCode,line);
+				Atom* dummy = new Atom(pdbCode,line);				
 				int id = dummy->atomId;
 				map<int, Atom*>::iterator atom_iter = atoms.find(id);
 				if (atom_iter != atoms.end())

@@ -40,6 +40,7 @@ public:
 	//Unique
 	string dataId;
 	int aminoId;//unique id within the pdb file
+	int structureAaId;//this is within the structure within the chain (for contact maps)
 	string aminoCode; //the 3 letter code
 	AminoAcid* _aaPrev;
 	AminoAcid* _aaNext;
@@ -57,7 +58,7 @@ public:
 	//Child
 	//do the atoms need to be here or ok just in the manager?
 public:
-	AminoAcid(string pdb_code, string chain_id, int amino_id, string aminoCode);
+	AminoAcid(string pdb_code, string chain_id, int amino_id, int structure_id, string aminoCode);
 	~AminoAcid(); //responsible for the torsions
 	void createBonds(AminoAcid* aaP, AminoAcid* aaPP);
 	void add(Atom*);
