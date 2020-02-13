@@ -7,8 +7,8 @@
 
 ## This script can be used to set the names and paths for the subsequent reports ##
 
-RUNID = "1DFJ" 
-PDBFILE = "1DFJ"
+RUNID = "6SCJ" 
+PDBFILE = "6SCJ"
 ROOTPATH = "F:\\PSUA\\Output\\"
 
 ##################################################################################

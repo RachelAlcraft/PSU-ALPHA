@@ -7,15 +7,18 @@
 /*
 TODO
 CENTRE OF GEOMETRY
-I'm not convinved that a centre of geometry (which I've since discovered is the usual way) is any better.
-For a centre of geometry I would then want to find the furtherst point for an axis, and the furtherst othogonal
+I'm not convinved that a centre of geometry (which I've since discovered is the usual way) (average of all x y and z) is any better.
+For a centre of geometry I would then want to find the furtherst point for an axis, and then the furthest next othogonal
 for another, it seems it would come roughly to the same thing and since the centre of geometry has no topological meaning
 doesn't seem intrinsically better. I will experiment with this method and see what I get before deciding.
 
 INSIDE OUTSIDE
 For the problem of deciding what is inside and what is outside - there is no way of doing it without the bonds so the GeoCloud would have to become a connected cloud.
 Then it would involve finding no particles in certain directons away from bonds. Surface particles could be labelled with a value, and the distance from the surface 
-could be recorded for each particle.
+could be recorded for each particle. Or a density could be recorded for all points in space of surrounding particles, or surrounding bonds. Closer to the surface would have a lower density. 
+But inside a curve would have high density. Needs to be bonds.
+
+But in fact what actually does mark the inside and outside?
 */
 
 GeoCloud::GeoCloud()
