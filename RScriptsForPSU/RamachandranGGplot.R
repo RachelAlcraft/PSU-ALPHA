@@ -7,7 +7,7 @@ data <- read.csv(rama_report)
 
 #Phi/Psi
 ggplot(data, aes(x=Phi, y=Psi,color=Chemical)) + 
-  ggtitle(paste(PDBFILE,"Ramachandran by PSU:Alpha") + 
+  ggtitle(paste(PDBFILE,"Ramachandran by PSU:Alpha")) + 
   geom_point(size=4) + 
   scale_y_continuous(breaks = c(-180,-120,-60,0,60,120,180))+
   scale_x_continuous(breaks = c(-180,-120,-60,0,60,120,180))

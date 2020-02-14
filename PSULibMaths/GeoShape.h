@@ -19,7 +19,7 @@ public://lazy public interface TODO
 public:
 	GeoTripod() {}
 	GeoTripod(GeoCoords a, GeoCoords b, GeoCoords c);
-	GeoTransformations* getTransformation(GeoTripod tri, int orientation);
+	GeoTransformations* getTransformation(GeoTripod tri/*, int orientation*/);
 	GeoTripod operator = (GeoTripod const& obj);
 
 };

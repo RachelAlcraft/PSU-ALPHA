@@ -22,6 +22,11 @@ public:
 	virtual GeoCoords applyTransformation(GeoCoords point) = 0;
 protected:
 	const double PI = 3.141592653589793238463;
+protected:
+	void rotateFlatAboutOrigin(double& x, double& y, double theta);
+	void rotateFlatAboutOrigin1Quadrant(double& x, double& y, double theta);
+	double radians(double degrees);
+	double degrees(double radians);
 
 };
 
@@ -38,7 +43,7 @@ public:
 class RotateTo_Y_Is_Zero_AboutOrigin :public GeoTransform
 {
 private:
-	double theta; // in radians
+	double thetaDeg; // in degrees
 public:
 	RotateTo_Y_Is_Zero_AboutOrigin(GeoCoords p);
 	GeoCoords applyTransformation(GeoCoords point) override;
@@ -46,7 +51,7 @@ public:
 class RotateTo_Z_Is_Zero_AboutOrigin :public GeoTransform
 {
 private:
-	double theta; // in radians
+	double thetaDeg; // in degrees
 public:
 	RotateTo_Z_Is_Zero_AboutOrigin(GeoCoords p);
 	GeoCoords applyTransformation(GeoCoords point) override;
@@ -55,7 +60,7 @@ public:
 class RotateTo_Y_Is_Zero_OverX_Axis :public GeoTransform
 {
 private:
-	double theta; // in radians
+	double thetaDeg; // in degrees
 public:
 	RotateTo_Y_Is_Zero_OverX_Axis(GeoCoords p);
 	GeoCoords applyTransformation(GeoCoords point) override;

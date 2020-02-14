@@ -19,9 +19,9 @@ data <- read.csv(calpha_report_PPI)
 sub_data <- subset(data,Distance <  angstrom) 
 
 #CAlpha Distance Map
-ggplot(sub_data, aes(x=Chain1, y=Chain2,color=Hydro1)) + 
+ggplot(sub_data, aes(x=Chain1, y=Chain2,color=Amino1)) + 
   ggtitle(paste(PDBFILE,"C-Alpha Contact Map by PSU:Alpha A<",angstrom)) + 
-  labs(x = chain1, y=chain2, color="Hydrophobicity")+
+  labs(x = chain1, y=chain2, color="Amino Acid")+
   geom_point()  
 
 #CAlpha Heat Contact Map

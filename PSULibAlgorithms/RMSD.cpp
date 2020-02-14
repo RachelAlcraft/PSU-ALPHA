@@ -59,10 +59,8 @@ string RMSD::calculateRMSD() // this may be iteratively called from an optimise 
 		unsigned int hval = 0;
 		unsigned int ival = 0;
 		unsigned int jval = 0;
-		unsigned int kval = 0;
-		unsigned int orientation = 0;
-		unsigned int MAXITER = 2; //TESTING ONLY DO IT ONCE
-		unsigned int MAXORIENTATION = 2; // only once
+		unsigned int kval = 0;		
+		unsigned int MAXITER = 3; //TESTING ONLY DO IT ONCE		
 		for (unsigned int h = 1; h < MAXITER; ++h)
 		{
 			for (unsigned int i = 1; i < MAXITER; ++i)
@@ -70,28 +68,25 @@ string RMSD::calculateRMSD() // this may be iteratively called from an optimise 
 				for (unsigned int j = 1; j < MAXITER; ++j)
 				{
 					for (unsigned int k = 1; k < MAXITER; ++k)
-					{
-						for (unsigned int orient = 1; orient < MAXORIENTATION; ++orient)
+					{						
+						double rmsd = calculateOptimalRMSD(h, i, j, k);
+						ss << "Opt: h=" << h << " i=" << i << " j=" << j << " k=" << k << " rmsd=" << rmsd << "\n";
+						if (ival == 0 || rmsd < best)
 						{
-							double rmsd = calculateOptimalRMSD(h, i, j, k, orient);
-							ss << "Opt: h=" << h << " i=" << i << " j=" << j << " k=" << k << " orientation=" << orient << " rmsd=" << rmsd << "\n";
-							if (ival == 0 || rmsd < best)
-							{
-								hval = h;
-								ival = i;
-								jval = j;
-								kval = k;
-								orientation = orient;
-								best = rmsd;
-							}
-						}
+							hval = h;
+							ival = i;
+							jval = j;
+							kval = k;
+							//orientation = orient;
+							best = rmsd;
+						}						
 					}
 				}
 			}
 		}
 		
 		//So we have done a minimum optimisation and we will take the best, calculating it again TODO because I haven't saved it
-		double rmsd = calculateOptimalRMSD(hval,ival, jval,kval,orientation);		
+		double rmsd = calculateOptimalRMSD(hval,ival, jval,kval);		
 		ss << "Optimised report: RMSD Value=" << rmsd;
 	}
 	else
@@ -100,17 +95,18 @@ string RMSD::calculateRMSD() // this may be iteratively called from an optimise 
 	}
 	return ss.str();	
 }
-double RMSD::calculateOptimalRMSD(int h,int i, int j, int k, int orientation)
-{	
+double RMSD::calculateOptimalRMSD(int h,int i, int j, int k/*, int orientation*/)
+{
+	stringstream ss;
 	GeoTripod tri1, tri2;
 	_geo1.makeTripod(tri1,h, i); // 1 is the best solution
 	_geo2.makeTripod(tri2,j, k);// 1 is the best solution
 	//For now I am moving both structures onto the orgin to compare them as I have failed to move one on to the other :-( TODO I could just also go backwards but for now this will do
-	GeoTransformations* gt1 = tri1.getTransformation(tri1,orientation);	
-	GeoTransformations* gt2 = tri2.getTransformation(tri2, orientation);
+	GeoTransformations* gt1 = tri1.getTransformation(tri1/*,orientation*/);	
+	GeoTransformations* gt2 = tri2.getTransformation(tri2/*, orientation*/);
 	PDB1->applyTransformation(gt1);
 	PDB2->applyTransformation(gt2);
-	double val = calculateOneRMSD();	
+	double val = calculateOneRMSD();		
 	return val;
 }
 double RMSD::calculateOneRMSD() // this may be iteratively called from an optimise function and needs to be fast
