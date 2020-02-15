@@ -1,4 +1,5 @@
 #include "GeoShape.h"
+#include <sstream>
 
 GeoTripod::GeoTripod(GeoCoords anchor, GeoCoords axisFar, GeoCoords perpFar)
 {
@@ -24,4 +25,11 @@ GeoTripod GeoTripod::operator=(GeoTripod const& obj)
 	B = obj.B;
 	C = obj.C;
 	return (GeoTripod(A, B, C));
+}
+
+string GeoTripod::info()
+{
+	stringstream ss;
+	ss << "A=" << A.info() << " B=" << B.info() << " C=" << C.info();
+	return ss.str();;
 }

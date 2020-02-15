@@ -40,7 +40,7 @@ public:
 	void SetupCAlphaPairs();
 	string calculateRMSD();
 	double calculateOneRMSD();
-	double calculateOptimalRMSD(int h, int i, int j, int k/*, int orientation*/);
+	double calculateOptimalRMSD(int h, int i, int j, int k, string& report/*, int orientation*/);
 	string getAtomMatches();
 };
 

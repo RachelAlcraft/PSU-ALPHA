@@ -34,6 +34,7 @@ public:
 	double getDotProduct(GeoVector);
 	double getOrthogonalDistance(GeoCoords p);//shortest distance from p to the vector
 	double getMagnitude();
+	string info();
 
 
 };

@@ -47,20 +47,23 @@ void RMSD::SetupCAlphaPairs()
 
 
 
-string RMSD::calculateRMSD() // this may be iteratively called from an optimise function and needs to be fast
+string RMSD::calculateRMSD() 
 {
 	stringstream ss;
 	if (Optimise)
 	{
 		ss << "Optimised report\n";
-		ss << "Initial Value=" << calculateOneRMSD() << "\n";
+		ss << "Initial Value=" << calculateOneRMSD() << "\n";				
+		LogFile::getInstance()->writeMessage(ss.str());
 		//Dummy attempt at optimisation TODO ALSO TODO if any ever come back as 0 we can stop!
 		double best = 0;
 		unsigned int hval = 0;
 		unsigned int ival = 0;
 		unsigned int jval = 0;
 		unsigned int kval = 0;		
-		unsigned int MAXITER = 3; //TESTING ONLY DO IT ONCE		
+		unsigned int MAXITER = 10;//should be config TODO
+		unsigned int count = 0;
+		double total = pow(MAXITER, 4);
 		for (unsigned int h = 1; h < MAXITER; ++h)
 		{
 			for (unsigned int i = 1; i < MAXITER; ++i)
@@ -68,9 +71,17 @@ string RMSD::calculateRMSD() // this may be iteratively called from an optimise 
 				for (unsigned int j = 1; j < MAXITER; ++j)
 				{
 					for (unsigned int k = 1; k < MAXITER; ++k)
-					{						
-						double rmsd = calculateOptimalRMSD(h, i, j, k);
-						ss << "Opt: h=" << h << " i=" << i << " j=" << j << " k=" << k << " rmsd=" << rmsd << "\n";
+					{
+						++count;
+						if (count % 1000 == 0)
+						{
+							stringstream ss;
+							ss << "RMSD Opt " << count << "/" << total;
+							LogFile::getInstance()->writeMessage(ss.str());
+						}
+						string report;
+						double rmsd = calculateOptimalRMSD(h, i, j, k,report);
+						ss << report << "\n\n";
 						if (ival == 0 || rmsd < best)
 						{
 							hval = h;
@@ -86,8 +97,11 @@ string RMSD::calculateRMSD() // this may be iteratively called from an optimise 
 		}
 		
 		//So we have done a minimum optimisation and we will take the best, calculating it again TODO because I haven't saved it
-		double rmsd = calculateOptimalRMSD(hval,ival, jval,kval);		
-		ss << "Optimised report: RMSD Value=" << rmsd;
+		string report;
+		ss << "Best RMSD Chosen as :\n";
+		double rmsd = calculateOptimalRMSD(hval,ival, jval,kval,report);		
+		ss << report << "\n";
+		ss << "Optimised report: RMSD Value=" << rmsd << "\n";
 	}
 	else
 	{
@@ -95,18 +109,31 @@ string RMSD::calculateRMSD() // this may be iteratively called from an optimise 
 	}
 	return ss.str();	
 }
-double RMSD::calculateOptimalRMSD(int h,int i, int j, int k/*, int orientation*/)
+double RMSD::calculateOptimalRMSD(int h,int i, int j, int k, string& report/*, int orientation*/)
 {
 	stringstream ss;
+	ss << "Optimising for " << h << ":" << i << ":" << j << ":" << k << "\n";
 	GeoTripod tri1, tri2;
 	_geo1.makeTripod(tri1,h, i); // 1 is the best solution
 	_geo2.makeTripod(tri2,j, k);// 1 is the best solution
+	ss << "Tripod 1=" << tri1.info() << "\n";
+	ss << "Tripod 2=" << tri2.info() << "\n";
+	
 	//For now I am moving both structures onto the orgin to compare them as I have failed to move one on to the other :-( TODO I could just also go backwards but for now this will do
 	GeoTransformations* gt1 = tri1.getTransformation(tri1/*,orientation*/);	
 	GeoTransformations* gt2 = tri2.getTransformation(tri2/*, orientation*/);
+
+	ss << "Transformation 1=\n" << gt1->info();
+	ss << "Transformation 2=\n" << gt2->info();
+
 	PDB1->applyTransformation(gt1);
-	PDB2->applyTransformation(gt2);
+	PDB2->applyTransformation(gt2);	
+	
 	double val = calculateOneRMSD();		
+	ss << "RMSD Value = " << val;	
+	delete gt1;
+	delete gt2;
+	report= ss.str();
 	return val;
 }
 double RMSD::calculateOneRMSD() // this may be iteratively called from an optimise function and needs to be fast
@@ -132,4 +159,5 @@ string RMSD::getAtomMatches()
 		ss << _calphaPairs[i].a1->getDescription() << ":" << _calphaPairs[i].a2->getDescription() << "\n";;
 	return ss.str();
 }
+
 

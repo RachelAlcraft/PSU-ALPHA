@@ -20,13 +20,11 @@ public:
 	//virtual GeoCoords applyTransformation(GeoCoords point) { return GeoCoords(0, 0, 0); }; //won't let me =0 it ??? TODO
 	GeoTransform() {}
 	virtual GeoCoords applyTransformation(GeoCoords point) = 0;
+	virtual string info() = 0;
 protected:
 	const double PI = 3.141592653589793238463;
 protected:
-	void rotateFlatAboutOrigin(double& x, double& y, double theta);
-	void rotateFlatAboutOrigin1Quadrant(double& x, double& y, double theta);
-	double radians(double degrees);
-	double degrees(double radians);
+
 
 };
 
@@ -38,23 +36,33 @@ private:
 public:
 	TranslateRelativeToOrigin(GeoCoords p);
 	GeoCoords applyTransformation(GeoCoords point) override;
+	string info() override;
 };
 
-class RotateTo_Y_Is_Zero_AboutOrigin :public GeoTransform
+class RotationAboutOrigin :public GeoTransform
 {
 private:
-	double thetaDeg; // in degrees
+	double _thetaDeg; // in degrees#
+	string _flatPlane;
+protected:
+	void rotateFlatAboutOrigin(double& x, double& y, double theta);
+	void rotateFlatAboutOrigin1Quadrant(double& x, double& y, double theta);
+	double findFlatRotation(double x, double y);
+	double radians(double degrees);
+	double degrees(double radians);
 public:
-	RotateTo_Y_Is_Zero_AboutOrigin(GeoCoords p);
+	RotationAboutOrigin(GeoCoords p, string flatPlane);
 	GeoCoords applyTransformation(GeoCoords point) override;
+	string info() override;
 };
-class RotateTo_Z_Is_Zero_AboutOrigin :public GeoTransform
+/*class RotateTo_Z_Is_Zero_AboutOrigin :public GeoTransform
 {
 private:
 	double thetaDeg; // in degrees
 public:
 	RotateTo_Z_Is_Zero_AboutOrigin(GeoCoords p);
 	GeoCoords applyTransformation(GeoCoords point) override;
+	string info() override;
 };
 
 class RotateTo_Y_Is_Zero_OverX_Axis :public GeoTransform
@@ -64,7 +72,8 @@ private:
 public:
 	RotateTo_Y_Is_Zero_OverX_Axis(GeoCoords p);
 	GeoCoords applyTransformation(GeoCoords point) override;
-};
+	string info() override;
+};*/
 
 
 class GeoTransformations
@@ -79,6 +88,7 @@ public:
 	~GeoTransformations();
 	GeoTransformations(GeoCoords a, GeoCoords b, GeoCoords c);
 	GeoCoords applyTransformation(GeoCoords point);
+	string info();
 private:	
 };
 

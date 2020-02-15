@@ -129,7 +129,13 @@ void PDBFile::createFileVector()
 	{
 		string line = "";
 		while (getline(myfile, line))
-			_file.push_back(line);
+		{
+			//decide to delete some data I am not handling TODO!
+			int pos = line.find("HETATM");
+			if (pos < 0)
+				_file.push_back(line);
+
+		}
 	}
 }
 

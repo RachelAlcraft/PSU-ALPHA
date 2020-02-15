@@ -66,10 +66,10 @@ void GeoCloud::makeTripod(GeoTripod& geo, unsigned int best1, unsigned int best2
 		}
 	}
 
-	if (farmag.size() > 0)
+	if (farmag.size() >= best1)
 	{		
-		_furthestPoints1.first = farcoords[0].first;
-		_furthestPoints1.second = farcoords[0].second;
+		_furthestPoints1.first = farcoords[best1-1].first;
+		_furthestPoints1.second = farcoords[best1-1].second;
 	}
 
 	//Then we need to find the furtherst piunts on a distance orthogonal at some rotation
@@ -103,7 +103,8 @@ void GeoCloud::makeTripod(GeoTripod& geo, unsigned int best1, unsigned int best2
 			farcoord2.pop_back();
 		}		
 	}
-	_furthestPoint2 = farcoord2[0];
+	if (farcoord2.size() >= best2)
+		_furthestPoint2 = farcoord2[best2-1];
 	//This should fully define what we need for a transformation for this cloud. We have an axis along the furthyest 2 pointsd
 	// Orthogonal to that we have the next furthest point
 	// Our transformations of clouds will match anchor points along the axis and then rotate to the plane

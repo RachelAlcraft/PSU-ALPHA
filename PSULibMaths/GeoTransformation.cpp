@@ -35,17 +35,17 @@ GeoTransformations::GeoTransformations(GeoCoords A, GeoCoords B, GeoCoords C)
 	C = t1->applyTransformation(C);
 	transformations.push_back(t1);
 
-	RotateTo_Y_Is_Zero_AboutOrigin* t2 = new RotateTo_Y_Is_Zero_AboutOrigin(B);
+	RotationAboutOrigin* t2 = new RotationAboutOrigin(B,"XY");
 	B = t2->applyTransformation(B);
 	C = t2->applyTransformation(C);
 	transformations.push_back(t2);
 
-	RotateTo_Z_Is_Zero_AboutOrigin* t3 = new RotateTo_Z_Is_Zero_AboutOrigin(B);
+	RotationAboutOrigin* t3 = new RotationAboutOrigin(B,"YZ");
 	B = t3->applyTransformation(B);
 	C = t3->applyTransformation(C);
 	transformations.push_back(t3);
 
-	RotateTo_Y_Is_Zero_OverX_Axis* t4 = new RotateTo_Y_Is_Zero_OverX_Axis(C);
+	RotationAboutOrigin* t4 = new RotationAboutOrigin(C,"XZ");
 	C = t4->applyTransformation(C);
 	transformations.push_back(t4);	
 }
@@ -60,6 +60,16 @@ GeoCoords GeoTransformations::applyTransformation(GeoCoords point)
 	return point;
 }
 
+string GeoTransformations::info()
+{
+	stringstream ss;	
+	for (unsigned int i = 0; i < transformations.size(); ++i)
+	{
+		ss << transformations[i]->info() << "\n";
+	}	
+	return ss.str();
+}
+
 //TRANSLATION///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 TranslateRelativeToOrigin::TranslateRelativeToOrigin(GeoCoords A):GeoTransform()
 {
@@ -67,106 +77,51 @@ TranslateRelativeToOrigin::TranslateRelativeToOrigin(GeoCoords A):GeoTransform()
 	V = GeoVector(A, GeoCoords(0, 0, 0));
 	//Log this
 	stringstream ss;
-	ss << "Rotate to origin x=" << A.x << " y=" << A.y << " z=" << A.z;
-	LogFile::getInstance()->writeMessage(ss.str());
+	//ss << "Rotate to origin x=" << A.x << " y=" << A.y << " z=" << A.z;
+	//LogFile::getInstance()->writeMessage(ss.str());
 }
 GeoCoords TranslateRelativeToOrigin::applyTransformation(GeoCoords point)
 {	
 	return V.movePoint(point);
 }
+string TranslateRelativeToOrigin::info()
+{
+	stringstream ss;
+	ss << "Translate:" << V.info();
+	return ss.str();
+}
 //ROTATION ABOUT THE ORIGIN////////////////////////////////////////////////////////////////////////////////////////////////////////////
-RotateTo_Y_Is_Zero_AboutOrigin::RotateTo_Y_Is_Zero_AboutOrigin(GeoCoords A) :GeoTransform()
+RotationAboutOrigin::RotationAboutOrigin(GeoCoords A, string flatPlane) :GeoTransform()
 {
-	//Z will remain unchanged so make a temporary no z vector
-	GeoCoords pNoZ(A.x, A.y, 0);
-	//We are mapping from A to 0, then 0 to B, so we have an iscoseles triangle |AO|==|OB| and AB
-	GeoVector AO(pNoZ, GeoCoords(0, 0, 0));
-	double magAO = AO.getMagnitude();
-	GeoVector OB(magAO,0,0);//moving into +ve quadrant
-	GeoVector AB = OB - AO;
-	double magAB = AB.getMagnitude();
-	//use cosine rule
-	//Find theta with the cosine rule	
-	double magAO2 = pow(magAO, 2);
-	double magAB2 = pow(magAB, 2);
-	double costheta = ((2 * magAO2) - magAB2) / (2 * magAO2);
-	double theta = acos(costheta);// in radians		
-	thetaDeg = degrees(theta);
-	//Log this
+	_flatPlane = flatPlane;	
+	if (_flatPlane == "XY")
+		_thetaDeg = findFlatRotation(A.x, A.y);
+	else if (_flatPlane == "YZ")
+		_thetaDeg = findFlatRotation(A.y, A.z);
+	else if (_flatPlane == "ZX")
+		_thetaDeg = findFlatRotation(A.z, A.x);
+			
+}
+GeoCoords RotationAboutOrigin::applyTransformation(GeoCoords point)
+{
+	GeoCoords pointRotated = point;	
+	if (_flatPlane == "XY")
+		rotateFlatAboutOrigin(pointRotated.x, pointRotated.y, _thetaDeg);
+	else if (_flatPlane == "YZ")
+		rotateFlatAboutOrigin(pointRotated.y, pointRotated.z, _thetaDeg);
+	else if (_flatPlane == "ZX")
+		rotateFlatAboutOrigin(pointRotated.z, pointRotated.x, _thetaDeg);
+		
+	return pointRotated;	
+}
+string RotationAboutOrigin::info()
+{
 	stringstream ss;
-	ss << "Rotate to y=0 Theta = " << thetaDeg;
-	LogFile::getInstance()->writeMessage(ss.str());
-}
-GeoCoords RotateTo_Y_Is_Zero_AboutOrigin::applyTransformation(GeoCoords point)
-{
-	GeoCoords pointRotated = point;
-	rotateFlatAboutOrigin(pointRotated.x, pointRotated.y, thetaDeg);
-	return pointRotated;
-
-	
-}
-RotateTo_Z_Is_Zero_AboutOrigin::RotateTo_Z_Is_Zero_AboutOrigin(GeoCoords A) :GeoTransform()
-{
-	//Z will remain unchanged so make a temporary no z vector
-	GeoCoords pNoZ(A.x, 0, A.z);
-	//We are mapping from A to 0, then 0 to B, so we have an iscoseles triangle |AO|==|OB| and AB
-	GeoVector AO(pNoZ, GeoCoords(0, 0, 0));
-	double magAO = AO.getMagnitude();
-	GeoVector OB(magAO, 0, 0);//moving into +ve quadrant
-	GeoVector AB = OB - AO;
-	double magAB = AB.getMagnitude();
-	//use cosine rule
-	//Find theta with the cosine rule	
-	double magAO2 = pow(magAO, 2);
-	double magAB2 = pow(magAB, 2);
-	double costheta = ((2 * magAO2) - magAB2) / (2 * magAO2);
-	double theta = acos(costheta);// in radians	
-	thetaDeg = degrees(theta);
-	//Log this
-	stringstream ss;
-	ss << "Rotate to z=0 Theta = " << thetaDeg;
-	LogFile::getInstance()->writeMessage(ss.str());
-}
-GeoCoords RotateTo_Z_Is_Zero_AboutOrigin::applyTransformation(GeoCoords point)
-{
-	GeoCoords pointRotated = point;
-	rotateFlatAboutOrigin(pointRotated.x, pointRotated.z, thetaDeg);
-	return pointRotated;
+	ss << "Rotate " << _flatPlane <<  ":" << _thetaDeg;
+	return ss.str();
 }
 
-//ROTATION OVER THE X-Axis////////////////////////////////////////////////////////////////////////////////////////////////////////////
-RotateTo_Y_Is_Zero_OverX_Axis::RotateTo_Y_Is_Zero_OverX_Axis(GeoCoords A) :GeoTransform()
-{
-	//X will remain unchanged so make a temporary no X vector
-	GeoCoords pNoX(0, A.y, A.z);
-	//We are mapping from A to 0, then 0 to B, so we have an iscoseles triangle |AO|==|OB| and AB
-	GeoVector AO(pNoX, GeoCoords(0, 0, 0));
-	double magAO = AO.getMagnitude();
-	GeoVector OB(magAO, 0, 0);//moving into +ve quadrant
-	GeoVector AB = OB - AO;
-	double magAB = AB.getMagnitude();
-	//use cosine rule
-	//Find theta with the cosine rule	
-	double magAO2 = pow(magAO, 2);
-	double magAB2 = pow(magAB, 2);
-	double costheta = ((2 * magAO2) - magAB2) / (2 * magAO2);
-	double theta = acos(costheta);// in radians		
-	thetaDeg = degrees(theta);
-	//Log this
-	stringstream ss;
-	ss << "Rotate to x=0 Theta = " << thetaDeg;
-	LogFile::getInstance()->writeMessage(ss.str());
-}
-GeoCoords RotateTo_Y_Is_Zero_OverX_Axis::applyTransformation(GeoCoords point)
-{
-	GeoCoords pointRotated = point;
-	rotateFlatAboutOrigin(pointRotated.x, pointRotated.y, thetaDeg);
-	return pointRotated;
-}
-
-
-
-void GeoTransform::rotateFlatAboutOrigin(double& x, double& y, double Theta)
+void RotationAboutOrigin::rotateFlatAboutOrigin(double& x, double& y, double Theta)
 {
 	double angleToApply = Theta;
 	double angleLeft = Theta;
@@ -198,7 +153,7 @@ void GeoTransform::rotateFlatAboutOrigin(double& x, double& y, double Theta)
 		}
 	}
 }
-void GeoTransform::rotateFlatAboutOrigin1Quadrant(double& x, double& y, double thetaDeg)
+void RotationAboutOrigin::rotateFlatAboutOrigin1Quadrant(double& x, double& y, double thetaDeg)
 {//We are guaranteed to move a maximum of 90% so no quadrant confusion
 	//Convert to radians
 	double Theta = radians(thetaDeg);
@@ -273,16 +228,53 @@ void GeoTransform::rotateFlatAboutOrigin1Quadrant(double& x, double& y, double t
 	}	
 }
 
-double GeoTransform::radians(double degrees)
+double RotationAboutOrigin::radians(double degrees)
 {
 	return (degrees * PI) / 180;
 
 }
-double GeoTransform::degrees(double radians)
+double RotationAboutOrigin::degrees(double radians)
 {
 	return (radians * 180) / PI;
 }
+double RotationAboutOrigin::findFlatRotation(double x, double y)
+{
+	
+	GeoCoords pNoX(x, y, 0);
+	//We are mapping from A to 0, then 0 to B, so we have an iscoseles triangle |AO|==|OB| and AB	
+	int Qfrom = 1;
+	if (y < 0 && x > 0)
+		Qfrom = 4;
+	else if (y < 0 && x < 0)
+		Qfrom = 3;
+	else if (y > 0 && x < 0)
+		Qfrom = 2;
 
+	GeoVector AO(pNoX, GeoCoords(0, 0, 0));
+	double magAO = AO.getMagnitude();
+	if (abs(magAO) > 0.0000001)//otherwise we are not moving anywhere
+	{
+		GeoVector OB(magAO, 0, 0);//moving into +ve quadrant
+		GeoVector AB = OB + AO;
+		double magAB = AB.getMagnitude();
+		//use cosine rule
+		//Find theta with the cosine rule	
+		double magAO2 = pow(magAO, 2);
+		double magAB2 = pow(magAB, 2);
+		double costheta = ((2 * magAO2) - magAB2) / (2 * magAO2);
+		double theta = acos(costheta);// in radians		
+		double thetaDeg = degrees(theta);
+		if (Qfrom == 4 || Qfrom == 3)
+			thetaDeg = 360 - thetaDeg;
+		//Log this
+		//stringstream ss;
+		//ss << "Rotate to " << _flatPlane << " Theta = " << thetaDeg;
+		//LogFile::getInstance()->writeMessage(ss.str());
+		return thetaDeg;
+	}
+	else
+		return 0;
+}
 
 
 

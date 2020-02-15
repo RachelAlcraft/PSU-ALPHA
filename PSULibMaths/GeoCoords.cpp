@@ -1,10 +1,18 @@
 #include "GeoCoords.h"
+#include <sstream>
 
 GeoCoords::GeoCoords()
 {
 	x = 0;
 	y = 0;
 	z = 0;
+}
+
+string GeoCoords::info()
+{
+	stringstream ss;
+	ss << "(" << x << "," << y << "," << z << ")";
+	return ss.str();
 }
 
 

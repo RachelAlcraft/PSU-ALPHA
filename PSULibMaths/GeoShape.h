@@ -2,6 +2,7 @@
 #include <GeoTransformation.h>
 #include <GeoCoords.h>
 
+using namespace std;
 
 
 class GeoCuboid
@@ -21,5 +22,6 @@ public:
 	GeoTripod(GeoCoords a, GeoCoords b, GeoCoords c);
 	GeoTransformations* getTransformation(GeoTripod tri/*, int orientation*/);
 	GeoTripod operator = (GeoTripod const& obj);
+	string info();
 
 };

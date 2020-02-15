@@ -1,5 +1,6 @@
 #include "GeoVector.h"
 #include <math.h>
+#include <sstream>
 
 GeoVector::GeoVector()
 {
@@ -158,4 +159,11 @@ double GeoVector::getMagnitude()
 	GeoVector A = *this;
 	double mag = (A.x * A.x) + (A.y * A.y) + (A.z * A.z);
 	return sqrt(mag);
+}
+
+string GeoVector::info()
+{
+	stringstream ss;
+	ss << "(" << x << "," << y << "," << z << ")";
+	return ss.str();
 }

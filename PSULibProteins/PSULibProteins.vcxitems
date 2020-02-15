@@ -18,6 +18,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Atom.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Chain.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)FASTAFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)HetAtom.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)PDBFile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Torsion.cpp" />
   </ItemGroup>
@@ -26,6 +27,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Atom.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Chain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)FASTAFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)HetAtom.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)PDBFile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Torsion.h" />
   </ItemGroup>

@@ -1,5 +1,9 @@
 #pragma once
 //#include <GeoTransformation.h>
+
+#include <string>
+
+using namespace std;
 class GeoCoords
 {
 
@@ -11,6 +15,7 @@ public:
 public:
 	GeoCoords(double, double, double);
 	GeoCoords();
+	string info();
 
 
 };
