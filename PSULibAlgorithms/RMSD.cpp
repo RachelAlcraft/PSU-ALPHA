@@ -64,16 +64,17 @@ string RMSD::calculateRMSD()
 		unsigned int ival = 0;
 		unsigned int jval = 0;
 		unsigned int kval = 0;		
-		unsigned int MAXITER = 30;//should be config TODO
+		unsigned int MAXITER1 = 501;//should be config TODO
+		unsigned int MAXITER2 = 3;//should be config TODO
 		unsigned int count = 0;
-		double total = pow(MAXITER, 4);
-		for (unsigned int h = 1; h < MAXITER; ++h)
+		double total = pow(MAXITER1-1, 2) * pow(MAXITER2-1, 2);
+		for (unsigned int h = 1; h < MAXITER1; ++h)
 		{
-			for (unsigned int i = 1; i < MAXITER; ++i)
+			for (unsigned int i = 1; i < MAXITER2; ++i)
 			{
-				for (unsigned int j = 1; j < MAXITER; ++j)
+				for (unsigned int j = 1; j < MAXITER1; ++j)
 				{
-					for (unsigned int k = 1; k < MAXITER; ++k)
+					for (unsigned int k = 1; k < MAXITER2; ++k)
 					{
 						++count;
 						if (count % 1000 == 0)
