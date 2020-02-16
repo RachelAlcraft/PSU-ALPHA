@@ -17,6 +17,7 @@ public://lazy public interface TODO
 	GeoCoords A;
 	GeoCoords B;
 	GeoCoords C;
+	bool Init;
 public:
 	GeoTripod() {}
 	GeoTripod(GeoCoords a, GeoCoords b, GeoCoords c);

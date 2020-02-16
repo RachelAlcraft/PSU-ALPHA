@@ -3,6 +3,7 @@
 #include <GeoVector.h>
 #include <set>
 #include <map>
+#include <LogFile.h>
 
 /*
 TODO
@@ -30,7 +31,91 @@ void GeoCloud::addCoords(GeoCoords coord)
 	_coords.push_back(coord);
 }
 
+void GeoCloud::createDistances()
+{
+	//First we need to do a distance map and find the furthest points
+	LogFile::getInstance()->writeMessage("Creating GeoCloud distance map");
+	_farDistance.clear();
+	_farCoords.clear();
+	_perpDistance.clear();
+	_perpCoords.clear();
+
+	for (unsigned int i = 0; i < _coords.size(); ++i)
+	{
+		for (unsigned int j = i + 1; j < _coords.size(); ++j)
+		{
+			GeoVector gv(_coords[i], _coords[j]);
+			double mag = gv.getMagnitude();			
+			bool inserted = false;
+			for (unsigned int k = 0; k < _farDistance.size(); ++k)
+			{
+				double dd = _farDistance[k];
+				if (mag > dd && !inserted)
+				{//biggest at the front					
+					_farDistance.insert(_farDistance.begin() + k, mag);
+					_farCoords.insert(_farCoords.begin() + k, pair<GeoCoords, GeoCoords>(_coords[i], _coords[j]));
+					inserted = true;
+				}
+			}
+			if (!inserted)
+			{
+				_farDistance.push_back(mag);
+				_farCoords.push_back(pair<GeoCoords, GeoCoords>(_coords[i], _coords[j]));
+			}			
+		}
+	}
+	
+	//Then we need to find the furtherst points on a distance orthogonal at some rotation
+	for (unsigned int i = 0; i < _farCoords.size(); ++i)
+	{
+		GeoVector ortho1(_farCoords[i].first, _farCoords[i].second);
+
+		vector<double> vDistance;
+		vector<GeoCoords> vCoords;
+
+		//we go through all the points and find the one that is furtherst from this vector to make the next orthoginal vector		
+		double furthest2 = 0;
+		for (unsigned int i = 0; i < _coords.size(); ++i)
+		{
+			double distance = ortho1.getOrthogonalDistance(_coords[i]);
+			bool inserted = false;
+			for (unsigned int j = 0; j < vDistance.size(); ++j)
+			{
+				double dd = vDistance[j];
+				if (distance > dd && !inserted)
+				{//biggest at the front
+					vDistance.insert(vDistance.begin() + j, distance);
+					vCoords.insert(vCoords.begin() + j, _coords[i]);
+					inserted = true;
+				}
+			}
+			if (!inserted)
+			{
+				vDistance.push_back(distance);
+				vCoords.push_back(_coords[i]);
+			}		
+		}
+		_perpCoords.push_back(vCoords);
+		_perpDistance.push_back(vDistance);
+	}		
+}
+
 void GeoCloud::makeTripod(GeoTripod& geo, unsigned int best1, unsigned int best2)
+{
+	if (_farCoords.size() >= best1 && _perpCoords.size() >= best2)
+	{
+		geo.A = _farCoords[best1].first;
+		geo.B = _farCoords[best1].second;
+		geo.C = _perpCoords[best1][best2];
+		geo.Init = true;
+	}
+	else
+	{
+		geo.Init = false;
+	}
+}
+
+/*void GeoCloud::makeTripod(GeoTripod& geo, unsigned int best1, unsigned int best2)
 {
 	//First we need to do a distance map and find the furthest points :-(
 	vector<double> farmag;
@@ -111,4 +196,4 @@ void GeoCloud::makeTripod(GeoTripod& geo, unsigned int best1, unsigned int best2
 	geo.A = _furthestPoints1.first;
 	geo.B = _furthestPoints1.second;
 	geo.C = _furthestPoint2;
-}
+}*/

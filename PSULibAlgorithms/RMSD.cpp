@@ -43,6 +43,9 @@ void RMSD::SetupCAlphaPairs()
 	{//use alignment file to match off
 
 	}
+	//Having set up CAlpha pairs we can now calculate the internal distances of each GeoCloud
+	_geo1.createDistances();
+	_geo2.createDistances();
 }
 
 
@@ -80,17 +83,24 @@ string RMSD::calculateRMSD()
 							LogFile::getInstance()->writeMessage(ss.str());
 						}
 						string report;
-						double rmsd = calculateOptimalRMSD(h, i, j, k,report);
-						ss << report << "\n\n";
-						if (ival == 0 || rmsd < best)
+						double rmsd = calculateOptimalRMSD(h, i, j, k,report); // -1 is an invalid return value
+						if (rmsd >= 0)
 						{
-							hval = h;
-							ival = i;
-							jval = j;
-							kval = k;
-							//orientation = orient;
-							best = rmsd;
-						}						
+							ss << report << "\n\n";
+							if (ival == 0 || rmsd < best)
+							{
+								hval = h;
+								ival = i;
+								jval = j;
+								kval = k;
+								//orientation = orient;
+								best = rmsd;
+							}
+						}
+						else
+						{
+							ss << "Invalid at " << h <<","<< i<<"," << j<<"," << k  << "\n\n";
+						}
 					}
 				}
 			}
@@ -114,27 +124,35 @@ double RMSD::calculateOptimalRMSD(int h,int i, int j, int k, string& report/*, i
 	stringstream ss;
 	ss << "Optimising for " << h << ":" << i << ":" << j << ":" << k << "\n";
 	GeoTripod tri1, tri2;
-	_geo1.makeTripod(tri1,h, i); // 1 is the best solution
-	_geo2.makeTripod(tri2,j, k);// 1 is the best solution
-	ss << "Tripod 1=" << tri1.info() << "\n";
-	ss << "Tripod 2=" << tri2.info() << "\n";
-	
-	//For now I am moving both structures onto the orgin to compare them as I have failed to move one on to the other :-( TODO I could just also go backwards but for now this will do
-	GeoTransformations* gt1 = tri1.getTransformation(tri1/*,orientation*/);	
-	GeoTransformations* gt2 = tri2.getTransformation(tri2/*, orientation*/);
+	_geo1.makeTripod(tri1,h, i);
+	_geo2.makeTripod(tri2,j, k);
+	if (tri1.Init && tri2.Init)
+	{
+		ss << "Tripod 1=" << tri1.info() << "\n";
+		ss << "Tripod 2=" << tri2.info() << "\n";
 
-	ss << "Transformation 1=\n" << gt1->info();
-	ss << "Transformation 2=\n" << gt2->info();
+		//For now I am moving both structures onto the orgin to compare them as I have failed to move one on to the other :-( TODO I could just also go backwards but for now this will do
+		GeoTransformations* gt1 = tri1.getTransformation(tri1/*,orientation*/);
+		GeoTransformations* gt2 = tri2.getTransformation(tri2/*, orientation*/);
 
-	PDB1->applyTransformation(gt1);
-	PDB2->applyTransformation(gt2);	
-	
-	double val = calculateOneRMSD();		
-	ss << "RMSD Value = " << val;	
-	delete gt1;
-	delete gt2;
-	report= ss.str();
-	return val;
+		ss << "Transformation 1=\n" << gt1->info();
+		ss << "Transformation 2=\n" << gt2->info();
+
+		PDB1->applyTransformation(gt1);
+		PDB2->applyTransformation(gt2);
+
+		double val = calculateOneRMSD();
+		ss << "RMSD Value = " << val;
+		delete gt1;
+		delete gt2;
+		report = ss.str();
+		return val;
+	}
+	else
+	{
+		LogFile::getInstance()->writeMessage("RMSD Opt, invalid tripod");
+		return -1;
+	}
 }
 double RMSD::calculateOneRMSD() // this may be iteratively called from an optimise function and needs to be fast
 {			
