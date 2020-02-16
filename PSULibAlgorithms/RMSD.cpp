@@ -64,7 +64,7 @@ string RMSD::calculateRMSD()
 		unsigned int ival = 0;
 		unsigned int jval = 0;
 		unsigned int kval = 0;		
-		unsigned int MAXITER = 10;//should be config TODO
+		unsigned int MAXITER = 30;//should be config TODO
 		unsigned int count = 0;
 		double total = pow(MAXITER, 4);
 		for (unsigned int h = 1; h < MAXITER; ++h)

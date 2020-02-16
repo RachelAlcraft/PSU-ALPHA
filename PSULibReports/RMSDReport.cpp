@@ -1,6 +1,7 @@
 #include "RMSDReport.h"
 #include <sstream>
 #include <fstream>
+#include <LogFile.h>
 
 
 void RMSDReport::printReport(RMSD* rmsd, string fileName, bool optimised, string fileroot)
@@ -22,4 +23,5 @@ void RMSDReport::printReport(RMSD* rmsd, string fileName, bool optimised, string
 		rmsd->PDB1->printShiftedFile(fileroot);
 		rmsd->PDB2->printShiftedFile(fileroot);
 	}
+	LogFile::getInstance()->writeMessage("RMSD Optimised report printed to " + fileroot);
 }

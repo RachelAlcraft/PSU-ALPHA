@@ -125,7 +125,9 @@ int main()
 			}
 
 			
-		}		
+		}
+
+		LogFile::getInstance()->writeMessage("########### PSU-Alpha concluded ##############");
 	}
 	else
 	{
