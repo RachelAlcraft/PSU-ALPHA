@@ -132,6 +132,16 @@ vector<Atom*> AminoAcid::atomsFromString(string atomstring)
 
 string AminoAcid::getSS()
 {
+	/*
+	A right-handed helix (inc. aR and 3-10 )
+	B ideal b-strand, parallel and anti-parallel b-sheet 
+	P named after the polyproline helix, but is also a
+	common b-strand conformation )
+	L left-handed ?-helix 
+	G left-handed glycine ‘helix’ 
+	E extended conformation of glycine 
+	From MSc Bioinformatics Birkbeck, 2020 Structural Bioinformatics module
+	*/
 	//Find the secondary structure on the ramachandran plot based on simple rules
 	string ss = "U";
 	if (_torsion)
