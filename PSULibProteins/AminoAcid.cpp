@@ -129,3 +129,36 @@ vector<Atom*> AminoAcid::atomsFromString(string atomstring)
 	else
 		return vector<Atom*>();
 }
+
+string AminoAcid::getSS()
+{
+	//Find the secondary structure on the ramachandran plot based on simple rules
+	string ss = "U";
+	if (_torsion)
+	{
+		double phi = _torsion->getPhi();
+		double psi = _torsion->getPsi();
+
+		if (phi <= -90 && psi >= 60)
+			ss = "B";
+		else if (phi < -20 && phi >= -90 && psi >= 60)
+			ss = "P";
+		else if (phi <= 0 && psi >= -90 && psi <= 60)
+			ss = "A";
+		else if (phi <= -90 && psi >= -180 && psi <= -145)
+			ss = "B";
+		else if (phi <= -50 && phi >= -90 && psi >= -180 && psi <= -150)
+			ss = "P";
+		else if (phi <= 180 && phi >= 60 && psi >= 120 && psi <= 180)
+			ss = "E";
+		else if (phi <= 70 && phi >= 30 && psi >= 10 && psi <= 70)
+			ss = "L";
+		else if (phi <= 150 && phi >= 60 && psi >= -40 && psi <= 60)
+			ss = "G";
+		else if (phi <= 180 && phi >= 30 && psi >= -180 && psi <= -90)
+			ss = "G";
+		else
+			ss = "U";
+	}
+	return ss;
+}

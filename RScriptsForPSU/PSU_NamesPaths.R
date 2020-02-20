@@ -7,17 +7,19 @@
 
 ## This script can be used to set the names and paths for the subsequent reports ##
 
-RUNID = "HenEgg2" 
-PDBFILE = "6SCJ"
+RUNID = "CW1" 
+PDBFILE = "cw_1bvr_orig"
 ROOTPATH = "F:\\PSUA\\Output\\"
+
+chain1 = "A"
+chain2 = "B"
+
+
 
 ##################################################################################
 # The working directory and file names will be created from the above (edit as preferred)
 workingdirectory = paste(ROOTPATH, RUNID,"\\Reports\\",sep="")
 setwd(workingdirectory)
-
-chain1 = "A"
-chain2 = "B"
 rama_report = paste(PDBFILE,"_torsion.txt",sep="")
 calpha_report = paste(PDBFILE,"_calpha.txt",sep="")
 calpha_report_PPI = paste(PDBFILE,"_calpha.txt",sep="")

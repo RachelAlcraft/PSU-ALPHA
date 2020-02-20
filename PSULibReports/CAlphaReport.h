@@ -12,5 +12,6 @@ public:
 	void printMultiReport(PDBFile* pdb1, PDBFile* pdb2, string fileName, bool shifted);
 private:
 	string getRow(AminoAcid* aa, Atom* a, AminoAcid* ab, Atom* b, double distance, bool singleChain);
+	string getHeader();
 };
 

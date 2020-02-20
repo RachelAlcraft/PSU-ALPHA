@@ -1,9 +1,6 @@
 
 library(scatterplot3d)
 
-#setwd("C:/Users/Rache/Google Drive/ProjectPlan/Education/MScBio/Module_StructuralBio/Dev/")
-setwd("C:/Users/Rache/OneDrive/dev/CPP_PDBStructuralViewer/data/")
-
 #Load data fram created from C++ project
 data <- read.csv(rama_report)
 

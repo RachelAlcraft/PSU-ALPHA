@@ -66,6 +66,7 @@ public:
 	SidechainTorsion* getSidechainTorsion() { return _sideTorsion; }
 	Atom* getCAlpha() { return _atoms["CA"]; }//obviously this needs error checking, but the whole system fails if there are no CA on each aa so it doesn't matter how badly it crashes TODO
 	map<string, Atom*> getAtoms() { return _atoms; }
+	string getSS();
 private: //Helper functions
 	vector<Atom*> atomsFromString(string atomstring); //we pass around atom strings like N-CA-C and would like to be able to turn those into acrual atoms
 	

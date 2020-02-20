@@ -13,7 +13,9 @@ void CAlphaReport::printReport(PDBFile* pdb, string chain1, string chain2, strin
 	else
 	{
 		stringstream report;
-		report << "Amino1,Id1,Hydro1,Donicity1,Chemical1,Polar1,Amino2,Id2,Hydro2,Donicity2,Chemical2,Polar2,Distance\n";
+		//stringstream report_gnuX;
+		//stringstream report_gnuY;
+		report << getHeader() << "\n";
 		map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdb->pdbCode);
 		for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 		{
@@ -51,7 +53,11 @@ void CAlphaReport::printReport(PDBFile* pdb, string chain1, string chain2, strin
 						{
 							report << getRow(aa, a, ab, b, distance,false) << "\n";							
 							if (!(chainself & (i == j)))//and reverse to halve the time														
-								report << getRow(ab, b, aa, a, distance,false) << "\n";							
+							{
+								report << getRow(ab, b, aa, a, distance, false) << "\n";
+								//report_gnuX << ;
+							}
+
 						}
 					}
 				}
@@ -69,7 +75,7 @@ void CAlphaReport::printSingleChainReport(PDBFile* pdb, string chain1, string ch
 {//produce data frame report for R reporting
 
 	stringstream report;
-	report << "Amino1, Chain1, Hydro1, Donicity1, Chemical1, Polar1, Amino2, Chain2, Hydro2, Donicity2, Chemical2, Polar2, Distance\n";
+	report << getHeader() << "\n";
 	Chain* pchain1 = ProteinManager::getInstance()->getOrAddChain(pdb->pdbCode,chain1);
 	Chain* pchain2 = ProteinManager::getInstance()->getOrAddChain(pdb->pdbCode, chain2);		
 	map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode, chain1);
@@ -110,7 +116,7 @@ void CAlphaReport::printMultiReport(PDBFile* pdb1, PDBFile* pdb2, string fileNam
 	LogFile::getInstance()->writeMessage("Starting C Aplpha distance map");
 	
 	stringstream report;
-	report << "Amino1,PDB1,Hydro1,Donicity1,Chemical1,Polar1,Amino2,PDB2,Hydro2,Donicity2,Chemical2,Polar2,Distance\n";
+	report << getHeader() << "\n";
 	map<string, Chain*> chains1 = ProteinManager::getInstance()->getChains(pdb1->pdbCode);
 	map<string, Chain*> chains2 = ProteinManager::getInstance()->getChains(pdb2->pdbCode);
 	for (map<string, Chain*>::iterator iter = chains1.begin(); iter != chains1.end(); ++iter)
@@ -162,19 +168,29 @@ string CAlphaReport::getRow(AminoAcid * aa, Atom* a, AminoAcid* ab, Atom* b, dou
 		aid = aa->aminoId;
 		bid = ab->aminoId;
 	}
+	
 	//The amino ID needs to be its place in the entire structure.
 	stringstream report;
 	report << a->aminoCode << "," << aid << ",";
+	report << aa->Chain << ",";
+	report << aa->getSS() << ",";
 	report << aa->Hydro << ",";
 	report << aa->Donicity << ",";
 	report << aa->Chemical << ",";
 	report << aa->Polar << ",";
 	report << b->aminoCode << "," << bid << ",";
+	report << ab->Chain << ",";
+	report << ab->getSS() << ",";
 	report << ab->Hydro << ",";
 	report << ab->Donicity << ",";
 	report << ab->Chemical << ",";
 	report << ab->Polar << ",";
 	report << distance;
 	return report.str();
+}
+
+string CAlphaReport::getHeader()
+{
+	return "Amino1,Id1,Chain1,SS1,Hydro1,Donicity1,Chemical1,Polar1,Amino2,Id2,Chain2,SS2,Hydro2,Donicity2,Chemical2,Polar2,Distance";
 }
 
