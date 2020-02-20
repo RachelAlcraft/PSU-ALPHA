@@ -172,14 +172,14 @@ string CAlphaReport::getRow(AminoAcid * aa, Atom* a, AminoAcid* ab, Atom* b, dou
 	//The amino ID needs to be its place in the entire structure.
 	stringstream report;
 	report << a->aminoCode << "," << aid << ",";
-	report << aa->Chain << ",";
+	report << aa->chainId << ",";
 	report << aa->getSS() << ",";
 	report << aa->Hydro << ",";
 	report << aa->Donicity << ",";
 	report << aa->Chemical << ",";
 	report << aa->Polar << ",";
 	report << b->aminoCode << "," << bid << ",";
-	report << ab->Chain << ",";
+	report << ab->chainId << ",";
 	report << ab->getSS() << ",";
 	report << ab->Hydro << ",";
 	report << ab->Donicity << ",";

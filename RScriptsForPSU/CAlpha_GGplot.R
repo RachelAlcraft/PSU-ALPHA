@@ -16,12 +16,14 @@ angstrom = 9
 
 
 data <- read.csv(calpha_report)
-sub_data <- subset(data,Distance <  angstrom) 
+sub_data <- subset(data,Distance <  angstrom)
+sub_data <- subset(sub_data,Distance >  1) 
 
 #CAlpha Distance Map
-ggplot(sub_data, aes(x=Id1, y=Id2,color=Chemical1)) + 
-  ggtitle(paste(PDBFILE,"C-Alpha Contact Map by PSU:Alpha A<",angstrom)) + 
-  labs(x = PDBFILE, y=PDBFILE, color="Chemical Type")+
+ggplot(sub_data, aes(x=Id1, y=Id2,color=SS1)) + 
+  ggtitle(paste("1BVR","C-Alpha Contact Map A<",angstrom)) + 
+  labs(x = "1BVR", y="1BVR", color="Secondary Structure")+
+  scale_colour_discrete(labels = c("right a-helix","ideal beta","extended-glycine","glycine-helix","left a-helix","beta-p","unknown"))+
   geom_point()  
 
 #CAlpha Heat Contact Map

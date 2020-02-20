@@ -17,12 +17,12 @@ angstrom = 9
 
 
 data <- read.csv(calpha_report)
-sub_dataA <- subset(data,Chain == "A") 
-sub_dataB <- subset(data,Chain == "B") 
-sub_dataC <- subset(data,Chain == "C") 
-sub_dataD <- subset(data,Chain == "D") 
-sub_dataE <- subset(data,Chain == "E") 
-sub_dataF <- subset(data,Chain == "F") 
+sub_dataA <- subset(data,Chain1 == "A") 
+sub_dataB <- subset(data,Chain1 == "B" && data,Chain2 == "B") 
+sub_dataC <- subset(data,Chain1 == "C" && data,Chain2 == "C") 
+sub_dataD <- subset(data,Chain1 == "D" && data,Chain2 == "D") 
+sub_dataE <- subset(data,Chain1 == "E" && data,Chain2 == "E") 
+sub_dataF <- subset(data,Chain1 == "F" && data,Chain2 == "F") 
 
 #CAlpha Distance Map
 p1 <- ggplot(sub_dataA, aes(x=Id1, y=Id2,color=Chemical1)) + 
