@@ -2,3 +2,8 @@ This is the BTL Library version 3.4 from
 http://people.cryst.bbk.ac.uk/~classlib/bioinf/BTL05.html
 
 The library has minor changes to build in Visual Studio 2019 as described below:
+
+22/2/2020
+btl_least_squares.h
+Moved the order of functions as the first called needs to be at the top etc
+
