@@ -108,6 +108,22 @@ void PDBFile::printShiftedFile(string fileRoot)
 	}
 }
 
+string PDBFile::getSequence() // TODO make it per chain if required
+{
+	string seq = "";
+	map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdbCode);
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* chain = iter->second;
+		map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdbCode, chain->chainId);
+		for (map<int, AminoAcid*>::iterator iteraa = aminos.begin(); iteraa != aminos.end(); ++iteraa)
+		{
+			seq += iteraa->second->AminoLetter;
+		}		
+	}
+	return seq;
+}
+
 string PDBFile::getFileString()
 {
 	string wholefile = "";

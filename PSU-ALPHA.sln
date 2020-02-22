@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSULibManagers", "PSULibMan
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSULibHelpers", "PSULibHelpers\PSULibHelpers.vcxitems", "{73EC3EC4-52B5-4D17-B623-27BA5154E908}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BTLLib", "BTLLib\BTLLib.vcxitems", "{568648AA-2549-4936-96FF-4639C4285340}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		PSULibReports\PSULibReports.vcxitems*{099c5818-8f67-483c-8fca-590c50f70bc4}*SharedItemsImports = 9
@@ -27,6 +29,7 @@ Global
 		PSULibMaths\PSULibMaths.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
 		PSULibProteins\PSULibProteins.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
 		PSULibReports\PSULibReports.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
+		BTLLib\BTLLib.vcxitems*{568648aa-2549-4936-96ff-4639c4285340}*SharedItemsImports = 9
 		PSULibHelpers\PSULibHelpers.vcxitems*{73ec3ec4-52b5-4d17-b623-27ba5154e908}*SharedItemsImports = 9
 		PSULibProteins\PSULibProteins.vcxitems*{bd4d8915-ee81-4efa-a220-e5d604cc2c92}*SharedItemsImports = 9
 		PSULibAlgorithms\PSULibAlgorithms.vcxitems*{e1b09bcf-7ab9-41b5-9f55-22ecd42bebfe}*SharedItemsImports = 9

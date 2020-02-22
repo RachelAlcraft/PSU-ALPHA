@@ -14,9 +14,11 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)LeastSquares.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)RMSD.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)LeastSquares.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RMSD.h" />
   </ItemGroup>
 </Project>

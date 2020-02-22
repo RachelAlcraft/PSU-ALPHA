@@ -108,13 +108,19 @@ int main()
 			}
 			if (RMSDOPT != "")//whether a fixed calpha or a pairing needed
 			{
-				optimised = true;
-				//and create the ff
+				LeastSquares* ls = new LeastSquares(pdb1,pdb2,alignment);
+				RMSDReport rrmsd;
+				rrmsd.printLeastSquaresReport(ls, rmsdreport, fileroot);
+				
+			}
+			else
+			{
+				RMSD* rmsd = new RMSD(pdb1, pdb2, ff, alignment, optimised);
+				RMSDReport rrmsd;
+				rrmsd.printReport(rmsd, rmsdreport, optimised, fileroot);
 			}
 			
-			RMSD* rmsd = new RMSD(pdb1, pdb2, ff, alignment, optimised);
-			RMSDReport rrmsd;
-			rrmsd.printReport(rmsd, rmsdreport,optimised,fileroot);
+			
 
 			if (RMSDCONTACT == "TRUE")
 			{

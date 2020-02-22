@@ -33,6 +33,7 @@ public:
 	void loadData();
 	void applyTransformation(GeoTransformations* trans);
 	void printShiftedFile(string);
+	string getSequence();
 
 
 private:

@@ -9,8 +9,7 @@ void RMSDReport::printReport(RMSD* rmsd, string fileName, bool optimised, string
 	stringstream report;
 	report << "RMSD Calculation\n";
 	report << rmsd->getAtomMatches() << "\n";
-	report << "Value calculated = " << rmsd->calculateRMSD();
-
+	report << "Value calculated = " << rmsd->calculateRMSD();	
 	ofstream outfile(fileName);
 	if (outfile.is_open())
 	{
@@ -23,5 +22,24 @@ void RMSDReport::printReport(RMSD* rmsd, string fileName, bool optimised, string
 		rmsd->PDB1->printShiftedFile(fileroot);
 		rmsd->PDB2->printShiftedFile(fileroot);
 	}
+	LogFile::getInstance()->writeMessage("RMSD Optimised report printed to " + fileroot);
+}
+
+void RMSDReport::printLeastSquaresReport(LeastSquares* ls, string fileName, string fileroot)
+{
+	stringstream report;
+	report << "RMSD Calculation\n";	
+	report << "Value calculated = " << ls->calculateRMSDLeastSquares();
+	ls->applyRMSDLeastSquares();
+	ofstream outfile(fileName);
+	if (outfile.is_open())
+	{
+		outfile << report.str();
+	}
+
+	//Print out the shifted structures		
+	ls->PDB1->printShiftedFile(fileroot);
+	ls->PDB2->printShiftedFile(fileroot);
+	
 	LogFile::getInstance()->writeMessage("RMSD Optimised report printed to " + fileroot);
 }

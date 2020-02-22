@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <GeoShape.h>
 
+
+
 RMSD::RMSD()
 {
 	PDB1 = nullptr;
@@ -178,5 +180,7 @@ string RMSD::getAtomMatches()
 		ss << _calphaPairs[i].a1->getDescription() << ":" << _calphaPairs[i].a2->getDescription() << "\n";;
 	return ss.str();
 }
+
+
 
 

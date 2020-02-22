@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="examples">
+      <UniqueIdentifier>{7288252e-b83a-4ed8-ad1d-5c212a16efaf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)examples\0README">
+      <Filter>examples</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)examples\test.pir">
+      <Filter>examples</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)examples\test_p4ins.dat">
+      <Filter>examples</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)amino_acid_property.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ATOM_processor.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)BTL.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)btl_biomolecular_data.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)btl_fourier.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)btl_least_squares.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)btl_matrix.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)btl_matrix_algorithms.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)btl_numerics.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)btl_numeric_vector.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)btl_sequence_algorithms.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)btl_statistics.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)btl_vector_algorithms.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)pdb_sort.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PIR_processor.h" />
+  </ItemGroup>
+</Project>

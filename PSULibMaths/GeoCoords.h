@@ -16,7 +16,8 @@ public:
 	GeoCoords(double, double, double);
 	GeoCoords();
 	string info();
-
+	// Operator overloads	
+	GeoCoords operator + (GeoCoords const& obj);
 
 };
 

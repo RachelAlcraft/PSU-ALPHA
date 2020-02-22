@@ -1,8 +1,8 @@
 #pragma once
 
-#include<PDBFile.h>
-#include<FASTAFile.h>
-#include<string>
+#include <PDBFile.h>
+#include <FASTAFile.h>
+#include <string>
 #include <GeoCloud.h>
 #include <GeoCoords.h>
 
@@ -42,6 +42,7 @@ public:
 	double calculateOneRMSD();
 	double calculateOptimalRMSD(int h, int i, int j, int k, string& report/*, int orientation*/);
 	string getAtomMatches();
+	
 };
 
 
