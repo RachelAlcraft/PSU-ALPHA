@@ -202,8 +202,8 @@ using namespace std;
       {
   
        // get the lengths of the sequences + 1
-       int length_s = (last1-first1); //RAlcraft reduced size by 1 (22/2/20)
-       int length_t = (last2-first2); //RAlcraft reduced size by 1 (22/2/20)
+       int length_s = (last1-first1);  //RAlcraft reduced size by 1 (22/2/20)
+       int length_t = (last2-first2);  //RAlcraft reduced size by 1 (22/2/20)
 
        // Create a score matrix
        matrix<float> matrix_s(length_s,length_t);
