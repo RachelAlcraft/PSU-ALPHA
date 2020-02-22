@@ -193,17 +193,17 @@ using namespace std;
                      be created at least twice the size of the longer sequence."] */
 
 
-       template <class InputIterator, class OutputIterator>
-       OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator last1,
+       template <class InputIterator,class OuputIterator>
+	   OuputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator last1,
                                        InputIterator first2, InputIterator last2, 
                                        float match_score, float mismatch_score,
                                        float gap_penalty, float gap_length_multiplier,
-				       OutputIterator result)
+										OuputIterator result)
       {
   
        // get the lengths of the sequences + 1
-       int length_s = (last1-first1)+1;
-       int length_t = (last2-first2)+1;
+       int length_s = (last1-first1); //RAlcraft reduced size by 1 (22/2/20)
+       int length_t = (last2-first2); //RAlcraft reduced size by 1 (22/2/20)
 
        // Create a score matrix
        matrix<float> matrix_s(length_s,length_t);
@@ -303,9 +303,9 @@ using namespace std;
        // the starting sequence element is (i_index,j_index)
 
        i=0; j=0;
-       typename iterator_traits<OutputIterator>::value_type load_element_s;
-       typename iterator_traits<OutputIterator>::value_type load_element_t;
-       const typename iterator_traits<OutputIterator>::value_type blank = ' ';
+       typename iterator_traits<InputIterator>::value_type load_element_s;
+       typename iterator_traits<InputIterator>::value_type load_element_t;
+       const typename iterator_traits<InputIterator>::value_type blank = ' ';
 
        if(i_index == 0)
        {

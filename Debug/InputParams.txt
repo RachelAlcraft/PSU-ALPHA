@@ -8,7 +8,7 @@ CONFIGPATH=F:\\PSUA\\Code\\PSU-ALPHA\\Config\\
 
 ###Whether to run a Least Squares fit rmsd report
 RMSDOPT=TRUE
-#ALIGNMENT
+ALIGNMENT=TRUE
 ###A slightly unnecessary contact map of the alignment
 #RMSDCONTACT=TRUE
 

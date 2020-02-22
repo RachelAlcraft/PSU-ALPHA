@@ -435,7 +435,8 @@ using namespace std;
 	    if (size != (last-first)) FATAL_ERROR("This matrix must be square");
            
 
-	    BTL_INT column, row;
+		//BTL_INT column, row;//RAlcraft (22/2/20) removed column to stop warning
+		BTL_INT row;
 	    numeric_vector<typename iterator_traits<InputIterator>::value_type> a(nrows*(nrows+1)/2);
 	    typename numeric_vector<typename iterator_traits<InputIterator>::value_type>::iterator trng = a.begin(); 
 	    InputIterator in;
@@ -449,9 +450,9 @@ using namespace std;
 
 	    // The matrix that will hold the results is initially = I.
 
-            for (int i=0; i< (nrows*nrows); i++)
+            for (int i=0; i< int(nrows*nrows); i++)
  	        *(eigenvectors+i) = 0.0; 
-            for (int i=0; i< (nrows*nrows); i += (nrows+1))
+            for (int i=0; i< int(nrows*nrows); i += (nrows+1))
  	        *(eigenvectors+i)+= 1.0; 
 
 	    // Setup variables  
@@ -464,7 +465,7 @@ using namespace std;
  
 	    anorm=0.0;
 	    iq=0;
-	    for (i=0; i<n; i++) for (j=0; j<=i; j++)
+	    for (i=0; i<(BTL_INT)n; i++) for (j=0; j<=i; j++)
 	    {
                 if (j!=i) anorm+=a[iq]*a[iq];
 	        ++iq;
@@ -515,7 +516,7 @@ using namespace std;
 				   // Rotate l & m columns.
  
 			      	    imq=n*m;
-			      	    for (i=0; i<n; i++)
+			      	    for (i=0; i<(BTL_INT)n; i++)
 				    { 
 					iq=i*(i+1)/2;
 					if (i!=l && i!=m)
@@ -557,13 +558,13 @@ using namespace std;
 	    // Sort eigenvalues & eigenvectors in order of descending eigenvalue.
 
 	    k=0;
-	    for (i=0; i<n-1; i++)
+	    for (i=0; i< (BTL_INT)(n-1); i++)
 	    {
 		im=i;
 	    	km=k;
 	    	am=a[k];
 	    	l=0;
-	    	for (j=0; j<n; j++)
+	    	for (j=0; j< (BTL_INT)n; j++)
 	    	{
 		    if (j>i && a[l]>am)
 		    {
@@ -579,7 +580,7 @@ using namespace std;
 	            a[k]=am;
 	            l=n*i;
 	            m=n*im;
-		    for (j=0; j<n; j++)
+		    for (j=0; j< (BTL_INT)n; j++)
 		    {
 			am=*(eigenvectors+l);
 		  	*(eigenvectors+(l++)) = *(eigenvectors+m);

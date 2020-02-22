@@ -36,9 +36,60 @@ void LeastSquares::setupAtomPairs()
 	else
 	{//use alignment file to match off
 		string seq1 = PDB1->getSequence();
-		string seq2 = PDB2->getSequence();				
+		string seq2 = PDB2->getSequence();		
+		/*FOR TESTING*/
+		//seq1 = "AADDE";
+		//seq2 = "AADE";
+		unsigned int safeSize = max(seq1.size(), seq2.size())*3;		
+		string output = "";
+		output.resize(safeSize);
 		// have not got the alignment working yet from BTL
 		LogFile::getInstance()->writeMessage("RMSD Alignment not yet implemented");
+		float score = 0.0;
+		score = needleman_wunsch_similarity(seq1.begin(), seq1.end(), seq2.begin(), seq2.end(), 1, 0, 0, 0, score);		
+		needleman_wunsch_alignment(seq1.begin(), seq1.end(), seq2.begin(), seq2.end(), 1, 0, 0, 0, output.begin());			
+		
+		//Now create CAlphas based on the alignment
+		vector<AminoAcid*> aminos1;
+		vector<AminoAcid*> aminos2;
+		map<string, Chain*> chains1 = PDB1->getChains();
+		map<string, Chain*> chains2 = PDB2->getChains();
+		for (map<string, Chain*>::iterator iter = chains1.begin(); iter != chains1.end(); ++iter)
+		{
+			map<int, AminoAcid*> aminos = iter->second->getAminoAcids();
+			for (map<int, AminoAcid*>::iterator aiter = aminos.begin(); aiter != aminos.end(); ++aiter)			
+				aminos1.push_back(aiter->second);
+		}
+		for (map<string, Chain*>::iterator iter = chains2.begin(); iter != chains2.end(); ++iter)
+		{
+			map<int, AminoAcid*> aminos = iter->second->getAminoAcids();
+			for (map<int, AminoAcid*>::iterator aiter = aminos.begin(); aiter != aminos.end(); ++aiter)
+				aminos2.push_back(aiter->second);
+		}
+
+		int a = 0;
+		int b = 0;
+		for (unsigned int i = 0;i < output.size()-1; i += 2)
+		{
+			string seq1char = output.substr(i,1);
+			string seq2char = output.substr(i + 1, 1);
+			bool gaps = false;
+			if (seq1char == " ")
+				gaps = true;
+			if (seq2char == " ")
+				gaps = true;			
+			if (!gaps && a < aminos1.size() && b < aminos2.size())
+			{
+				Atom* a1 = aminos1[a]->getCAlpha();
+				Atom* a2 = aminos2[b]->getCAlpha();
+				_atomPairsAlignment.push_back(AtomPair(a1,a2));
+				LogFile::getInstance()->writeMessage("RMSD Match: " + a1->getDescription() + " " + a2->getDescription());
+			}
+			if (seq1char != " ")				
+				++a;
+			if (seq2char != " ")
+				++b;
+		}		
 	}
 }
 
@@ -124,6 +175,7 @@ void LeastSquares::applyRMSDLeastSquares()
 		// ALSO ROTATE ALL #############################################################################
 		rotate(vAForAll.begin(), vAForAll.end(), rotation.begin(), centreB.begin());		
 
+		//Now put the coordinates back over the pdb
 		unsigned int j = 0;
 		for (unsigned int i = 0; i < atoms.size(); ++i)
 		{
@@ -137,15 +189,9 @@ void LeastSquares::applyRMSDLeastSquares()
 			}
 			else
 			{
-				cout << "error in size of shifted vector";
+				LogFile::getInstance()->writeMessage("error in size of shifted vector for RMSD");
 			}
 		}
 		
 	}
-
-	//Now put the coordinates back over the pdb
-
-
-	
-	
 }
