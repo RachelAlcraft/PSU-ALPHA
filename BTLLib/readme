@@ -11,4 +11,7 @@ btl_matrix_algorithms.h
 btl_sequence_algorithms.h
 	Bug fix as lengths of sequences were 1 too big
 
+23/2/2020
+btl_sequence_algorithms.h
+	Correction to previous bug fix, new index count and stop a repetition on last element of seq1
 

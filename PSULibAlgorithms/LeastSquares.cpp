@@ -40,6 +40,8 @@ void LeastSquares::setupAtomPairs()
 		/*FOR TESTING*/
 		//seq1 = "AADDE";
 		//seq2 = "AADE";
+		//seq1 = "CTNETTL";
+		//seq2 = "KLP";
 		unsigned int safeSize = max(seq1.size(), seq2.size())*3;		
 		string output = "";
 		output.resize(safeSize);
@@ -67,8 +69,8 @@ void LeastSquares::setupAtomPairs()
 				aminos2.push_back(aiter->second);
 		}
 
-		int a = 0;
-		int b = 0;
+		unsigned int a = 0;
+		unsigned int b = 0;
 		for (unsigned int i = 0;i < output.size()-1; i += 2)
 		{
 			string seq1char = output.substr(i,1);
