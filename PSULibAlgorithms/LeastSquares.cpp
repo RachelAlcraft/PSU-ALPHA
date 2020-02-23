@@ -36,8 +36,8 @@ void LeastSquares::setupAtomPairs()
 	}
 	else
 	{//use alignment file to match off
-		string seq2 = PDB1->getSequence();
-		string seq1 = PDB2->getSequence();		
+		string seq1 = PDB1->getSequence();
+		string seq2 = PDB2->getSequence();		
 		/*FOR TESTING*/
 		//seq1 = "AADDE";
 		//seq2 = "AADE";
@@ -75,39 +75,61 @@ void LeastSquares::setupAtomPairs()
 
 		
 		stringstream al1, al2;
-		unsigned int a = 0;
-		unsigned int b = 0;
-		for (unsigned int i = 0; i < output.size() - 1; i += 2)
+		unsigned int i = 0;
+		while (i < output.size() - 1)
 		{
-			string seq1char = output.substr(i, 1);
-			string seq2char = output.substr(i + 1, 1);
-			if (!(seq1char[0] == '\0' || seq2char[0] == '\0'))
-			{
-				al1 << seq1char;
-				al2 << seq2char;
-				bool gaps = false;
-				if (seq1char == " ")
-					gaps = true;
-				if (seq2char == " ")
-					gaps = true;
-				if (!gaps && a < aminos1.size() && b < aminos2.size())
-				{
-					Atom* a1 = aminos1[a]->getCAlpha();
-					Atom* a2 = aminos2[b]->getCAlpha();
-					_atomPairsAlignment.push_back(AtomPair(a1, a2));
-					LogFile::getInstance()->writeMessage("RMSD Match: " + a1->getDescription() + " " + a2->getDescription());
-					reportStream << "RMSD Match: " + a1->getDescription() + " " + a2->getDescription() << "\n";
-				}
-				if (seq1char != " ")
-					++a;
-				if (seq2char != " ")
-					++b;
-			}			
+			al1 << output[i];
+			al2 << output[i+1];
+			i += 2;
 		}
-		
+
+
 		reportStream << "NW Alignment score= " << score << "\n";
 		reportStream << al1.str() << "\n";
 		reportStream << al2.str() << "\n";
+		string str1 = al1.str();
+		string str2 = al2.str();
+		
+		unsigned int a = 0;
+		unsigned int b = 0;
+		
+		//al1 and al2 must be the same size
+		if (str1.size() == str2.size())
+		{
+			for (unsigned int i = 0; i < str1.size(); ++i)
+			{
+				char seq1char = str1[i];
+				char seq2char = str2[i];
+				if (!(seq1char == '\0' || seq2char == '\0'))
+				{
+					al1 << seq1char;
+					al2 << seq2char;
+					bool gaps = false;
+					if (seq1char == ' ')
+						gaps = true;
+					if (seq2char == ' ')
+						gaps = true;
+					if (!gaps && a < aminos1.size() && b < aminos2.size())
+					{
+						Atom* a1 = aminos1[a]->getCAlpha();
+						Atom* a2 = aminos2[b]->getCAlpha();
+						_atomPairsAlignment.push_back(AtomPair(a1, a2));
+						LogFile::getInstance()->writeMessage("RMSD Match: " + a1->getDescription() + " " + a2->getDescription());
+						reportStream << "RMSD Match: " + a1->getDescription() + " " + a2->getDescription() << "\n";
+					}
+					if (seq1char != ' ')
+						++a;
+					if (seq2char != ' ')
+						++b;
+				}
+			}
+		}
+		else
+		{
+			LogFile::getInstance()->writeMessage("Error in sequence alignment, they don't match");
+		}
+		
+		
 
 	}
 }
