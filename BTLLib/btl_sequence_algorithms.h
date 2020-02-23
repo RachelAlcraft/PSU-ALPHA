@@ -373,7 +373,11 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 		}
 	}
 
-	// pad out the ends of sequences where necessary     
+	// pad out the ends of sequences where necessary     		
+	if (i >= (length_s-1))//RAlcraft stop final doubling of last elements
+		load_element_s = blank; 
+	if (j >= (length_t - 1))
+		load_element_t = blank;
 
 	for (i; i < (length_s - 1); ++i)
 	{
@@ -384,8 +388,7 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 			load_element_s = *first1; ++first1;
 		}
 		load_element_t = blank;
-	}
-	load_element_s = blank; //RAlcraft stop final doubling of last element of string 1
+	}	
 	for (j; j < (length_t - 1); ++j)
 	{
 		*result = load_element_s; ++result;

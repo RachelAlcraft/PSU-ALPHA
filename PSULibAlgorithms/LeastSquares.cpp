@@ -36,13 +36,13 @@ void LeastSquares::setupAtomPairs()
 	}
 	else
 	{//use alignment file to match off
-		string seq1 = PDB1->getSequence();
-		string seq2 = PDB2->getSequence();		
+		string seq2 = PDB1->getSequence();
+		string seq1 = PDB2->getSequence();		
 		/*FOR TESTING*/
 		//seq1 = "AADDE";
 		//seq2 = "AADE";
-		//seq1 = "CTNETTL";
-		//seq2 = "KLP";
+		//seq2 = "CTNETTL";
+		//seq1 = "KLP";
 		unsigned int safeSize = max(seq1.size(), seq2.size())*3;		
 		string output = "";
 		output.resize(safeSize);				

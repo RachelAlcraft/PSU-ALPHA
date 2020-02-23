@@ -1,31 +1,7 @@
 ﻿  LeastSquares.cpp
-F:\PSUA\Code\PSU-ALPHA\BTLLib\btl_matrix_algorithms.h(452,28): warning C4018: '<': signed/unsigned mismatch
-F:\PSUA\Code\PSU-ALPHA\PSULibAlgorithms\LeastSquares.cpp(117): message : see reference to function template instantiation 'void btl::eigen_solution<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>>(InputIterator,InputIterator,BTL_INT,OutputMatrixIterator,OutputVectorIterator)' being compiled
-F:\PSUA\Code\PSU-ALPHA\PSULibAlgorithms\LeastSquares.cpp(117): message :         with
-F:\PSUA\Code\PSU-ALPHA\PSULibAlgorithms\LeastSquares.cpp(117): message :         [
-F:\PSUA\Code\PSU-ALPHA\PSULibAlgorithms\LeastSquares.cpp(117): message :             _Ty=double,
-F:\PSUA\Code\PSU-ALPHA\PSULibAlgorithms\LeastSquares.cpp(117): message :             InputIterator=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<double>>>,
-F:\PSUA\Code\PSU-ALPHA\PSULibAlgorithms\LeastSquares.cpp(117): message :             OutputMatrixIterator=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<double>>>,
-F:\PSUA\Code\PSU-ALPHA\PSULibAlgorithms\LeastSquares.cpp(117): message :             OutputVectorIterator=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<double>>>
-F:\PSUA\Code\PSU-ALPHA\PSULibAlgorithms\LeastSquares.cpp(117): message :         ]
-F:\PSUA\Code\PSU-ALPHA\BTLLib\btl_matrix_algorithms.h(454,28): warning C4018: '<': signed/unsigned mismatch
-F:\PSUA\Code\PSU-ALPHA\BTLLib\btl_matrix_algorithms.h(467,17): warning C4018: '<': signed/unsigned mismatch
-F:\PSUA\Code\PSU-ALPHA\BTLLib\btl_matrix_algorithms.h(518,26): warning C4018: '<': signed/unsigned mismatch
-F:\PSUA\Code\PSU-ALPHA\BTLLib\btl_matrix_algorithms.h(560,17): warning C4018: '<': signed/unsigned mismatch
-F:\PSUA\Code\PSU-ALPHA\BTLLib\btl_matrix_algorithms.h(566,18): warning C4018: '<': signed/unsigned mismatch
-F:\PSUA\Code\PSU-ALPHA\BTLLib\btl_matrix_algorithms.h(582,18): warning C4018: '<': signed/unsigned mismatch
-  RMSD.cpp
-  ProteinManager.cpp
-  AminoAcid.cpp
-  PDBFile.cpp
-  CAlphaReport.cpp
-  RMSDReport.cpp
-  RamaReport.cpp
-  PSU-ALPHA.cpp
-F:\PSUA\Code\PSU-ALPHA\BTLLib\btl_matrix_algorithms.h(438,14): warning C4101: 'column': unreferenced local variable
   Generating code
-  13 of 1862 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    113 functions had inline decision re-evaluated but remain unchanged
+  1 of 1991 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    3 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   PSU-ALPHA.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Release\PSU-ALPHA.exe
