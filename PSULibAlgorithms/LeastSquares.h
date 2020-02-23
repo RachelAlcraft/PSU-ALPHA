@@ -4,6 +4,7 @@
 #include <PDBFile.h>
 #include <FASTAFile.h>
 #include <string>
+#include <sstream>
 #include <Atom.h>
 
 using namespace std;
@@ -32,11 +33,13 @@ public:
 	LeastSquares(PDBFile* pdb1, PDBFile* pdb2, bool align);
 private:
 	vector<AtomPair> _atomPairsAlignment;	
+	stringstream reportStream;
 
 
 public:
 	void setupAtomPairs();
 	double calculateRMSDLeastSquares();
 	void applyRMSDLeastSquares();
+	string report() { return  reportStream.str(); }
 };
 

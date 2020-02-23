@@ -29,8 +29,10 @@ void RMSDReport::printLeastSquaresReport(LeastSquares* ls, string fileName, stri
 {
 	stringstream report;
 	report << "RMSD Calculation\n";	
-	report << "Value calculated = " << ls->calculateRMSDLeastSquares();
+	double rmsd = ls->calculateRMSDLeastSquares();	
 	ls->applyRMSDLeastSquares();
+	report << ls->report() << "\n";
+	report << "RMSD Value calculated = " << rmsd;
 	ofstream outfile(fileName);
 	if (outfile.is_open())
 	{

@@ -30,7 +30,8 @@ void LeastSquares::setupAtomPairs()
 		for (int i = 0; i < maxposs_calphas; ++i)
 		{
 			_atomPairsAlignment.push_back(AtomPair(calphas1[i], calphas2[i]));
-			LogFile::getInstance()->writeMessage("RMSD Match: " + calphas1[i]->getDescription() + " " + calphas2[i]->getDescription());
+			reportStream << "RMSD Match: " + calphas1[i]->getDescription() + " " + calphas2[i]->getDescription() << "\n";
+			//LogFile::getInstance()->writeMessage("RMSD Match: " + calphas1[i]->getDescription() + " " + calphas2[i]->getDescription());
 		}
 	}
 	else
@@ -44,12 +45,15 @@ void LeastSquares::setupAtomPairs()
 		//seq2 = "KLP";
 		unsigned int safeSize = max(seq1.size(), seq2.size())*3;		
 		string output = "";
-		output.resize(safeSize);
-		// have not got the alignment working yet from BTL
-		LogFile::getInstance()->writeMessage("RMSD Alignment not yet implemented");
+		output.resize(safeSize);				
 		float score = 0.0;
+		
+		//From BTL
 		score = needleman_wunsch_similarity(seq1.begin(), seq1.end(), seq2.begin(), seq2.end(), 1, 0, 0, 0, score);		
-		needleman_wunsch_alignment(seq1.begin(), seq1.end(), seq2.begin(), seq2.end(), 1, 0, 0, 0, output.begin());			
+		needleman_wunsch_alignment(seq1.begin(), seq1.end(), seq2.begin(), seq2.end(), 1, 0, 0, 0, output.begin());		
+
+		reportStream << "NW Alignment score " << score << "\n";
+		
 		
 		//Now create CAlphas based on the alignment
 		vector<AminoAcid*> aminos1;
@@ -69,29 +73,42 @@ void LeastSquares::setupAtomPairs()
 				aminos2.push_back(aiter->second);
 		}
 
+		
+		stringstream al1, al2;
 		unsigned int a = 0;
 		unsigned int b = 0;
-		for (unsigned int i = 0;i < output.size()-1; i += 2)
+		for (unsigned int i = 0; i < output.size() - 1; i += 2)
 		{
-			string seq1char = output.substr(i,1);
+			string seq1char = output.substr(i, 1);
 			string seq2char = output.substr(i + 1, 1);
-			bool gaps = false;
-			if (seq1char == " ")
-				gaps = true;
-			if (seq2char == " ")
-				gaps = true;			
-			if (!gaps && a < aminos1.size() && b < aminos2.size())
+			if (!(seq1char[0] == '\0' || seq2char[0] == '\0'))
 			{
-				Atom* a1 = aminos1[a]->getCAlpha();
-				Atom* a2 = aminos2[b]->getCAlpha();
-				_atomPairsAlignment.push_back(AtomPair(a1,a2));
-				LogFile::getInstance()->writeMessage("RMSD Match: " + a1->getDescription() + " " + a2->getDescription());
-			}
-			if (seq1char != " ")				
-				++a;
-			if (seq2char != " ")
-				++b;
-		}		
+				al1 << seq1char;
+				al2 << seq2char;
+				bool gaps = false;
+				if (seq1char == " ")
+					gaps = true;
+				if (seq2char == " ")
+					gaps = true;
+				if (!gaps && a < aminos1.size() && b < aminos2.size())
+				{
+					Atom* a1 = aminos1[a]->getCAlpha();
+					Atom* a2 = aminos2[b]->getCAlpha();
+					_atomPairsAlignment.push_back(AtomPair(a1, a2));
+					LogFile::getInstance()->writeMessage("RMSD Match: " + a1->getDescription() + " " + a2->getDescription());
+					reportStream << "RMSD Match: " + a1->getDescription() + " " + a2->getDescription() << "\n";
+				}
+				if (seq1char != " ")
+					++a;
+				if (seq2char != " ")
+					++b;
+			}			
+		}
+		
+		reportStream << "NW Alignment score= " << score << "\n";
+		reportStream << al1.str() << "\n";
+		reportStream << al2.str() << "\n";
+
 	}
 }
 
@@ -146,7 +163,7 @@ void LeastSquares::applyRMSDLeastSquares()
 	}
 	
 
-	//Code copied from BTL
+	//Code copied from BTL to access the matrices for transfromation to entire structure
 	{
 		// Do the superposition the long way in order to demonstrate the vector and matrix algorithms 
 		// The geometric centre of each structure is declared as a BTL numeric_vector with 3 elements of
