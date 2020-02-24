@@ -52,7 +52,7 @@ void LeastSquares::setupAtomPairs()
 		score = needleman_wunsch_similarity(seq1.begin(), seq1.end(), seq2.begin(), seq2.end(), 1, 0, 0, 0, score);		
 		needleman_wunsch_alignment(seq1.begin(), seq1.end(), seq2.begin(), seq2.end(), 1, 0, 0, 0, output.begin());		
 
-		reportStream << "NW Alignment score " << score << "\n";
+		reportStream << "NW Alignment score = " << score << "\n";
 		
 		
 		//Now create CAlphas based on the alignment
@@ -81,10 +81,7 @@ void LeastSquares::setupAtomPairs()
 			al1 << output[i];
 			al2 << output[i+1];
 			i += 2;
-		}
-
-
-		reportStream << "NW Alignment score= " << score << "\n";
+		}		
 		reportStream << al1.str() << "\n";
 		reportStream << al2.str() << "\n";
 		string str1 = al1.str();
