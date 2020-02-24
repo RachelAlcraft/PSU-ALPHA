@@ -306,8 +306,6 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 	typename iterator_traits<OutputIterator>::value_type load_element_s;
 	typename iterator_traits<OutputIterator>::value_type load_element_t;
 	const typename iterator_traits<OutputIterator>::value_type blank = ' ';
-	int first1_idx = 0;//RAlcraft count increments with iterator to guarantee not going over the end
-	int first2_idx = 0;
 
 	if (i_index == 0)
 	{
@@ -316,19 +314,19 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 			*result = blank; ++result;
 			*result = *first2; ++result; first2++;
 		}
-		load_element_s = *first1; ++first1; ++first1_idx;
-		load_element_t = *first2; ++first2; ++first2_idx;
+		load_element_s = *first1; ++first1;
+		load_element_t = *first2; ++first2;
 		j = j_index;
 	}
 	else
 	{
 		for (i = 0; i < i_index; i++)
 		{
-			*result = *first1; ++result; ++first1; ++first1_idx;
+			*result = *first1; ++result; first1++;
 			*result = blank; ++result;
 		}
-		load_element_s = *first1; ++first1; ++first1_idx;
-		load_element_t = *first2; ++first2; ++first2_idx;
+		load_element_s = *first1; ++first1;
+		load_element_t = *first2; ++first2;
 		i = i_index;
 	}
 
@@ -339,15 +337,9 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 			&& (matrix_s[i + 1][j + 1] >= matrix_s[i + 1][j]))
 		{
 			*result = load_element_s; ++result;       // diagonal   
-			*result = load_element_t; ++result;			
-			if (first1_idx < (length_s - 1))
-			{
-				load_element_s = *first1; ++first1; ++first1_idx; 
-			}
-			if (first2_idx < (length_t - 1))
-			{
-				load_element_t = *first2; ++first2; ++first2_idx;
-			}
+			*result = load_element_t; ++result;
+			load_element_s = *first1; ++first1;
+			load_element_t = *first2; ++first2;
 			++i;
 			++j;
 		}
@@ -358,7 +350,7 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 				*result = load_element_s; ++result;
 				*result = load_element_t; ++result;
 				load_element_s = blank;                 // right
-				load_element_t = *first2; ++first2; ++first2_idx;
+				load_element_t = *first2; ++first2;
 				++j;
 
 			}
@@ -366,38 +358,29 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 			{
 				*result = load_element_s; ++result;
 				*result = load_element_t; ++result;
-				load_element_s = *first1; ++first1;++first1_idx;// down              
+				load_element_s = *first1; ++first1;       // down              
 				load_element_t = blank;
 				++i;
 			}
 		}
 	}
 
-	// pad out the ends of sequences where necessary     		
-	if (i >= (length_s-1))//RAlcraft stop final doubling of last elements
-		load_element_s = blank; 
-	if (j >= (length_t - 1))
-		load_element_t = blank;
+	// pad out the ends of sequences where necessary     
 
 	for (i; i < (length_s - 1); ++i)
 	{
-		*result = load_element_s; ++result;		
-		*result = load_element_t; ++result;		
-		if (first1_idx < (length_s - 1))
-		{
-			load_element_s = *first1; ++first1;
-		}
+		*result = load_element_s; ++result;
+		*result = load_element_t; ++result;
+		load_element_s = *first1; ++first1;
 		load_element_t = blank;
-	}	
+	}
+
 	for (j; j < (length_t - 1); ++j)
 	{
 		*result = load_element_s; ++result;
-		*result = load_element_t; ++result;		
-		if (first2_idx < (length_t - 1))
-		{
-			load_element_t = *first2; ++first2;
-		}
+		*result = load_element_t; ++result;
 		load_element_s = blank;
+		load_element_t = *first2; ++first2;
 	}
 
 	return result;
