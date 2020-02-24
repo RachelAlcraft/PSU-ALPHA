@@ -1,8 +1,8 @@
-#include "ScoringDataReport.h"
+#include "GeometricalDataReport.h"
 #include <LogFile.h>
 #include <ProteinManager.h>
 
-void ScoringDataReport::printReport(PDBFile* pdb, string fileName)
+void GeometricalDataReport::printReport(PDBFile* pdb, string fileName)
 {//produce data frame report for R reporting
 	LogFile::getInstance()->writeMessage("Starting Scoring Data report for " + pdb->pdbCode);
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <PDBFile.h>
-class ScoringDataReport
+class GeometricalDataReport
 {
 public:
 	void printReport(PDBFile* pdb, string filename);
