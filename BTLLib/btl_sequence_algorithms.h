@@ -25,6 +25,7 @@
 // Modification History:
 // Original version: B.S. (assistance from W.P)             Date: 30/08/98
 // Last modified by: M.A.W                                  Date: 16/06/05
+// Last modified by: R.Alcraft								Date: 24/02/20
 // Comments:   
 ///////////////////////////////////////////////////////////////////////////
 
@@ -338,8 +339,24 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 		{
 			*result = load_element_s; ++result;       // diagonal   
 			*result = load_element_t; ++result;
-			load_element_s = *first1; ++first1;
-			load_element_t = *first2; ++first2;
+			
+			if (first1 != last1)//R.Alcraft end of iterator error fixed (24/2/20)
+			{
+				load_element_s = *first1; ++first1;				
+			}
+			else
+			{
+				load_element_s = blank;
+			}
+			if (first2 != last2)//R.Alcraft end of iterator error fixed (24/2/20)
+			{
+				load_element_t = *first2; ++first2;				
+				
+			}
+			else
+			{
+				load_element_t = blank;
+			}
 			++i;
 			++j;
 		}
@@ -349,7 +366,7 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 			{
 				*result = load_element_s; ++result;
 				*result = load_element_t; ++result;
-				load_element_s = blank;                 // right
+				load_element_s = blank;                 // right	
 				load_element_t = *first2; ++first2;
 				++j;
 
@@ -358,7 +375,7 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 			{
 				*result = load_element_s; ++result;
 				*result = load_element_t; ++result;
-				load_element_s = *first1; ++first1;       // down              
+				load_element_s = *first1; ++first1;       // down	
 				load_element_t = blank;
 				++i;
 			}
@@ -371,7 +388,14 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 	{
 		*result = load_element_s; ++result;
 		*result = load_element_t; ++result;
-		load_element_s = *first1; ++first1;
+		if (first1 != last1)//R.Alcraft end of iterator error fixed (24/2/20)
+		{
+			load_element_s = *first1; ++first1;
+		}
+		else
+		{
+			load_element_s = blank;
+		}						
 		load_element_t = blank;
 	}
 
@@ -380,7 +404,14 @@ OutputIterator needleman_wunsch_alignment(InputIterator first1, InputIterator la
 		*result = load_element_s; ++result;
 		*result = load_element_t; ++result;
 		load_element_s = blank;
-		load_element_t = *first2; ++first2;
+		if (first2 != last2)//R.Alcraft end of iterator error fixed (24/2/20)
+		{
+			load_element_t = *first2; ++first2;
+		}
+		else
+		{
+			load_element_t = blank;
+		}		
 	}
 
 	return result;
