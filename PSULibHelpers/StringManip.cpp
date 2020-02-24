@@ -1,4 +1,6 @@
 #include "StringManip.h"
+#include <xlocbuf>
+#include <codecvt>
 
 
 
@@ -33,4 +35,18 @@ vector<string> StringManip::stringToVector(string input, string delim)
 
 	vals.push_back(newin);
 	return vals;
+}
+
+wstring StringManip::utf8ToUtf16(const std::string& utf8Str)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	return conv.from_bytes(utf8Str);
+}
+
+std::string StringManip::ws2s(const std::wstring& wstr)
+{
+	using convert_typeX = std::codecvt_utf8<wchar_t>;
+	std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+	return converterX.to_bytes(wstr);
 }

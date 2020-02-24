@@ -7,7 +7,9 @@ OUTPUTPATH=F:\\PSUA\\Output\\
 CONFIGPATH=F:\\PSUA\\Code\\PSU-ALPHA\\Config\\
 
 ### Whether to create a database file of the geometric features of a pdb
+GEODATABASE=F:\\PSUA\\Output\\GeoData\\
 GEOREPORT=TRUE
+GEOAGGREGATION=TRUE
 
 ###Whether to run a Least Squares fit rmsd report
 #RMSDOPT=TRUE

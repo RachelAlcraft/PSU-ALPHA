@@ -6,6 +6,7 @@ GeoTripod::GeoTripod(GeoCoords anchor, GeoCoords axisFar, GeoCoords perpFar)
 	anchor = anchor;
 	axisFar = axisFar;
 	perpFar = perpFar;
+	Init = true;
 }
 
 GeoTransformations* GeoTripod::getTransformation(GeoTripod tri/*, int orientation*/)

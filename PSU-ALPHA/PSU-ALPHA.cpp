@@ -10,7 +10,8 @@
 #include <FASTAFile.h>
 #include <RMSD.h>
 #include <RMSDReport.h>
-#include <ScoringDataReport.h>
+#include <GeometricalDataReport.h>
+#include <GeometricalAggregationReport.h>
 
 using namespace std;
 
@@ -48,7 +49,9 @@ int main()
 		string RMSDOPT = InputParams::getInstance()->getParam("RMSDOPT");
 		string ALIGNMENT = InputParams::getInstance()->getParam("ALIGNMENT");
 		string RMSDCONTACT = InputParams::getInstance()->getParam("RMSDCONTACT");
+		string GEODATABASE = InputParams::getInstance()->getParam("GEODATABASE");
 		string GEOREPORT = InputParams::getInstance()->getParam("GEOREPORT");
+		string GEOAGGREGATION = InputParams::getInstance()->getParam("GEOAGGREGATION");
 
 
 		//// INPUT CONSTRUCTION ////
@@ -137,10 +140,21 @@ int main()
 		//Shall we write out a database file of the geometric features of this pdb?
 		if (GEOREPORT == "TRUE")
 		{
-			string geodata = OUTPATH + "Reports\\" + PDB1 + "_geometricfeatures.csv";
-			LogFile::getInstance()->writeMessage("Outputting geometric features to, outfile=" + geodata);
-			ScoringDataReport sdr;
-			sdr.printReport(pdb1, geodata);
+			string geodata1 = OUTPATH + "Reports\\" + PDB1 + "_geometricfeatures.csv";
+			string geodata2 = GEODATABASE + PDB1 + "_geometricfeatures.csv";
+			LogFile::getInstance()->writeMessage("Outputting geometric features to, outfile=" + geodata1 + " and " + geodata2);
+			GeometricalDataReport gdr;
+			gdr.printReport(pdb1, geodata1, geodata2);
+
+		}
+		//Shall we aggregate all of the existing geometrical data into a probability distribution file?
+		if (GEOAGGREGATION == "TRUE")
+		{	
+			string geodata1 = OUTPATH + "Reports\\geoprobdist.csv";
+			string geodata = GEODATABASE;
+			LogFile::getInstance()->writeMessage("Outputting geometric features to, outfile=" + geodata1);
+			GeometricalAggregationReport gar;
+			gar.printReport(geodata, geodata1);
 
 		}
 

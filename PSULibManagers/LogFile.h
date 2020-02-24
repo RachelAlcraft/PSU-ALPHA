@@ -28,8 +28,6 @@ public:
 	void writeMessage(string msg);
 	string runId();
 private:
-	bool CreateFolder(string path);
-	wstring utf8ToUtf16(const std::string& utf8Str);
-
+	bool CreateFolder(string path);	
 };
 

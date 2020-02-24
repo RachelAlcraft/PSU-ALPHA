@@ -20,6 +20,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)GeoPlane.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GeoTransformation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GeoVector.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ProbabilityDistribution.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)GeoCloud.h" />
@@ -28,5 +29,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)GeoPlane.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)GeoTransformation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)GeoVector.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProbabilityDistribution.h" />
   </ItemGroup>
 </Project>

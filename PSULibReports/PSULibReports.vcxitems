@@ -15,12 +15,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CAlphaReport.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GeometricalAggregationReport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)RamaReport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)RMSDReport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GeometricalDataReport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CAlphaReport.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GeometricalAggregationReport.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RamaReport.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RMSDReport.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)GeometricalDataReport.h" />

@@ -1,5 +1,6 @@
 #include "LogFile.h"
 #include <Windows.h>
+#include <StringManip.h>
 
 
 LogFile* LogFile::instance = 0;
@@ -57,13 +58,13 @@ bool LogFile::setLogFile(string fileName, string path)
 
 bool LogFile::CreateFolder(string path)
 {
-	wstring wpath = utf8ToUtf16(path);	
+	wstring wpath = StringManip::utf8ToUtf16(path);	
 	LPCWSTR lp = wpath.c_str(); 
 	bool success = true;
 	if (CreateDirectoryW(lp, NULL))
 	{
 		string reppath = path + "\\Reports\\";
-		wstring wrpath = utf8ToUtf16(reppath);
+		wstring wrpath = StringManip::utf8ToUtf16(reppath);
 		LPCWSTR lpr = wrpath.c_str();
 		if (!CreateDirectoryW(lpr, NULL))		
 			success = false;		
@@ -74,10 +75,6 @@ bool LogFile::CreateFolder(string path)
 	return success;
 }
 
-wstring LogFile::utf8ToUtf16(const std::string& utf8Str)
-{
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
-	return conv.from_bytes(utf8Str);
-}
+
 
 

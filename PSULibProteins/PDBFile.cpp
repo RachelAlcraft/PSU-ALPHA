@@ -15,6 +15,7 @@ PDBFile::PDBFile(string filename, string pdb_code)
 {
 	pdbCode = pdb_code;	
 	_filename = filename;
+	experimentalMethod = "UNK"; // unknown currently don't know how to get this but it should be part of the primary key.
 }
 
 PDBFile::~PDBFile()

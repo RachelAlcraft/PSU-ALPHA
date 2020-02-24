@@ -16,6 +16,7 @@ private:
 	vector<string> _file; //The original file is saved so we can print it back out
 public:
 	string pdbCode;
+	string experimentalMethod;
 	
 
 private:
