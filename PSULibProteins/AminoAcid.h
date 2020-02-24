@@ -29,7 +29,7 @@ public:
 	int Charge;
 	bool Polar;
 	string Formula;
-	string Chain;
+	string AtomChain;
 	string Chi1;
 	string Chi2;
 	string Chi3;
@@ -57,6 +57,10 @@ public:
 
 	//Child
 	//do the atoms need to be here or ok just in the manager?
+	vector<AtomBond> _bonds;
+	vector<AtomAngle> _angles;
+	vector<AtomTorsion> _torsions;
+
 public:
 	AminoAcid(string pdb_code, string chain_id, int amino_id, int structure_id, string aminoCode);
 	~AminoAcid(); //responsible for the torsions
@@ -67,6 +71,10 @@ public:
 	Atom* getCAlpha() { return _atoms["CA"]; }//obviously this needs error checking, but the whole system fails if there are no CA on each aa so it doesn't matter how badly it crashes TODO
 	map<string, Atom*> getAtoms() { return _atoms; }
 	string getSS();
+	void createScoringAtoms();
+	vector<AtomBond> getAtomBonds() { return _bonds; }
+	vector<AtomAngle> getAtomAngles() { return _angles; }
+	vector<AtomTorsion> getAtomTorsions() { return _torsions; }
 private: //Helper functions
 	vector<Atom*> atomsFromString(string atomstring); //we pass around atom strings like N-CA-C and would like to be able to turn those into acrual atoms
 	

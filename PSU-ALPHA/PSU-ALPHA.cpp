@@ -10,6 +10,7 @@
 #include <FASTAFile.h>
 #include <RMSD.h>
 #include <RMSDReport.h>
+#include <ScoringDataReport.h>
 
 using namespace std;
 
@@ -47,6 +48,7 @@ int main()
 		string RMSDOPT = InputParams::getInstance()->getParam("RMSDOPT");
 		string ALIGNMENT = InputParams::getInstance()->getParam("ALIGNMENT");
 		string RMSDCONTACT = InputParams::getInstance()->getParam("RMSDCONTACT");
+		string GEOREPORT = InputParams::getInstance()->getParam("GEOREPORT");
 
 
 		//// INPUT CONSTRUCTION ////
@@ -131,6 +133,15 @@ int main()
 			}
 
 			
+		}
+		//Shall we write out a database file of the geometric features of this pdb?
+		if (GEOREPORT == "TRUE")
+		{
+			string geodata = OUTPATH + "Reports\\" + PDB1 + "_geometricfeatures.csv";
+			LogFile::getInstance()->writeMessage("Outputting geometric features to, outfile=" + geodata);
+			ScoringDataReport sdr;
+			sdr.printReport(pdb1, geodata);
+
 		}
 
 		LogFile::getInstance()->writeMessage("########### PSU-Alpha concluded ##############");

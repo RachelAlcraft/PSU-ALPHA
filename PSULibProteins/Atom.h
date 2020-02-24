@@ -42,3 +42,38 @@ private:
 
 };
 
+class AtomBond
+{
+protected:
+	Atom* _A1;
+	Atom* _A2;
+	string _atomString;
+	string _SS;
+public:
+	AtomBond(string ss, Atom* a1, Atom* a2);
+	string getChain() { return _A1->chainId; }
+	string getAA() { return _A1->aminoCode; }
+	int getId() { return _A1->atomId; }	
+	string getAtoms() { return _atomString; }
+	string getSS() { return _SS; }
+	virtual double getValue();
+};
+
+class AtomAngle : public AtomBond
+{	
+	Atom* _A3;
+public:
+	AtomAngle(string ss, Atom* a1, Atom* a2, Atom* a3);
+	double getValue() override;
+
+};
+
+class AtomTorsion: public AtomBond
+{	
+	Atom* _A3;
+	Atom* _A4;
+public:
+	AtomTorsion(string ss, Atom* a1, Atom* a2, Atom* a3, Atom* a4);
+	double getValue() override;
+};
+

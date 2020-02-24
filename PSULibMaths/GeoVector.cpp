@@ -104,7 +104,7 @@ double GeoVector::angle(GeoVector b)
 	//magnitude
 	double ma2 = a.magnitude();
 	double mb2 = b.magnitude();
-	double div = pow(ma2, 0.5) * pow(mb2, 0.5);
+	double div = ma2 * mb2;
 	//cos
 	double cos_theta = dot / div;
 	//inverse cos
@@ -116,6 +116,7 @@ double GeoVector::angle(GeoVector b)
 	//ATAN2 version?	I prefer this but the decision on sign is effectively the same thing.
 	return theta;
 }
+
 
 double GeoVector::magnitude()
 {

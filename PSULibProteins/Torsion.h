@@ -12,7 +12,7 @@ protected:
 	
 public: //methods
 	Torsion(string, int);
-	double getDihedralAngle(vector<Atom*>);
+	static double getDihedralAngle(vector<Atom*>);
 
 };
 

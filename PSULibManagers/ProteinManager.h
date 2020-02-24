@@ -72,6 +72,9 @@ public:
 	vector<Atom*> getCAlphas(string pdbCode);
 	vector<Atom*>  getAtoms(string pdbCode);
 	map<int,Atom*>  getAtomsMap(string pdbCode);
+	vector<AtomBond>  getAtomBonds(string pdbCode);
+	vector<AtomAngle>  getAtomAngles(string pdbCode);
+	vector<AtomTorsion>  getAtomTorsions(string pdbCode);
 
 private:
 	//vector<string> stringToVector(string input, string delim);

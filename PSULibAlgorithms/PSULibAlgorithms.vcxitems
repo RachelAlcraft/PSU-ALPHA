@@ -16,9 +16,11 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)LeastSquares.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)RMSD.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ScoringFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)LeastSquares.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RMSD.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ScoringFunction.h" />
   </ItemGroup>
 </Project>

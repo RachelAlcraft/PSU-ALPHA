@@ -217,6 +217,64 @@ map<int,Atom*>  ProteinManager::getAtomsMap(string pdbCode)
 	return mapatoms;
 }
 
+vector<AtomBond>  ProteinManager::getAtomBonds(string pdbCode)
+{
+	vector<AtomBond> vecatoms;
+	PDBFile* pdb = _pdbfiles[pdbCode];
+	map<string, Chain*> chains = pdb->getChains();
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		map<int, AminoAcid*> aminos = ch->getAminoAcids();
+		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
+		{
+			vector<AtomBond> atoms = biter->second->getAtomBonds();
+			for (unsigned int i = 0; i < atoms.size(); ++i)
+				vecatoms.push_back(atoms[i]);
+		}
+
+	}
+	return vecatoms;
+}
+
+vector<AtomAngle>  ProteinManager::getAtomAngles(string pdbCode)
+{
+	vector<AtomAngle> vecatoms;
+	PDBFile* pdb = _pdbfiles[pdbCode];
+	map<string, Chain*> chains = pdb->getChains();
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		map<int, AminoAcid*> aminos = ch->getAminoAcids();
+		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
+		{
+			vector<AtomAngle> atoms = biter->second->getAtomAngles();
+			for (unsigned int i = 0; i < atoms.size(); ++i)
+				vecatoms.push_back(atoms[i]);
+		}
+
+	}
+	return vecatoms;
+}
+vector<AtomTorsion>  ProteinManager::getAtomTorsions(string pdbCode)
+{
+	vector<AtomTorsion> vecatoms;
+	PDBFile* pdb = _pdbfiles[pdbCode];
+	map<string, Chain*> chains = pdb->getChains();
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		map<int, AminoAcid*> aminos = ch->getAminoAcids();
+		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
+		{
+			vector<AtomTorsion> atoms = biter->second->getAtomTorsions();
+			for (unsigned int i = 0; i < atoms.size(); ++i)
+				vecatoms.push_back(atoms[i]);
+		}
+
+	}
+	return vecatoms;
+}
 
 
 

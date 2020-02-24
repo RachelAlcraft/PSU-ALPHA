@@ -4,6 +4,7 @@
 #include <sstream>
 #include "LogFile.h"
 #include <StringManip.h>
+#include <Torsion.h>
 
 Atom::Atom(string pdb_code, string atom_string)
 {		
@@ -108,4 +109,56 @@ void Atom::applyTransformation(GeoTransformations* trans)
 {
 	GeoCoords newCoords = trans->applyTransformation(coords);
 	shifted_coords = newCoords;
+}
+
+// BONDS ################################################################
+AtomBond::AtomBond(string ss, Atom* a1, Atom* a2)
+{
+	_A1 = a1;
+	_A2 = a2;	
+	_SS = ss;
+	_atomString = a1->elementName + "-" + a2->elementName;
+
+}
+double AtomBond::getValue()
+{
+	GeoVector a = _A1->vectorDifference(_A2);
+	return a.getMagnitude();
+}
+// ANGLES ################################################################
+AtomAngle::AtomAngle(string ss, Atom* a1, Atom* a2, Atom* a3):AtomBond(ss,a1,a2)
+{
+	_A1 = a1;
+	_A2 = a2;
+	_A3 = a3;
+	_atomString += "-" + a3->elementName;
+
+}
+
+double AtomAngle::getValue()
+{
+	GeoVector a = _A2->vectorDifference(_A1);
+	GeoVector b = _A2->vectorDifference(_A3);
+	double angle = a.angle(b);
+	return angle;
+}
+
+// TORSIONS ################################################################
+AtomTorsion::AtomTorsion(string ss, Atom* a1, Atom* a2, Atom* a3, Atom* a4) :AtomBond( ss, a1, a2)
+{
+	_A1 = a1;
+	_A2 = a2;
+	_A3 = a3;
+	_A4 = a4;
+	_atomString += "-" + a3->elementName + "-" + a4->elementName;
+}
+
+double AtomTorsion::getValue()
+{
+	vector < Atom *> atoms; 
+	atoms.push_back(_A1);
+	atoms.push_back(_A2);
+	atoms.push_back(_A3);
+	atoms.push_back(_A4);
+	return Torsion::getDihedralAngle(atoms);
 }
