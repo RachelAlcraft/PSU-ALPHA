@@ -191,7 +191,7 @@ void AminoAcid::createScoringAtoms()
 	}
 	//Then we need the bond that goes to the next atom (unless it is the end)
 	//TODO although currently I don't think this is being called if it is either the first or last
-	if (_aaNext)
+	if (_atmNpp)
 	{		
 		_bonds.push_back(AtomBond(ss, last, _atmNpp));
 	}
@@ -207,7 +207,7 @@ void AminoAcid::createScoringAtoms()
 		last1 = a2;
 		last2 = a3;
 	}
-	if (_aaNext)
+	if (_atmNpp && _atmCApp)
 	{		
 		_angles.push_back(AtomAngle(ss, last1, last2, _atmNpp));		
 		_angles.push_back(AtomAngle(ss, last2, _atmNpp, _atmCApp));
@@ -227,7 +227,7 @@ void AminoAcid::createScoringAtoms()
 		last2 = a3;
 		last3 = a4;
 	}
-	if (_aaNext)
+	if (_atmNpp && _atmCApp)
 	{		
 		_torsions.push_back(AtomTorsion(ss, last1, last2, last3, _atmNpp));	
 		_torsions.push_back(AtomTorsion(ss, last2, last3, _atmNpp, _atmCApp));

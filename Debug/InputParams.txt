@@ -1,14 +1,15 @@
 #The Strucutre of data is fixed once the config location and output location are given
 # This is the DEBUG config file
 RUNID=GEO1
-PDB1=1by2
+PDB1=1ga6
 PDB2=sml2
 OUTPUTPATH=F:\\PSUA\\Output\\
 CONFIGPATH=F:\\PSUA\\Code\\PSU-ALPHA\\Config\\
 
 ### Whether to create a database file of the geometric features of a pdb
-GEODATABASE=F:\\PSUA\\Output\\GeoData\\
-GEOREPORT=TRUE
+GEODATABASE=F:\\PSUA\\GeoDatabase\\
+PDBDATABASE=F:\\PSUA\\PDBDatabase\\
+#GEOREPORT=TRUE
 GEOAGGREGATION=TRUE
 
 ###Whether to run a Least Squares fit rmsd report

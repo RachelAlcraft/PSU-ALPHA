@@ -1,14 +1,20 @@
 ###The Strucutre of data is fixed once the config location and output location are given
 ###This is the RELEASE config file
-RUNID=TST1
-PDB1=1by2
-PDB2=1p57a
+RUNID=GEO3
+#PDB1=1ga6
+PDB1=sml2
 OUTPUTPATH=F:\\PSUA\\Output\\
 CONFIGPATH=F:\\PSUA\\Code\\PSU-ALPHA\\Config\\
 
+### Whether to create a database file of the geometric features of a pdb
+GEODATABASE=F:\\PSUA\\GeoDatabase\\
+PDBDATABASE=F:\\PSUA\\PDBDatabase\\
+#GEOREPORT=TRUE
+GEOAGGREGATION=TRUE
+
 ###Whether to run a Least Squares fit rmsd report
-RMSDOPT=TRUE
-ALIGNMENT=TRUE
+#RMSDOPT=TRUE
+#ALIGNMENT=TRUE
 ###A slightly unnecessary contact map of the alignment
 #RMSDCONTACT=TRUE
 
@@ -23,4 +29,5 @@ ALIGNMENT=TRUE
 ###We can add chains to the contact map report which are useful for looking at PPI in a complex, eg 1DFJ
 #CONTACTCHAIN1=A
 #CONTACTCHAIN2=B
+
 

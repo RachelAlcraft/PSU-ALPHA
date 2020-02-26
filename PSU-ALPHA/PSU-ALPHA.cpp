@@ -50,6 +50,7 @@ int main()
 		string ALIGNMENT = InputParams::getInstance()->getParam("ALIGNMENT");
 		string RMSDCONTACT = InputParams::getInstance()->getParam("RMSDCONTACT");
 		string GEODATABASE = InputParams::getInstance()->getParam("GEODATABASE");
+		string PDBDATABASE = InputParams::getInstance()->getParam("PDBDATABASE");
 		string GEOREPORT = InputParams::getInstance()->getParam("GEOREPORT");
 		string GEOAGGREGATION = InputParams::getInstance()->getParam("GEOAGGREGATION");
 
@@ -144,17 +145,17 @@ int main()
 			string geodata2 = GEODATABASE + PDB1 + "_geometricfeatures.csv";
 			LogFile::getInstance()->writeMessage("Outputting geometric features to, outfile=" + geodata1 + " and " + geodata2);
 			GeometricalDataReport gdr;
-			gdr.printReport(pdb1, geodata1, geodata2);
+			gdr.printReport(pdb1, geodata1, geodata2,PDBDATABASE,GEODATABASE);
 
 		}
 		//Shall we aggregate all of the existing geometrical data into a probability distribution file?
 		if (GEOAGGREGATION == "TRUE")
 		{	
-			string geodata1 = OUTPATH + "Reports\\geoprobdist.csv";
+			//string geodata1 = OUTPATH + "Reports\\geoprobdist.csv";
 			string geodata = GEODATABASE;
-			LogFile::getInstance()->writeMessage("Outputting geometric features to, outfile=" + geodata1);
+			LogFile::getInstance()->writeMessage("Outputting geometric features to, outfile=" + geodata);
 			GeometricalAggregationReport gar;
-			gar.printReport(geodata, geodata1);
+			gar.printReport(geodata);
 
 		}
 

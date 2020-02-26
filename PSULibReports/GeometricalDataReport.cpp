@@ -1,9 +1,49 @@
 #include "GeometricalDataReport.h"
 #include <LogFile.h>
 #include <ProteinManager.h>
+#include <FoldersFiles.h>
 
-void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string fileName2)
+void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string fileName2, string directory, string geodir)
 {//produce data frame report for R reporting
+	
+	if (directory != "")
+	{
+		vector<string> pdbs = FoldersFiles::getFilesWithinFolder(directory);
+		for (unsigned int i = pdbs.size()-1; i >= 0; --i)
+		{			
+			stringstream status;
+			status << i << " out of " << pdbs.size();
+			string pdb = pdbs[i];
+			try
+			{
+				string file = directory + pdb;
+				string geofile = geodir + pdb + ".geo.txt";
+				LogFile::getInstance()->writeMessage(status.str() + " - Loading data for PDB1, file=" + pdb);
+				PDBFile* pf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, file);
+				pf->loadData();
+				if (pf != nullptr)
+				{
+
+					printOneReport(pf, geofile, "");
+				}
+			}
+			catch (...)
+			{
+				LogFile::getInstance()->writeMessage("Error loading pdb file " + pdb);
+			}
+		}		
+	}
+	else
+	{
+		printOneReport(pdb, fileName1, fileName2);
+	}
+
+}
+
+void GeometricalDataReport::printOneReport(PDBFile* pdb, string fileName1, string fileName2)
+{//produce data frame report for R reporting
+
+	
 	LogFile::getInstance()->writeMessage("Starting Scoring Data report for " + pdb->pdbCode);
 
 	stringstream report;
@@ -47,7 +87,7 @@ void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string f
 		report << torsions[i].getAtoms() << ",";
 		report << torsions[i].getValue() << "\n";
 	}
-	
+
 	//Dual output to the temporary results directory, and also to a database directory for accumulation of data
 	ofstream outfile(fileName1);
 	if (outfile.is_open())
@@ -55,9 +95,12 @@ void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string f
 		outfile << report.str();
 	}
 
-	ofstream outfile2(fileName2);
-	if (outfile2.is_open())
+	if (fileName2 != "")
 	{
-		outfile2 << report.str();
+		ofstream outfile2(fileName2);
+		if (outfile2.is_open())
+		{
+			outfile2 << report.str();
+		}
 	}
 }

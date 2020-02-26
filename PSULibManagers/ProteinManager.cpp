@@ -97,27 +97,35 @@ void ProteinManager::addAtom(string pdbCode, string chainId, int aminoId, Atom* 
 
 AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int aminoId, string aminoCode, int& structure_id)
 {
-	stringstream id;
-	id << pdbCode << chainId << aminoId;
-
-	PDBFile* pdb = _pdbfiles[pdbCode];
-	Chain* chain = pdb->getChain(chainId);
-	if (chain)
+	try
 	{
-		AminoAcid* aa = chain->getAminoAcid(aminoId);		
-		if (!aa)
+		stringstream id;
+		id << pdbCode << chainId << aminoId;
+
+		PDBFile* pdb = _pdbfiles[pdbCode];
+		Chain* chain = pdb->getChain(chainId);
+		if (chain && aminoCode != "UNK")
 		{
-			structure_id += 1;
-			AminoAcid* aa = new AminoAcid(pdbCode, chainId, aminoId, structure_id,aminoCode);
-			chain->addAminoAcid(aa);			
-			return aa;
+			AminoAcid* aa = chain->getAminoAcid(aminoId);
+			if (!aa)
+			{
+				structure_id += 1;
+				AminoAcid* aa = new AminoAcid(pdbCode, chainId, aminoId, structure_id, aminoCode);
+				chain->addAminoAcid(aa);
+				return aa;
+			}
+			else
+			{
+				return aa;
+			}
 		}
 		else
 		{
-			return aa;
+			LogFile::getInstance()->writeMessage("Amino acid not found " + pdbCode);
+			return nullptr;
 		}
 	}
-	else
+	catch (...)
 	{
 		LogFile::getInstance()->writeMessage("Amino acid not found " + pdbCode);
 		return nullptr;

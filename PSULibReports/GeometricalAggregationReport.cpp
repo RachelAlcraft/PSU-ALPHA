@@ -3,71 +3,110 @@
 #include <iostream>
 #include <vector>
 #include <Windows.h> // TODO this is windows only which is not what I want ultimately, have not succedded in using boost yet.
-#include <StringManip.h>
+
 #include <LogFile.h>
 #include <CSVFile.h>
 #include <map>
+#include <FoldersFiles.h>
 
 using namespace std;
 
 
-void GeometricalAggregationReport::printReport(string datadir, string filename)
+void GeometricalAggregationReport::printReport(string datadir)
 {
 	LogFile::getInstance()->writeMessage("Starting Aggregation report for " + datadir);
-	vector<string> files = getFilesWithinFolder(datadir);
-	map<string, vector<double>> probabilities;
+	vector<string> files = FoldersFiles::getFilesWithinFolder(datadir);
+	map<string,map<string, vector<double>>> probabilities;
 	for (unsigned int i = 0; i < files.size(); ++i)
 	{
+		stringstream status;
+		status << i << " out of " << files.size() << " ";
 		string file = datadir + files[i];
-		LogFile::getInstance()->writeMessage(files[i]);
-		CSVFile csv(file);
-		for (unsigned int i = 1; i < csv.fileVector.size(); ++i) // TODO a bit hard coded, skipping the header and we know we want 1,3,4,5,6 then 7 is the value
-		{
-			string key = csv.fileVector[i][1] + ":"; //ALA
-			key += csv.fileVector[i][3] + ":"; //SS
-			key += csv.fileVector[i][4] + ":"; // ANGLE
-			key += csv.fileVector[i][5] + ":"; // METHOD
-			key += csv.fileVector[i][6]; // chain			
-			double value = atof((csv.fileVector[i][7]).c_str());
-			map<string, vector<double>>::iterator iter = probabilities.find(key);
-			if (iter == probabilities.end())
+		LogFile::getInstance()->writeMessage(status.str() + files[i]);
+		try
+		{					
+			CSVFile csv(file);
+			for (unsigned int i = 1; i < csv.fileVector.size(); ++i) // TODO a bit hard coded, skipping the header and we know we want 1,3,4,5,6 then 7 is the value
 			{
-				vector<double> oneval;
-				oneval.push_back(value);
-				probabilities.insert(pair < string, vector<double>>(key, oneval));
+				if (csv.fileVector[i].size() > 7)
+				{
+					string key = csv.fileVector[i][1] + ":"; //ALA
+					key += csv.fileVector[i][3] + ":"; //SS
+					key += csv.fileVector[i][4] + ":"; // ANGLE
+					key += csv.fileVector[i][5] + ":"; // METHOD
+					key += csv.fileVector[i][6]; // chain			
+					double value = atof((csv.fileVector[i][7]).c_str());
+					map<string, map<string, vector<double>>>::iterator aiter = probabilities.find(csv.fileVector[i][1]);
+					if (aiter == probabilities.end())
+					{
+						map<string, vector<double>> emptydata;
+						probabilities.insert(pair<string, map<string, vector<double>>>(csv.fileVector[i][1], emptydata));
+					}
+					//Now it is there for sure
+					map<string, map<string, vector<double>>>::iterator biter = probabilities.find(csv.fileVector[i][1]);
+					map<string, vector<double>>::iterator citer = biter->second.find(key);
+					if (citer == biter->second.end())
+					{
+						vector<double> emptydata;
+						probabilities[csv.fileVector[i][1]].insert(pair<string, vector<double>>(key, emptydata));
+					}
+					//Now it is there for sure
+					probabilities[csv.fileVector[i][1]][key].push_back(value);
+				}
+				else
+				{
+					LogFile::getInstance()->writeMessage("Invalid data for creating geometric aggregation");
+				}
 			}
-			else
-			{
-				probabilities[key].push_back(value);
-			}			
 		}
-	}
-
-	//now print out the probability distribution file
-	stringstream report;
-	report << "ProabilityID,Values\n";
-	
-	for (map<string, vector<double>>::iterator iter = probabilities.begin(); iter != probabilities.end(); ++iter)
-	{
-		string key = iter->first;
-		vector<double> vals = iter->second;
-		report << key;
-		for (unsigned int i = 0; i < vals.size(); ++i)
+		catch (...)
 		{
-			report <<"," << vals[i];
+			LogFile::getInstance()->writeMessage("!!!Error");
 		}
-		report << "\n";
 	}
 
-	ofstream outfile(filename);
-	if (outfile.is_open())
+	//now print out the probability distribution file per amino acid so it is easy to look at
+	
+	
+	for (map<string,map<string, vector<double>>>::iterator iter = probabilities.begin(); iter != probabilities.end(); ++iter)
 	{
-		outfile << report.str();
+		try
+		{
+			stringstream report;
+			report << "ProabilityID,Values\n";
+
+			string aa = iter->first;
+			for (map<string, vector<double>>::iterator biter = iter->second.begin(); biter != iter->second.end(); ++biter)
+			{
+				string key = biter->first;
+				vector<double> vals = biter->second;
+				report << key;
+				for (unsigned int i = 0; i < vals.size(); ++i)
+				{
+					report << "," << vals[i];
+				}
+				report << "\n";
+			}
+
+			string filename = datadir + aa + "_geoprobdist.csv";
+			ofstream outfile(filename);
+			if (outfile.is_open())
+			{
+				LogFile::getInstance()->writeMessage("Printing " + filename);
+				outfile << report.str();
+			}
+		}
+		catch (...)
+		{
+			LogFile::getInstance()->writeMessage("!!! Error printing aggregation");
+		}
 	}
+
+	
 
 }
 
-vector<string> GeometricalAggregationReport::getFilesWithinFolder(string folder)
+/*vector<string> GeometricalAggregationReport::getFilesWithinFolder(string folder)
 {//https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
 	vector<string> names;
 	string search_path = folder + "*.*";
@@ -90,6 +129,6 @@ vector<string> GeometricalAggregationReport::getFilesWithinFolder(string folder)
 		::FindClose(hFind);
 	}
 	return names;
-}
+}*/
 
 

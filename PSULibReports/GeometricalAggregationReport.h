@@ -7,8 +7,8 @@ using namespace std;
 class GeometricalAggregationReport
 {
 public:
-	void printReport(string datadir, string filename);
+	void printReport(string datadir);
 private:
-	vector<string> getFilesWithinFolder(string folder);
+	//vector<string> getFilesWithinFolder(string folder);
 };
 

@@ -15,7 +15,7 @@ PDBFile::PDBFile(string filename, string pdb_code)
 {
 	pdbCode = pdb_code;	
 	_filename = filename;
-	experimentalMethod = "UNK"; // unknown currently don't know how to get this but it should be part of the primary key.
+	experimentalMethod = "XR"; // only XR at the moment
 }
 
 PDBFile::~PDBFile()
@@ -44,7 +44,8 @@ void PDBFile::loadData()
 			string chain = atom->chainId;
 			Chain* pchain = ProteinManager::getInstance()->getOrAddChain(pdbCode, chain);
 			AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, chain, amino_id, amino, structureId);
-			ProteinManager::getInstance()->addAtom(pdbCode,chain,amino_id,atom);															
+			if (paa!=nullptr)
+				ProteinManager::getInstance()->addAtom(pdbCode,chain,amino_id,atom);															
 		}
 	}
 	addLinks();
