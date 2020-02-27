@@ -123,6 +123,7 @@ AtomBond::AtomBond(string ss, Atom* a1, Atom* a2)
 double AtomBond::getValue()
 {
 	GeoVector a = _A1->vectorDifference(_A2);
+	//TODO should it be divided by resolution to make a comparative sense across structures?
 	return a.getMagnitude();
 }
 // ANGLES ################################################################
