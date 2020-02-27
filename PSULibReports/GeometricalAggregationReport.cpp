@@ -72,7 +72,7 @@ void GeometricalAggregationReport::printReport(string datadir)
 	{
 		try
 		{
-			//TODO better make it a dataframe bu having
+			//TODO better to make it a dataframe by having
 			// AA,Exmp_meth,geo type, SS,atoms,values as a : delim list
 			// Then the prob dist can be got at whatever preferre granularity
 			stringstream report;
