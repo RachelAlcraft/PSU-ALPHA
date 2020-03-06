@@ -1,0 +1,8 @@
+Note this is not good data, it is a proof of concept for feasibility and timings. 
+Any pdb files that crashed the system I just deleted. 
+Weird looking files that were produced I also deleted.
+Some data is clearely missing.
+In terms of timings the following was the rough result:
+ - Downnloading 1000 pdb files using an R script to my harddrive - about 20 minutes
+ - Going through each pdb file and calculating a geometric feature file for each one individually - about 3 minutes
+ - Aggregating all those indivifudal files into sets of values based on a defined granularity - about 3 minutes
