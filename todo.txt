@@ -1,0 +1,11 @@
+
+7/3/20
+
+Need to add OXT and any other way of knowing that an atom is a terminating atom in a structure
+
+There are some non standard amino acids that must be in the files that failed, so go though those files.
+
+I need to scrap the pdb format and use cif: http://mmcif.wwpdb.org/docs/sw-examples/cpp/html/index.html
+
+Do I need any sort of probability analysis in c++ or only produce the data for all analysis in R? Just worried about speed.
+
