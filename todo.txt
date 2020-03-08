@@ -1,4 +1,18 @@
 
+8/3/20
+As per StrBui practical 8, when adding hydrogens in Chimera
+Select  Select All
+Tools  Structure Editing  Add H
+Hydrogens are in the structure like
+ATOM   1566  N   GLY   103      17.773  21.088   2.351  1.00 62.54           N
+ATOM   1567  CA  GLY   103      17.150  22.161   1.621  1.00 62.54           C
+ATOM   1568  C   GLY   103      17.355  22.049   0.145  1.00 62.54           C
+ATOM   1569  O   GLY   103      18.393  21.585  -0.316  1.00 62.54           O
+ATOM   1570  H   GLY   103      18.769  20.919   2.338  1.00  0.00           H
+ATOM   1571  HA2 GLY   103      17.573  23.106   1.961  1.00  0.00           H
+ATOM   1572  HA3 GLY   103      16.080  22.157   1.831  1.00  0.00           H
+Need to be able to do something with that.
+
 7/3/20
 
 Need to add OXT and any other way of knowing that an atom is a terminating atom in a structure
