@@ -1,6 +1,6 @@
 
 8/3/20
-As per StrBui practical 8, when adding hydrogens in Chimera
+As per StrBio practical 8, when adding hydrogens in Chimera
 Select  Select All
 Tools  Structure Editing  Add H
 Hydrogens are in the structure like
