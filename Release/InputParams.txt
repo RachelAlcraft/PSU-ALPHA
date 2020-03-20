@@ -1,17 +1,17 @@
 ###The Strucutre of data is fixed once the config location and output location are given
 ###This is the RELEASE config file
-RUNID=GEO3
+RUNID=CW4
 #PDB1=1ga6
-PDB1=sml2
+PDB1=Model2
 OUTPUTPATH=F:\\PSUA\\Output\\
 CONFIGPATH=F:\\PSUA\\Code\\PSU-ALPHA\\Config\\
 
 ### Whether to create a database file of the geometric features of a pdb
-GEODATABASE=F:\\PSUA\\GeoDatabase\\
-PDBDATABASE=F:\\PSUA\\PDBDatabase\\
+#GEODATABASE=F:\\PSUA\\GeoDatabase\\
+#PDBDATABASE=F:\\PSUA\\PDBDatabase\\
 #GEOREPORT=TRUE
-GEOAGGREGATION=TRUE
-
+#GEOAGGREGATION=TRUE
+ 
 ###Whether to run a Least Squares fit rmsd report
 #RMSDOPT=TRUE
 #ALIGNMENT=TRUE
@@ -22,10 +22,10 @@ GEOAGGREGATION=TRUE
 #RMSDFIX=FALSE
 
 ###Whether to run a ramachandran plot
-#RAMA=TRUE
+RAMA=TRUE
 
 ###Whether to run a c-alpha copntact map plot
-#CONTACT=TRUE
+CONTACT=TRUE
 ###We can add chains to the contact map report which are useful for looking at PPI in a complex, eg 1DFJ
 #CONTACTCHAIN1=A
 #CONTACTCHAIN2=B

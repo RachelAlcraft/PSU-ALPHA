@@ -31,3 +31,4 @@ for (i in 1:length(pdbcodes[,1])){
   print(paste(i,"completed..."))
 }
 
+download.file("http://www.bioinf.org.uk/teaching/bbk/biocomp2/project/data/chrom_CDS_9.gz","f:\\chme9.gz")

@@ -57,3 +57,17 @@ p6 <- ggplot(sub_dataF, aes(x=Phi, y=Psi,color=SS)) +
   
 
 grid.arrange(p1,p2,p3,p4,p5,p6,nrow=2)
+
+#Phi/Psi
+
+sub_data0 <- subset(data, Chi1 != 0)
+sub_data0 <- subset(sub_data0, Chi2 != 0) 
+
+pall <- ggplot(data, aes(x=Phi, y=Psi,color=SS)) + 
+  ggtitle(paste("Ramachandran Plot for 'Model 2'")) + 
+  geom_point(size=4) + 
+  scale_colour_discrete(labels = c("right a-helix","ideal beta","extended-glycine","glycine-helix","left a-helix","beta-p","unknown"))+
+  scale_y_continuous(breaks = c(-180,-120,-60,0,60,120,180))+
+  scale_x_continuous(breaks = c(-180,-120,-60,0,60,120,180))
+
+grid.arrange(pall,nrow=2)

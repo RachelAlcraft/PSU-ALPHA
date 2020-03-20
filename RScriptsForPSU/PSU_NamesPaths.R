@@ -7,8 +7,8 @@
 
 ## This script can be used to set the names and paths for the subsequent reports ##
 
-RUNID = "CW2" 
-PDBFILE = "cw_1bvr_orig"
+RUNID = "CW4" 
+PDBFILE = "Model2"
 ROOTPATH = "F:\\PSUA\\Output\\"
 
 chain1 = "A"

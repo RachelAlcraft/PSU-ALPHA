@@ -28,7 +28,7 @@ int main()
 	if (RUNID == "")
 		RUNID = LogFile::getInstance()->runId();
 	OUTPATH = OUTPATH + RUNID + "\\";
-	bool success = LogFile::getInstance()->setLogFile(OUTPATH + "logger.pdb",OUTPATH);
+	bool success = LogFile::getInstance()->setLogFile(OUTPATH + "logger.txt",OUTPATH);
 	if (success)
 	{
 		LogFile::getInstance()->writeMessage("");
