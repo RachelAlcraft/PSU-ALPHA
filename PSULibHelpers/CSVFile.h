@@ -12,6 +12,6 @@ class CSVFile
 public:
 	vector < vector<string>> fileVector;
 public:
-	CSVFile(string filepath);
+	CSVFile(string filepath, string sep);
 };
 

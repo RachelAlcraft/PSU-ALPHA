@@ -14,4 +14,5 @@ class FoldersFiles
 {
 public:
 	static vector<string> getFilesWithinFolder(string folder);
+	static void setWorkingPathToExe();
 };

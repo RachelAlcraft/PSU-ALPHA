@@ -2,7 +2,7 @@
 #include <fstream>
 #include <StringManip.h>
 
-CSVFile::CSVFile(string filepath)
+CSVFile::CSVFile(string filepath, string sep)
 {
 	_filename = filepath;
 
@@ -13,7 +13,7 @@ CSVFile::CSVFile(string filepath)
 		while (getline(myfile, line))
 		{
 			//decide to delete some data I am not handling TODO!
-			vector<string> row = StringManip::stringToVector(line, ",");
+			vector<string> row = StringManip::stringToVector(line, sep);
 			fileVector.push_back(row);
 		}
 	}	
