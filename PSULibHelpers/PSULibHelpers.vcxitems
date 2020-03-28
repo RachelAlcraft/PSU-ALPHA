@@ -15,13 +15,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CSVFile.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)DataFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)DataFrame.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)FoldersFiles.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)StringManip.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CSVFile.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)DataFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)DataFrame.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)FoldersFiles.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)StringManip.h" />
   </ItemGroup>

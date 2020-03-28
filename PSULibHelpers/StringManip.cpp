@@ -20,17 +20,30 @@ string StringManip::trim(string string_to_trim)
 	return string_trimmed;
 }
 
+string StringManip::removeChar(string string_to_trim, string char_remove)
+{
+	string string_trimmed = string_to_trim;
+	int startpos = string_trimmed.find(char_remove);
+	while (startpos > -1)
+	{
+		string_trimmed = string_trimmed.replace(startpos, 1, "");
+		startpos = string_trimmed.find(char_remove);
+	}	
+	return string_trimmed;
+}
+
 vector<string> StringManip::stringToVector(string input, string delim)
 {
 	string newin = input;
 	vector<string> vals;
-	int pos = newin.find_first_of(delim);
-	while (pos > 0)
+	int pos = newin.find(delim);
+	while (pos > -1)
 	{
 		string val = newin.substr(0, pos);
-		vals.push_back(val);
+		if (val != "")
+			vals.push_back(val);
 		newin = newin.substr(pos + 1);
-		pos = newin.find_first_of(delim);
+		pos = newin.find(delim);
 	}
 
 	vals.push_back(newin);

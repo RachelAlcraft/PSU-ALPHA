@@ -71,7 +71,7 @@ int main()
 		{
 			LogFile::getInstance()->writeMessage("Loading data for PDB1, file=" + inPDB);
 			pdb1 = ProteinManager::getInstance()->getOrAddPDBFile(PDB1, inPDB);
-			pdb1->loadData();
+			pdb1->loadData(false);
 		}
 
 		PDBFile* pdb2 = nullptr;
@@ -79,7 +79,7 @@ int main()
 		{
 			LogFile::getInstance()->writeMessage("Loading data for PDB2, file=" + inPDB2);
 			pdb2 = ProteinManager::getInstance()->getOrAddPDBFile(PDB2, inPDB2);
-			pdb2->loadData();
+			pdb2->loadData(false);
 		}
 
 		//Shall we run a ramachandran report?

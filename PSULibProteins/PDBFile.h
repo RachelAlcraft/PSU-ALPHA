@@ -31,7 +31,7 @@ public:
 	Chain* getChain(string chainId);
 	map<int, Atom*> getAtoms(string pdbCode);
 	void addChain(Chain* ch);
-	void loadData();
+	void loadData(bool fileOnly);
 	void applyTransformation(GeoTransformations* trans);
 	void printShiftedFile(string);
 	string getSequence();

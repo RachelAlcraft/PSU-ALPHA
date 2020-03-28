@@ -9,7 +9,7 @@ Each row should be an observation
 
 using namespace std;
 
-class DataFile
+class DataFrame
 {
 private:
 	string _filename;
@@ -17,7 +17,7 @@ public:
 	vector<string> headerVector;
 	vector<vector<string>> fileVector;
 public:
-	DataFile(string filepath);
+	DataFrame(string filepath);
 	void print();
 };
 

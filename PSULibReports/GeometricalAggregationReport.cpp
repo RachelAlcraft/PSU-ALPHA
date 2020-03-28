@@ -25,7 +25,7 @@ void GeometricalAggregationReport::printReport(string datadir)
 		LogFile::getInstance()->writeMessage(status.str() + files[i]);
 		try
 		{					
-			CSVFile csv(file,",");
+			CSVFile csv(file,",",true);
 			for (unsigned int i = 1; i < csv.fileVector.size(); ++i) // TODO a bit hard coded, skipping the header and we know we want 1,3,4,5,6 then 7 is the value
 			{
 				if (csv.fileVector[i].size() > 7)

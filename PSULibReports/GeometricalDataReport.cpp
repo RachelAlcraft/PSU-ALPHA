@@ -9,7 +9,7 @@ void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string f
 	if (directory != "")
 	{
 		vector<string> pdbs = FoldersFiles::getFilesWithinFolder(directory);
-		for (unsigned int i = pdbs.size()-1; i >= 0; --i)
+		for (int i = pdbs.size()-1; i >= 0; --i)
 		{			
 			stringstream status;
 			status << i << " out of " << pdbs.size();
@@ -20,7 +20,7 @@ void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string f
 				string geofile = geodir + pdb + ".geo.txt";
 				LogFile::getInstance()->writeMessage(status.str() + " - Loading data for PDB1, file=" + pdb);
 				PDBFile* pf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, file);
-				pf->loadData();
+				pf->loadData(false);
 				if (pf != nullptr)
 				{
 

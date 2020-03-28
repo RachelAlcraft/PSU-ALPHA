@@ -21,9 +21,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BTLLib", "BTLLib\BTLLib.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-HighResList", "MSC-HighResList\MSC-HighResList.vcxproj", "{1E7C0800-B3BB-4A3E-874B-850DD0E5EBD6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-AnnotateHighResList", "MSC-AnnotateHighResList\MSC-AnnotateHighResList.vcxproj", "{1D465BAA-4076-4730-BA1D-9080B5BB848D}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		PSULibReports\PSULibReports.vcxitems*{099c5818-8f67-483c-8fca-590c50f70bc4}*SharedItemsImports = 9
+		PSULibHelpers\PSULibHelpers.vcxitems*{1d465baa-4076-4730-ba1d-9080b5bb848d}*SharedItemsImports = 4
 		PSULibHelpers\PSULibHelpers.vcxitems*{1e7c0800-b3bb-4a3e-874b-850dd0e5ebd6}*SharedItemsImports = 4
 		PSULibManagers\PSULibManagers.vcxitems*{37002173-9797-454c-92de-005680d3c501}*SharedItemsImports = 9
 		BTLLib\BTLLib.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
@@ -62,6 +65,14 @@ Global
 		{1E7C0800-B3BB-4A3E-874B-850DD0E5EBD6}.Release|x64.Build.0 = Release|x64
 		{1E7C0800-B3BB-4A3E-874B-850DD0E5EBD6}.Release|x86.ActiveCfg = Release|Win32
 		{1E7C0800-B3BB-4A3E-874B-850DD0E5EBD6}.Release|x86.Build.0 = Release|Win32
+		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Debug|x64.ActiveCfg = Debug|x64
+		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Debug|x64.Build.0 = Debug|x64
+		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Debug|x86.ActiveCfg = Debug|Win32
+		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Debug|x86.Build.0 = Debug|Win32
+		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Release|x64.ActiveCfg = Release|x64
+		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Release|x64.Build.0 = Release|x64
+		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Release|x86.ActiveCfg = Release|Win32
+		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

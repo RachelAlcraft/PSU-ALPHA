@@ -9,14 +9,15 @@ It is just a 1-off to get a unique list of high res structures from the pdb that
 identical to others via the 100% similarity file
 That is in chains though so this I'm truncating them to do unique pdb files
 Vaguely thining where a chain in a file is 100% similar to a chain in another
-we only beed 1 of them
+we only need 1 of them
+The files are taken from: https://www.rcsb.org/pages/general/summaries
 */
 
 #include <iostream>
 #include <CSVFile.h>
 #include <algorithm>
 #include <map>
-#include <DataFile.h>
+#include <DataFrame.h>
 #include <sstream>
 #include <iomanip>
 
@@ -28,9 +29,9 @@ int main()
 	string inputPath = "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-HighResList\\";
 
 	cout << "Load the files\n";
-	CSVFile sim100(inputPath + "bc-100.out"," ");
+	CSVFile sim100(inputPath + "bc-100.out"," ",true);
 	//CSVFile entries(inputPath + "entries.idx","\t");
-	CSVFile cmpd_res(inputPath + "cmpd_res.idx",";");
+	CSVFile cmpd_res(inputPath + "cmpd_res.idx",";",true);
 
 //Turn the cmpd_res into a dictionary of pdb to resoltion
 	cout << "Make a dictionary of pdb-res\n";
@@ -43,7 +44,7 @@ int main()
 		string strres = entry[1];		
 		
 		double res = atof(strres.c_str());
-		if (res < 0.0000001)
+		if (res < 0.0000001)//arbitrary small number
 		{
 			cout << "Not x-ray " << pdb << "\n";
 		}
@@ -111,7 +112,7 @@ int main()
 
 	//now get a list of all the highest resoltuon structures, but don't use any in the delete list	
 	cout << "Now get all high res structures list\n";
-	DataFile data_highres(inputPath + "highres_and_unique.txt");
+	DataFrame data_highres(inputPath + "highres_and_unique.txt");
 	data_highres.headerVector.push_back("PDB");
 	data_highres.headerVector.push_back("RES");
 	int pdbcount = pdb_res.size();

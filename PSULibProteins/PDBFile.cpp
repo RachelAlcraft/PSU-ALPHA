@@ -22,33 +22,36 @@ PDBFile::~PDBFile()
 {
 }
 
-void PDBFile::loadData()
+void PDBFile::loadData(bool fileOnly)
 {	
 	createFileVector();
-	Chain* currentChain = NULL;
-	int structureId = 0;
-	//AminoAcid* currentAmino = NULL;	
-	for (unsigned int i = 0; i < _file.size(); ++i)
+	if (!fileOnly)
 	{
-		string line = _file[i];
-		int pos = line.find("ATOM");
-		if (pos == 0)
+		Chain* currentChain = NULL;
+		int structureId = 0;
+		//AminoAcid* currentAmino = NULL;	
+		for (unsigned int i = 0; i < _file.size(); ++i)
 		{
-			Atom* atom = new Atom(pdbCode,line);
-			if (i % 500 == 0)
-				atom->printAtom();
-			int id = atom->atomId;
-			
-			string amino = atom->aminoCode;
-			int amino_id = atom->aminoId;
-			string chain = atom->chainId;
-			Chain* pchain = ProteinManager::getInstance()->getOrAddChain(pdbCode, chain);
-			AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, chain, amino_id, amino, structureId);
-			if (paa!=nullptr)
-				ProteinManager::getInstance()->addAtom(pdbCode,chain,amino_id,atom);															
+			string line = _file[i];
+			int pos = line.find("ATOM");
+			if (pos == 0)
+			{
+				Atom* atom = new Atom(pdbCode, line);
+				if (i % 500 == 0)
+					atom->printAtom();
+				int id = atom->atomId;
+
+				string amino = atom->aminoCode;
+				int amino_id = atom->aminoId;
+				string chain = atom->chainId;
+				Chain* pchain = ProteinManager::getInstance()->getOrAddChain(pdbCode, chain);
+				AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, chain, amino_id, amino, structureId);
+				if (paa != nullptr)
+					ProteinManager::getInstance()->addAtom(pdbCode, chain, amino_id, atom);
+			}
 		}
+		addLinks();
 	}
-	addLinks();
 }
 
 void PDBFile::applyTransformation(GeoTransformations* trans)

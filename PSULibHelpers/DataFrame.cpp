@@ -1,15 +1,15 @@
-#include "DataFile.h"
+#include "DataFrame.h"
 #include <sstream>
 #include <fstream>
 
 using namespace std;
 
-DataFile::DataFile(string filepath)
+DataFrame::DataFrame(string filepath)
 {
 	_filename = filepath;
 }
 
-void DataFile::print()
+void DataFrame::print()
 {
 	stringstream ss;
 	for (unsigned int i = 0; i < headerVector.size(); ++i)
