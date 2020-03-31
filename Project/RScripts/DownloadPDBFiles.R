@@ -23,17 +23,23 @@ setwd(workingdirectory)
 
 for (i in 1:length(pdbcodes$PDB)){
 
-  #pdb = paste(pdbcodes$PDB[i])
-  #url = paste("https://files.rcsb.org/download/",pdb,".pdb",sep="")
-  #destfile = paste(pdb,".pdb",sep="")
-#5) And download to the directory
-  #download.file(url, destfile)
+  pdb = paste(pdbcodes$PDB[i])
+  url = paste("https://files.rcsb.org/download/",pdb,".pdb",sep="")
+  destfile = paste(pdb,".pdb",sep="")
+  #5) And download to the directory
+  try(download.file(url, destfile))
   
   #6) Also download structure factors if they exist
   cif = paste(pdbcodes$PDB[i],"-sf",sep="") #structure factors
   urlcif = paste("https://files.rcsb.org/download/",cif,".cif",sep="")
   destfilecif = paste(cif,".cif",sep="")
-  download.file(urlcif, destfilecif)
+  try(download.file(urlcif, destfilecif))
+  
+
+
+  
+  
+  
   
   
   print(paste(i,"completed..."))
