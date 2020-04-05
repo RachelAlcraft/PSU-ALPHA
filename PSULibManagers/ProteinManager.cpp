@@ -95,7 +95,7 @@ void ProteinManager::addAtom(string pdbCode, string chainId, int aminoId, Atom* 
 }
 
 
-AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int aminoId, string aminoCode, int& structure_id)
+AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int aminoId, string aminoCode, int& structure_id, int& residuenum)
 {
 	try
 	{
@@ -112,6 +112,7 @@ AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int
 				structure_id += 1;
 				AminoAcid* aa = new AminoAcid(pdbCode, chainId, aminoId, structure_id, aminoCode);
 				chain->addAminoAcid(aa);
+				++residuenum;
 				return aa;
 			}
 			else

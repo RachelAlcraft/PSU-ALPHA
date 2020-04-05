@@ -4,7 +4,7 @@
 #include <vector>
 #include <map>
 #include "AminoAcid.h"
-#include <GeoTransformation.h>
+//#include <GeoTransformation.h>
 //#include "Bond.h"
 #include "Atom.h"
 #include "Chain.h"
@@ -17,6 +17,7 @@ private:
 public:
 	string pdbCode;
 	string experimentalMethod;
+	int residues;
 	
 
 private:
@@ -35,6 +36,7 @@ public:
 	void applyTransformation(GeoTransformations* trans);
 	void printShiftedFile(string);
 	string getSequence();
+	
 
 
 private:
