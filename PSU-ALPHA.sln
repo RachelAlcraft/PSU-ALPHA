@@ -31,9 +31,6 @@ Global
 		PSULibMaths\PSULibMaths.vcxitems*{1d465baa-4076-4730-ba1d-9080b5bb848d}*SharedItemsImports = 4
 		PSULibProteins\PSULibProteins.vcxitems*{1d465baa-4076-4730-ba1d-9080b5bb848d}*SharedItemsImports = 4
 		PSULibHelpers\PSULibHelpers.vcxitems*{1e7c0800-b3bb-4a3e-874b-850dd0e5ebd6}*SharedItemsImports = 4
-		PSULibManagers\PSULibManagers.vcxitems*{1e7c0800-b3bb-4a3e-874b-850dd0e5ebd6}*SharedItemsImports = 4
-		PSULibMaths\PSULibMaths.vcxitems*{1e7c0800-b3bb-4a3e-874b-850dd0e5ebd6}*SharedItemsImports = 4
-		PSULibProteins\PSULibProteins.vcxitems*{1e7c0800-b3bb-4a3e-874b-850dd0e5ebd6}*SharedItemsImports = 4
 		PSULibManagers\PSULibManagers.vcxitems*{37002173-9797-454c-92de-005680d3c501}*SharedItemsImports = 9
 		BTLLib\BTLLib.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
 		PSULibAlgorithms\PSULibAlgorithms.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
