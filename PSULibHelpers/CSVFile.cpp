@@ -21,6 +21,7 @@ CSVFile::CSVFile(string filepath, string sep, bool load)
 				fileVector.push_back(row);
 			}
 		}
+		myfile.close();
 	}
 	else
 	{

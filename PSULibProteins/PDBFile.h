@@ -18,7 +18,11 @@ public:
 	string pdbCode;
 	string experimentalMethod;
 	int residues;
-	
+//3 stages of initiation
+	bool loadedText;
+	bool loadedAminos;
+	bool loadedBonds;
+	bool loadedTorsions;
 
 private:
 	map<string, Chain*> _chains;
@@ -32,10 +36,14 @@ public:
 	Chain* getChain(string chainId);
 	map<int, Atom*> getAtoms(string pdbCode);
 	void addChain(Chain* ch);
-	void loadData(bool fileOnly);
+	void loadData();
+	void loadAminos();
+	void loadBonds();
+	void loadTorsions();
 	void applyTransformation(GeoTransformations* trans);
 	void printShiftedFile(string);
 	string getSequence();
+
 	
 
 

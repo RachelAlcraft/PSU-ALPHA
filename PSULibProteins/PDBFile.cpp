@@ -17,42 +17,59 @@ PDBFile::PDBFile(string filename, string pdb_code)
 	_filename = filename;
 	residues = 0;
 	experimentalMethod = "XR"; // only XR at the moment
+	loadedText = false;
+	loadedAminos = false;
+	loadedBonds = false;
+	loadedTorsions = false;
 }
 
 PDBFile::~PDBFile()
 {
 }
 
-void PDBFile::loadData(bool fileOnly)
+void PDBFile::loadData()
 {	
-	createFileVector();
-	if (!fileOnly)
-	{
-		Chain* currentChain = NULL;
-		int structureId = 0;
-		//AminoAcid* currentAmino = NULL;	
-		for (unsigned int i = 0; i < _file.size(); ++i)
-		{
-			string line = _file[i];
-			int pos = line.find("ATOM");
-			if (pos == 0)
-			{
-				Atom* atom = new Atom(pdbCode, line);
-				if (i % 500 == 0)
-					atom->printAtom();
-				int id = atom->atomId;
+	createFileVector();	
+	loadedText = true;
+}
 
-				string amino = atom->aminoCode;
-				int amino_id = atom->aminoId;
-				string chain = atom->chainId;
-				Chain* pchain = ProteinManager::getInstance()->getOrAddChain(pdbCode, chain);
-				AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, chain, amino_id, amino, structureId,residues);
-				if (paa != nullptr)
-					ProteinManager::getInstance()->addAtom(pdbCode, chain, amino_id, atom);
-			}
+void PDBFile::loadAminos()
+{
+	Chain* currentChain = NULL;
+	int structureId = 0;
+	//AminoAcid* currentAmino = NULL;	
+	for (unsigned int i = 0; i < _file.size(); ++i)
+	{
+		string line = _file[i];
+		int pos = line.find("ATOM");
+		if (pos == 0)
+		{
+			Atom* atom = new Atom(pdbCode, line);
+			if (i % 500 == 0)
+				atom->printAtom();
+			int id = atom->atomId;
+
+			string amino = atom->aminoCode;
+			int amino_id = atom->aminoId;
+			string chain = atom->chainId;
+			Chain* pchain = ProteinManager::getInstance()->getOrAddChain(pdbCode, chain);
+			AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, chain, amino_id, amino, structureId, residues);
+			if (paa != nullptr)
+				ProteinManager::getInstance()->addAtom(pdbCode, chain, amino_id, atom);
 		}
-		addLinks();
 	}
+	loadedAminos = true;
+	
+}
+void PDBFile::loadBonds()
+{
+	addLinks();
+	loadedBonds = true;
+	loadedTorsions = true;
+}
+void PDBFile::loadTorsions()
+{
+
 }
 
 void PDBFile::applyTransformation(GeoTransformations* trans)

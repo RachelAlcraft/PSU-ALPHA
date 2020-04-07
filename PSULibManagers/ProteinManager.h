@@ -60,6 +60,7 @@ private:
 public:
 	static ProteinManager* getInstance();
 	~ProteinManager(); //responsible for pdbs
+	void deletePdbs();//in case we are just examining pdbs and don;t want loads
 	void createConfigData(string path);
 	vector<string> getAminoData(string aminoCode);
 	void addAtom(string pdbCode, string chainId, int aminoId, Atom* atm);
@@ -75,6 +76,7 @@ public:
 	vector<AtomBond>  getAtomBonds(string pdbCode);
 	vector<AtomAngle>  getAtomAngles(string pdbCode);
 	vector<AtomTorsion>  getAtomTorsions(string pdbCode);
+	
 
 private:
 	//vector<string> stringToVector(string input, string delim);

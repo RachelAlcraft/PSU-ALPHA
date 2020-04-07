@@ -20,7 +20,9 @@ void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string f
 				string geofile = geodir + pdb + ".geo.txt";
 				LogFile::getInstance()->writeMessage(status.str() + " - Loading data for PDB1, file=" + pdb);
 				PDBFile* pf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, file);
-				pf->loadData(false);
+				pf->loadData();
+				pf->loadAminos();
+				pf->loadBonds();
 				if (pf != nullptr)
 				{
 

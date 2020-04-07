@@ -1,7 +1,16 @@
-﻿  PDBFile.cpp
+﻿  LeastSquares.cpp
+  RMSD.cpp
+  CSVFile.cpp
+  ProteinManager.cpp
+  AminoAcid.cpp
+  PDBFile.cpp
+  CAlphaReport.cpp
+  GeometricalDataReport.cpp
+  RamaReport.cpp
+  PSU-ALPHA.cpp
   Generating code
-  11 of 2533 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+  41 of 2536 functions ( 1.6%) were compiled, the rest were copied from previous compilation.
     1 functions were new in current compilation
-    15 functions had inline decision re-evaluated but remain unchanged
+    9 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   PSU-ALPHA.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Release\PSU-ALPHA.exe

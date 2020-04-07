@@ -25,6 +25,15 @@ ProteinManager::~ProteinManager() //responsible for pdbs
 	_pdbfiles.clear();
 }
 
+void ProteinManager::deletePdbs()
+{
+	for (map<string, PDBFile*>::iterator iter = _pdbfiles.begin(); iter != _pdbfiles.end(); ++iter)
+	{
+		delete iter->second;
+	}
+	_pdbfiles.clear();
+}
+
 ProteinManager* ProteinManager::getInstance()
 {
 	if (!instance)

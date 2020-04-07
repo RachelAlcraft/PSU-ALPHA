@@ -10,25 +10,32 @@ AminoAcid::AminoAcid(string pdb_code, string chain_id, int amino_id, int structu
 	chainId = chain_id;
 	aminoCode = amino_Code;
 	vector<string> aa_general = ProteinManager::getInstance()->getAminoData(aminoCode);
-	//general data setttings
-	AminoCode = aa_general[0];
-	AminoName = aa_general[1];
-	AminoLetter = aa_general[2];
-	Hydro = atof(aa_general[3].c_str());
-	Hydropathy = aa_general[4];
-	Volume = atof(aa_general[5].c_str());
-	Donicity = aa_general[6];
-	Chemical = aa_general[7];
-	Physio = aa_general[8];
-	Charge = atol(aa_general[9].c_str());
-	Polar = aa_general[10]=="T"?true:false;
-	Formula = aa_general[11];
-	AtomChain = aa_general[12];
-	Chi1 = aa_general[13];
-	Chi2 = aa_general[14];
-	Chi3 = aa_general[15];
-	Chi4 = aa_general[16];
-	Chi5 = aa_general[17];
+	if (aa_general.size() > 1)
+	{
+		//general data setttings
+		AminoCode = aa_general[0];
+		AminoName = aa_general[1];
+		AminoLetter = aa_general[2];
+		Hydro = atof(aa_general[3].c_str());
+		Hydropathy = aa_general[4];
+		Volume = atof(aa_general[5].c_str());
+		Donicity = aa_general[6];
+		Chemical = aa_general[7];
+		Physio = aa_general[8];
+		Charge = atol(aa_general[9].c_str());
+		Polar = aa_general[10] == "T" ? true : false;
+		Formula = aa_general[11];
+		AtomChain = aa_general[12];
+		Chi1 = aa_general[13];
+		Chi2 = aa_general[14];
+		Chi3 = aa_general[15];
+		Chi4 = aa_general[16];
+		Chi5 = aa_general[17];
+	}
+	else
+	{
+
+	}
 }
 
 AminoAcid::~AminoAcid()
@@ -182,7 +189,7 @@ void AminoAcid::createScoringAtoms()
 	Atom* last = nullptr;
 	string ss = getSS();
 	// BONDS #########################
-	for (unsigned int i = 0; i < aaatoms.size() - 1; ++i)
+	for (int i = 0; i < (int)(aaatoms.size()) - 1; ++i)
 	{
 		Atom* a1 = aaatoms[i];
 		Atom* a2 = aaatoms[i + 1];		
@@ -191,14 +198,14 @@ void AminoAcid::createScoringAtoms()
 	}
 	//Then we need the bond that goes to the next atom (unless it is the end)
 	//TODO although currently I don't think this is being called if it is either the first or last
-	if (_atmNpp)
+	if (_atmNpp && last)
 	{		
 		_bonds.push_back(AtomBond(ss, last, _atmNpp));
 	}
 	// ANGLES #########################
 	Atom* last1 = nullptr;
 	Atom* last2 = nullptr;
-	for (unsigned int i = 0; i < aaatoms.size() - 2; ++i)
+	for (int i = 0; i < (int)(aaatoms.size()) - 2; ++i)
 	{
 		Atom* a1 = aaatoms[i];
 		Atom* a2 = aaatoms[i + 1];
@@ -207,7 +214,7 @@ void AminoAcid::createScoringAtoms()
 		last1 = a2;
 		last2 = a3;
 	}
-	if (_atmNpp && _atmCApp)
+	if (_atmNpp && _atmCApp && last1 && last2)
 	{		
 		_angles.push_back(AtomAngle(ss, last1, last2, _atmNpp));		
 		_angles.push_back(AtomAngle(ss, last2, _atmNpp, _atmCApp));
@@ -216,7 +223,7 @@ void AminoAcid::createScoringAtoms()
 	last1 = nullptr;
 	last2 = nullptr;
 	Atom* last3 = nullptr;
-	for (unsigned int i = 0; i < aaatoms.size() - 3; ++i)
+	for (int i = 0; i < (int)(aaatoms.size()) - 3; ++i)
 	{
 		Atom* a1 = aaatoms[i];
 		Atom* a2 = aaatoms[i + 1];
@@ -227,7 +234,7 @@ void AminoAcid::createScoringAtoms()
 		last2 = a3;
 		last3 = a4;
 	}
-	if (_atmNpp && _atmCApp)
+	if (_atmNpp && _atmCApp && last1 && last2&& last3)
 	{		
 		_torsions.push_back(AtomTorsion(ss, last1, last2, last3, _atmNpp));	
 		_torsions.push_back(AtomTorsion(ss, last2, last3, _atmNpp, _atmCApp));
