@@ -33,7 +33,7 @@ int main()
 	string dir = "F:\\PSUA\\Code\\PSU-ALPHA\\Project\\PDBData\\";
 	string pdbdir = "F:\\PSUA\\ProjectData\\HighResFiles\\";
 	string highResFile = "highres_and_unique.txt";
-	string annHighResFile = "ann_highres_unique_v2_" + runID + ".txt";
+	string annHighResFile = "ann_highres_unique_v3_" + runID + ".txt";
 
 	CSVFile highRes(dir + highResFile, ",",true);
 	DataFrame annHighRes(dir + annHighResFile);
@@ -43,6 +43,7 @@ int main()
 	annHighRes.headerVector.push_back("COMPLEX");
 	annHighRes.headerVector.push_back("RVALUE");
 	annHighRes.headerVector.push_back("RFREE");
+	annHighRes.headerVector.push_back("OCCUPANCY");
 	annHighRes.headerVector.push_back("STRUCFAC");
 	annHighRes.headerVector.push_back("CHAINS");
 	annHighRes.headerVector.push_back("RESIDUES");
@@ -77,6 +78,7 @@ int main()
 			string sf = structurefile.exists ? "Y" : "N";
 			string rval = "NA";
 			string rfree = "NA";
+			string occ = "NA";
 			string chains = "NA";
 			string name = "NA";
 			string date = "NA";
@@ -102,10 +104,14 @@ int main()
 				PDBFile* pdbf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, pdbdir + pdb + ".pdb");
 				pdbf->loadData();
 				pdbf->loadAminos();
-				int iresidues = pdbf->residues;
+				int iresidues = pdbf->residues;				
 				stringstream ssres;
 				ssres << iresidues;
 				residues = ssres.str();
+
+				//occupancy
+				bool occupancy = ProteinManager::getInstance()->hasOccupancy(pdb);
+				occupancy ? occ = "T" : occ = "F";
 
 				//tbhis needs to be moved into the pdbfile class, but memory and state need to be sorted out
 				bool foundR = false;
@@ -205,6 +211,7 @@ int main()
 			observation.push_back(complex);
 			observation.push_back(rval);
 			observation.push_back(rfree);
+			observation.push_back(occ);
 			observation.push_back(sf);
 			observation.push_back(chains);
 			observation.push_back(residues);

@@ -10,7 +10,7 @@ identical to others via the 100% similarity file
 That is in chains though so this I'm truncating them to do unique pdb files
 Vaguely thining where a chain in a file is 100% similar to a chain in another
 we only need 1 of them
-The files are taken from: https://www.rcsb.org/pages/general/summaries
+The files are taken from: https://www.rcsb.org/pages/general/summaries and https://www.rcsb.org/pages/download/ftp
 */
 
 #include <iostream>
@@ -31,11 +31,13 @@ int main()
 
 	cout << "Load the files\n";
 	CSVFile sim100(inputPath + "bc-100.out"," ",true);
+	CSVFile sim95(inputPath + "bc-95.out", " ", true);
+	CSVFile sim90(inputPath + "bc-90.out", " ", true);
 	//CSVFile entries(inputPath + "entries.idx","\t");
 	CSVFile cmpd_res(inputPath + "cmpd_res.idx",";",true);
 
 //Turn the cmpd_res into a dictionary of pdb to resoltion
-	cout << "Make a dictionary of pdb-res\n";
+	std::cout << "Make a dictionary of pdb-res\n";
 	map<string, double> pdb_res;
 	for (unsigned int i = 4; i < cmpd_res.fileVector.size(); ++i)
 	{
@@ -47,7 +49,7 @@ int main()
 		double res = atof(strres.c_str());
 		if (res < 0.0000001)//arbitrary small number
 		{
-			cout << "Not x-ray " << pdb << "\n";
+			std::cout << "Not x-ray " << pdb << "\n";
 		}
 		else
 		{
@@ -59,60 +61,82 @@ int main()
 	}
 
 
-// turn the bc-100 into a unique set
-	cout << "Now bc-100 into a unique set\n";
+// turn the similarities desired into into a unique set
+	vector<CSVFile> simFiles;
+	simFiles.push_back(sim100);
+	simFiles.push_back(sim95);
+	simFiles.push_back(sim90);	
 	vector<string> remove_pdb;
-	for (unsigned int i = 0; i < sim100.fileVector.size(); ++i)
+	for (unsigned int s = 0; s < simFiles.size(); ++s)
 	{
-		cout << "i="<<i<<"\n";
-		vector<string> unique_in_row;
-		vector<string> this_row = sim100.fileVector[i];
-		
-		for (unsigned int j = 0; j < this_row.size(); ++j)
+		CSVFile simi = simFiles[s];
+		std::cout << "Sim into a unique set\n";
+		for (unsigned int i = 0; i < simi.fileVector.size(); ++i)
 		{
-			string pdb = this_row[j]; // but this is a chain, I want just the pdb
-			pdb = pdb.substr(0, 4);
-			if (std::find(unique_in_row.begin(), unique_in_row.end(), pdb) == unique_in_row.end())
+			std::cout << "i=" << i << "\n";
+			vector<string> unique_in_row;
+			string high_pdb = "";
+			double high_res = 100;
+			string this_pdb;
+			vector<string> this_row = simi.fileVector[i];
+
+			for (unsigned int j = 0; j < this_row.size(); ++j)
 			{
-				unique_in_row.push_back(pdb);
-			}
-			//Now which is the highest resolution of these
-			double highres = 100;
-			string highpdb = "";
-			for (unsigned int r = 0; r < unique_in_row.size(); ++r)
-			{
-				string pdb = unique_in_row[r];
-				if (pdb_res.find(pdb) != pdb_res.end() )
-				{
-					double res = pdb_res[pdb];
-					if (res < highres) // then we want this not the one currently saved
+				string pdb = this_row[j]; // but this is a chain, I want just the pdb
+				this_pdb = pdb.substr(0, 4);
+				
+				//if (std::find(unique_in_row.begin(), unique_in_row.end(), pdb) == unique_in_row.end())
+				//{
+					//unique_in_row.push_back(pdb);
+				//}
+				//Now which is the highest resolution of these
+				//double highres = 100;
+				//string highpdb = "";
+				//for (unsigned int r = 0; r < unique_in_row.size(); ++r)
+				//{
+				//	string pdb = unique_in_row[r];
+					if (pdb_res.find(this_pdb) != pdb_res.end())
 					{
-						if (highpdb != "")
-						{
-							//cout << "excluding " << highpdb << ":" << highres << " in favour of " << pdb << ":" << res << "\n";							
-							remove_pdb.push_back(highpdb);
+						double res = pdb_res[this_pdb];
+						if (res < high_res) // then we want this not the one currently saved
+						{							
+							if (high_pdb != "")
+							{
+								//cout << "excluding " << highpdb << ":" << highres << " in favour of " << pdb << ":" << res << "\n";							
+								if (std::find(remove_pdb.begin(), remove_pdb.end(), high_pdb) == remove_pdb.end())
+								{
+									remove_pdb.push_back(high_pdb);
+								}
+							}
+
+							high_res = res;
+							high_pdb = this_pdb;
+							
 						}
-						
-						highres = res;
-						highpdb = pdb;
+						else // we want to get rid of this one
+						{
+							//cout << "excluding " << pdb << ":" << res << " in favour of " << highpdb << ":" << highres << "\n";
+							if (std::find(remove_pdb.begin(), remove_pdb.end(), this_pdb) == remove_pdb.end())
+							{
+								remove_pdb.push_back(this_pdb);
+							}
+						}
 					}
-					else // we want to get rid of this one
+					else
 					{
-						//cout << "excluding " << pdb << ":" << res << " in favour of " << highpdb << ":" << highres << "\n";
-						remove_pdb.push_back(pdb);
+						//is it safest to remove this then if there is no resolution? Most likely not x-ray.
+						if (std::find(remove_pdb.begin(), remove_pdb.end(), this_pdb) == remove_pdb.end())
+						{
+							remove_pdb.push_back(this_pdb);
+						}
 					}
-				}
-				else
-				{
-					//is it safest to remove this then if there is no resolution? Most likely not x-ray.
-					remove_pdb.push_back(pdb);
-				}
+				//}
 			}
 		}
 	}
 
 	//now get a list of all the highest resoltuon structures, but don't use any in the delete list	
-	cout << "Now get all high res structures list\n";
+	std::cout << "Now get all high res structures list\n";
 	DataFrame data_highres(inputPath + "highres_and_unique.txt");
 	data_highres.headerVector.push_back("PDB");
 	data_highres.headerVector.push_back("RES");
@@ -152,3 +176,4 @@ int main()
 	cout << "Completed High Res file manipulation";
     
 }
+

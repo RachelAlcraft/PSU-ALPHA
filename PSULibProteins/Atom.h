@@ -15,6 +15,7 @@ public: //public struct
 	int atomId;
 	string elementName;
 	string elementType;
+	double occupancy;
 	
 	//Parent
 	string pdbCode;	

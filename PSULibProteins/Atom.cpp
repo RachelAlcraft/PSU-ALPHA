@@ -27,6 +27,10 @@ Atom::Atom(string pdb_code, string atom_string)
 	string z_c = StringManip::trim(atom_string.substr(46, 8));
 	coords = GeoCoords(atof(x_c.c_str()), atof(y_c.c_str()), atof(z_c.c_str()));
 	shifted_coords = GeoCoords(atof(x_c.c_str()), atof(y_c.c_str()), atof(z_c.c_str()));
+	//55 - 60        Real(8.3)     occupancy   Double
+	string occ = StringManip::trim(atom_string.substr(54, 6));
+	occupancy = atof(occ.c_str());
+
 	//77 - 78        LString(2)    element      Element symbol, right-justified.
 	elementType = StringManip::trim(atom_string.substr(76, 2));
 
