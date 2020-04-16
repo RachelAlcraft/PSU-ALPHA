@@ -33,22 +33,23 @@ int main()
 	string dir = "F:\\PSUA\\Code\\PSU-ALPHA\\Project\\PDBData\\";
 	string pdbdir = "F:\\PSUA\\ProjectData\\HighResFiles\\";
 	string highResFile = "highres_and_unique.txt";
-	string annHighResFile = "ann_highres_unique_v3_" + runID + ".txt";
+	string annHighResFile = "ann_highres_unique_v4_" + runID + ".txt";
 
 	CSVFile highRes(dir + highResFile, ",",true);
 	DataFrame annHighRes(dir + annHighResFile);
-	annHighRes.headerVector.push_back("PDB");
-	annHighRes.headerVector.push_back("RES");
-	annHighRes.headerVector.push_back("CLASS");
-	annHighRes.headerVector.push_back("COMPLEX");
-	annHighRes.headerVector.push_back("RVALUE");
-	annHighRes.headerVector.push_back("RFREE");
-	annHighRes.headerVector.push_back("OCCUPANCY");
-	annHighRes.headerVector.push_back("STRUCFAC");
-	annHighRes.headerVector.push_back("CHAINS");
-	annHighRes.headerVector.push_back("RESIDUES");
-	annHighRes.headerVector.push_back("DATE");
-	annHighRes.headerVector.push_back("COMMENTS");
+	annHighRes.headerVector.push_back("PDB"); //pdb code
+	annHighRes.headerVector.push_back("RES"); //the resolution
+	annHighRes.headerVector.push_back("CLASS"); //header class
+	annHighRes.headerVector.push_back("COMPLEX"); //is the structure a complex?
+	annHighRes.headerVector.push_back("RVALUE"); // the r value
+	annHighRes.headerVector.push_back("RFREE");  // the r free value
+	annHighRes.headerVector.push_back("OCCUPANCY"); //any atoms with occupancy less than 1?
+	annHighRes.headerVector.push_back("HYDROGENS"); //level of detail of resolution such that hydrogen atoms are in the pdb structure
+	annHighRes.headerVector.push_back("STRUCFAC"); //are there structure factors in the pdb
+	annHighRes.headerVector.push_back("CHAINS"); //How many chains
+	annHighRes.headerVector.push_back("RESIDUES"); //how many residies
+	annHighRes.headerVector.push_back("DATE"); //what date was it deposited
+	annHighRes.headerVector.push_back("COMMENTS"); //NA here comments can be annoted later
 
 	for (unsigned int i = 1; i < highRes.fileVector.size(); ++i)
 	{
@@ -79,6 +80,7 @@ int main()
 			string rval = "NA";
 			string rfree = "NA";
 			string occ = "NA";
+			string hyd = "NA";
 			string chains = "NA";
 			string name = "NA";
 			string date = "NA";
@@ -111,7 +113,11 @@ int main()
 
 				//occupancy
 				bool occupancy = ProteinManager::getInstance()->hasOccupancy(pdb);
-				occupancy ? occ = "T" : occ = "F";
+				occupancy ? occ = "Y" : occ = "N";
+
+				//hydrogens - level of detail of resolution such that hydrogen atoms are in the pdb structure
+				bool hydrogens = ProteinManager::getInstance()->hasHydrogens(pdb);
+				hydrogens ? hyd = "Y" : hyd = "N";
 
 				//tbhis needs to be moved into the pdbfile class, but memory and state need to be sorted out
 				bool foundR = false;
@@ -212,6 +218,7 @@ int main()
 			observation.push_back(rval);
 			observation.push_back(rfree);
 			observation.push_back(occ);
+			observation.push_back(hyd);
 			observation.push_back(sf);
 			observation.push_back(chains);
 			observation.push_back(residues);

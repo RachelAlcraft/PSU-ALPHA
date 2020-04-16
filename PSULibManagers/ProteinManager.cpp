@@ -322,5 +322,32 @@ bool ProteinManager::hasOccupancy(string pdbCode)
 	return hasOccupancy;
 }
 
+bool ProteinManager::hasHydrogens(string pdbCode)
+{
+	bool hasHyd = false;
+	PDBFile* pdb = _pdbfiles[pdbCode];
+	map<string, Chain*> chains = pdb->getChains();
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		map<int, AminoAcid*> aminos = ch->getAminoAcids();
+		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
+		{
+			map<string, Atom*> atoms = biter->second->getAtoms();
+			for (map<string, Atom*>::iterator citer = atoms.begin(); citer != atoms.end(); ++citer)
+			{
+				string ele = citer->second->elementName;
+				if (ele == "H")
+				{
+					hasHyd = true;
+				}
+
+			}
+		}
+	}
+
+	return hasHyd;
+}
+
 
 

@@ -77,6 +77,7 @@ public:
 	vector<AtomAngle>  getAtomAngles(string pdbCode);
 	vector<AtomTorsion>  getAtomTorsions(string pdbCode);
 	bool hasOccupancy(string pdbCode);
+	bool hasHydrogens(string pdbCode);
 	
 
 private:

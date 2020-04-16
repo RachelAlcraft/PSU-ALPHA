@@ -66,3 +66,8 @@ Config/TrimDatabaseLiat.xlsx
 *.iobj
 *.ipdb
 Project/PDBData/~$HighResPDBs.xlsx
+MSC-AnnotateHighResList/Release/MSC-AnnotateHighResList.log
+MSC-AnnotateHighResList/Release/MSC-AnnotateHighResList.log
+MSC-AnnotateHighResList/Release/MSC-AnnotateHighResList.log
+.vs/PSU-ALPHA/v16/Solution.VC.db-shm
+PSU-ALPHA/Release/PSU-ALPHA.log
