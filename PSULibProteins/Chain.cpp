@@ -1,4 +1,5 @@
 #include "Chain.h"
+#include <NucleicAcid.h>
 
 Chain::Chain(string pdb_code,string chain_id)
 {
@@ -25,6 +26,15 @@ AminoAcid* Chain::getAminoAcid(int aminoId)
 		return iter->second;		
 }
 
+NucleicAcid* Chain::getNucleicAcid(int nucleicId)
+{
+	map<int, NucleicAcid*>::iterator iter = _nucleics.find(nucleicId);
+	if (iter == _nucleics.end())
+		return nullptr;
+	else
+		return iter->second;
+}
+
 vector<Atom*> Chain::getCAlphas()
 {
 	vector<Atom*> calphas;
@@ -42,5 +52,13 @@ void Chain::addAminoAcid(AminoAcid* aa)
 	map<int, AminoAcid*>::iterator iter = _aminos.find(aa->aminoId);
 	if (iter == _aminos.end())
 		_aminos.insert(pair<int, AminoAcid*>(aa->aminoId,aa));
+
+}
+
+void Chain::addNucleicAcid(NucleicAcid* na)
+{
+	map<int, NucleicAcid*>::iterator iter = _nucleics.find(na->nucleicId);
+	if (iter == _nucleics.end())
+		_nucleics.insert(pair<int, NucleicAcid*>(na->nucleicId, na));
 
 }

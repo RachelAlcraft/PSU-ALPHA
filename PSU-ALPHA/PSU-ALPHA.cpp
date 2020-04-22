@@ -72,7 +72,7 @@ int main()
 			LogFile::getInstance()->writeMessage("Loading data for PDB1, file=" + inPDB);
 			pdb1 = ProteinManager::getInstance()->getOrAddPDBFile(PDB1, inPDB);
 			pdb1->loadData();
-			pdb1->loadAminos();
+			pdb1->loadAtoms();
 			pdb1->loadBonds();
 		}
 
@@ -82,7 +82,7 @@ int main()
 			LogFile::getInstance()->writeMessage("Loading data for PDB2, file=" + inPDB2);
 			pdb2 = ProteinManager::getInstance()->getOrAddPDBFile(PDB2, inPDB2);
 			pdb2->loadData();
-			pdb2->loadAminos();
+			pdb2->loadAtoms();
 			pdb2->loadBonds();
 		}
 

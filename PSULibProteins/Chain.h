@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <AminoAcid.h>
+#include <NucleicAcid.h>
 
 using namespace std;
 
@@ -16,13 +17,16 @@ public:
 
 	//Children
 	map<int, AminoAcid*> _aminos;
+	map<int, NucleicAcid*> _nucleics;
 
 public:
 	Chain(string pdb_code, string chain_id);
 	~Chain();
 	AminoAcid* getAminoAcid(int aminoId);
+	NucleicAcid* getNucleicAcid(int aminoId);
 	map<int, AminoAcid*> getAminoAcids() { return _aminos; }
 	vector<Atom*>  getCAlphas();
 	void addAminoAcid(AminoAcid* aa);
+	void addNucleicAcid(NucleicAcid* na);
 };
 

@@ -66,6 +66,7 @@ public:
 	void addAtom(string pdbCode, string chainId, int aminoId, Atom* atm);
 	PDBFile* getOrAddPDBFile(string pdbCode, string filename);
 	AminoAcid* getOrAddAminoAcid(string pdbCode, string chainId, int aminoId, string amino_code, int& structure_id, int& residuenum);
+	NucleicAcid* getOrAddNucleicAcid(string pdbCode, string chainId, int aminoId, string amino_code, int& structure_id, int& residuenum);
 	Chain* getOrAddChain(string pdbCode, string chainId);
 	map<string, Chain*> getChains(string pdbCode);	
 	map<int, AminoAcid*> getAminoAcids(string pdbCode, string chainId);		
@@ -77,7 +78,10 @@ public:
 	vector<AtomAngle>  getAtomAngles(string pdbCode);
 	vector<AtomTorsion>  getAtomTorsions(string pdbCode);
 	bool hasOccupancy(string pdbCode);
+	double maxBFactor(string pdbCode);
 	bool hasHydrogens(string pdbCode);
+	bool isAminoAcid(string code);
+	bool isNucleicAcid(string code);
 	
 
 private:

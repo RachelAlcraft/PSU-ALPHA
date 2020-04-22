@@ -21,7 +21,7 @@ void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string f
 				LogFile::getInstance()->writeMessage(status.str() + " - Loading data for PDB1, file=" + pdb);
 				PDBFile* pf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, file);
 				pf->loadData();
-				pf->loadAminos();
+				pf->loadAtoms();
 				pf->loadBonds();
 				if (pf != nullptr)
 				{

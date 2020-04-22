@@ -18,6 +18,7 @@ public:
 	string pdbCode;
 	string experimentalMethod;
 	int residues;
+	int nucleotides;
 //3 stages of initiation
 	bool loadedText;
 	bool loadedAminos;
@@ -37,7 +38,7 @@ public:
 	map<int, Atom*> getAtoms(string pdbCode);
 	void addChain(Chain* ch);
 	void loadData();
-	void loadAminos();
+	void loadAtoms();
 	void loadBonds();
 	void loadTorsions();
 	void applyTransformation(GeoTransformations* trans);

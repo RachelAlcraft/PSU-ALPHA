@@ -13,8 +13,10 @@ Atom::Atom(string pdb_code, string atom_string)
 	atomId = atol(StringManip::trim(atom_string.substr(6, 5)).c_str());
 	//13 - 16        Atom          name         Atom name.
 	elementName = StringManip::trim(atom_string.substr(12, 4));
+	//16 - 17        The accupancy code if there is one
+	occupant = StringManip::trim(atom_string.substr(16, 1)); 
 	//18 - 20        Residue name  resName      Residue name.
-	aminoCode = StringManip::trim(atom_string.substr(17, 3));
+	aminoCode = StringManip::trim(atom_string.substr(17, 3)); // or nucleic code this is not accurate
 	//22             Character     chainID      Chain identifier.
 	chainId = StringManip::trim(atom_string.substr(21, 1));
 	//23 - 26        Integer       resSeq       Residue sequence number.
@@ -30,6 +32,10 @@ Atom::Atom(string pdb_code, string atom_string)
 	//55 - 60        Real(8.3)     occupancy   Double
 	string occ = StringManip::trim(atom_string.substr(54, 6));
 	occupancy = atof(occ.c_str());
+
+	//61 - 66        Real(8.3)     b factor   Double
+	string bfac = StringManip::trim(atom_string.substr(60, 6));
+	bfactor = atof(bfac.c_str());
 
 	//77 - 78        LString(2)    element      Element symbol, right-justified.
 	elementType = StringManip::trim(atom_string.substr(76, 2));

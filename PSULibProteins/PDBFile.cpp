@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include "LogFile.h"
+#include <NucleicAcid.h>
 
 using namespace std;
 
@@ -33,7 +34,7 @@ void PDBFile::loadData()
 	loadedText = true;
 }
 
-void PDBFile::loadAminos()
+void PDBFile::loadAtoms()
 {
 	Chain* currentChain = NULL;
 	int structureId = 0;
@@ -52,10 +53,21 @@ void PDBFile::loadAminos()
 			string amino = atom->aminoCode;
 			int amino_id = atom->aminoId;
 			string chain = atom->chainId;
+			atom->isAmino = true;
+			if (ProteinManager::getInstance()->isNucleicAcid(amino))			
+				atom->isAmino = false;			
 			Chain* pchain = ProteinManager::getInstance()->getOrAddChain(pdbCode, chain);
-			AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, chain, amino_id, amino, structureId, residues);
-			if (paa != nullptr)
-				ProteinManager::getInstance()->addAtom(pdbCode, chain, amino_id, atom);
+			
+			if (atom->isAmino)
+			{
+				AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, chain, amino_id, amino, structureId, residues);
+				if (paa != nullptr)
+					ProteinManager::getInstance()->addAtom(pdbCode, chain, amino_id, atom);
+			}
+			else
+			{
+				NucleicAcid* pna = ProteinManager::getInstance()->getOrAddNucleicAcid(pdbCode, chain, amino_id, amino, structureId, nucleotides);
+			}
 		}
 	}
 	loadedAminos = true;

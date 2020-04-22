@@ -6,6 +6,7 @@
 #include "PDBFile.h"
 #include <LogFile.h>
 #include <StringManip.h>
+#include <NucleicAcid.h>
 
 
 using namespace std;
@@ -103,6 +104,58 @@ void ProteinManager::addAtom(string pdbCode, string chainId, int aminoId, Atom* 
 	aa->add(atm);
 }
 
+
+bool ProteinManager::isAminoAcid(string code)
+{
+	return true;
+}
+
+bool ProteinManager::isNucleicAcid(string code)
+{
+	if (code.length() < 3)
+		return true;
+	else
+		return false;
+}
+
+NucleicAcid* ProteinManager::getOrAddNucleicAcid(string pdbCode, string chainId, int aminoId, string aminoCode, int& structure_id, int& nucleonum)
+{
+	try
+	{
+		stringstream id;
+		id << pdbCode << chainId << aminoId;
+
+		PDBFile* pdb = _pdbfiles[pdbCode];
+		Chain* chain = pdb->getChain(chainId);
+		if (chain)
+		{
+			NucleicAcid* na = chain->getNucleicAcid(aminoId);
+			if (!na)
+			{
+				structure_id += 1;
+				NucleicAcid* na = new NucleicAcid(aminoId);
+				chain->addNucleicAcid(na);
+				++nucleonum;
+				return na;
+			}
+			else
+			{
+				return na;
+			}
+		}
+		else
+		{
+			LogFile::getInstance()->writeMessage("Amino acid not found " + pdbCode);
+			return nullptr;
+		}
+	}
+	catch (...)
+	{
+		LogFile::getInstance()->writeMessage("Amino acid not found " + pdbCode);
+		return nullptr;
+	}
+
+}
 
 AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int aminoId, string aminoCode, int& structure_id, int& residuenum)
 {
@@ -321,6 +374,32 @@ bool ProteinManager::hasOccupancy(string pdbCode)
 	
 	return hasOccupancy;
 }
+
+double ProteinManager::maxBFactor(string pdbCode)
+{
+	double maxbf = 0;
+	PDBFile* pdb = _pdbfiles[pdbCode];
+	map<string, Chain*> chains = pdb->getChains();
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		map<int, AminoAcid*> aminos = ch->getAminoAcids();
+		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
+		{
+			map<string, Atom*> atoms = biter->second->getAtoms();
+			for (map<string, Atom*>::iterator citer = atoms.begin(); citer != atoms.end(); ++citer)
+			{
+				double mbf = citer->second->bfactor;
+				if (mbf > maxbf)
+				{
+					maxbf = mbf;
+				}
+			}
+		}
+	}
+	return maxbf;
+}
+
 
 bool ProteinManager::hasHydrogens(string pdbCode)
 {

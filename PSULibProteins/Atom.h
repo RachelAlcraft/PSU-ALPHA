@@ -15,7 +15,10 @@ public: //public struct
 	int atomId;
 	string elementName;
 	string elementType;
+	string occupant;
 	double occupancy;
+	double bfactor;
+	bool isAmino;
 	
 	//Parent
 	string pdbCode;	
