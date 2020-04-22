@@ -33,7 +33,7 @@ int main()
 	string dir = "F:\\PSUA\\Code\\PSU-ALPHA\\Project\\PDBData\\";
 	string pdbdir = "F:\\PSUA\\ProjectData\\HighResFiles\\";
 	string highResFile = "highres_and_unique.txt";
-	string annHighResFile = "ann_highres_unique_v4_" + runID + ".txt";
+	string annHighResFile = "ann_highres_unique_v5_" + runID + ".txt";
 
 	CSVFile highRes(dir + highResFile, ",",true);
 	DataFrame annHighRes(dir + annHighResFile);
@@ -44,10 +44,12 @@ int main()
 	annHighRes.headerVector.push_back("RVALUE"); // the r value
 	annHighRes.headerVector.push_back("RFREE");  // the r free value
 	annHighRes.headerVector.push_back("OCCUPANCY"); //any atoms with occupancy less than 1?
+	annHighRes.headerVector.push_back("BFACTOR"); //is there ever a b factor > 30? Y or N
 	annHighRes.headerVector.push_back("HYDROGENS"); //level of detail of resolution such that hydrogen atoms are in the pdb structure
 	annHighRes.headerVector.push_back("STRUCFAC"); //are there structure factors in the pdb
 	annHighRes.headerVector.push_back("CHAINS"); //How many chains
 	annHighRes.headerVector.push_back("RESIDUES"); //how many residies
+	annHighRes.headerVector.push_back("NUCLEOTIDES"); //how many nucleotides
 	annHighRes.headerVector.push_back("DATE"); //what date was it deposited
 	annHighRes.headerVector.push_back("COMMENTS"); //NA here comments can be annoted later
 
@@ -80,12 +82,15 @@ int main()
 			string rval = "NA";
 			string rfree = "NA";
 			string occ = "NA";
+			string bfactor = "NA";
 			string hyd = "NA";
 			string chains = "NA";
 			string name = "NA";
 			string date = "NA";
 			string complex = "NA";
 			string residues = "NA";
+			string nucleotides = "NA";
+			string comments = "NA";
 			/*
 			HEADER    OXIDOREDUCTASE                          17-SEP-98   1BVR
 			COMPND   3 CHAIN: A, B, C, D, E, F;
@@ -105,15 +110,28 @@ int main()
 				//slowly put the functionality into the pdbfile class
 				PDBFile* pdbf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, pdbdir + pdb + ".pdb");
 				pdbf->loadData();
-				pdbf->loadAminos();
+				pdbf->loadAtoms();
 				int iresidues = pdbf->residues;				
 				stringstream ssres;
 				ssres << iresidues;
 				residues = ssres.str();
 
+				int inucleotides = pdbf->nucleotides;
+				stringstream ssnuc;
+				ssnuc << inucleotides;
+				nucleotides = ssnuc.str();
+
+
 				//occupancy
 				bool occupancy = ProteinManager::getInstance()->hasOccupancy(pdb);
 				occupancy ? occ = "Y" : occ = "N";
+
+				//BFactor
+				double bf = ProteinManager::getInstance()->maxBFactor(pdb);
+				stringstream ssbf;
+				ssbf.precision(5);
+				ssbf << bf;
+				bfactor = ssbf.str();
 
 				//hydrogens - level of detail of resolution such that hydrogen atoms are in the pdb structure
 				bool hydrogens = ProteinManager::getInstance()->hasHydrogens(pdb);
@@ -218,12 +236,14 @@ int main()
 			observation.push_back(rval);
 			observation.push_back(rfree);
 			observation.push_back(occ);
+			observation.push_back(bfactor);
 			observation.push_back(hyd);
 			observation.push_back(sf);
 			observation.push_back(chains);
 			observation.push_back(residues);
+			observation.push_back(nucleotides);
 			observation.push_back(date);
-			observation.push_back("NA");
+			observation.push_back(comments);
 			annHighRes.fileVector.push_back(observation);
 			ProteinManager::getInstance()->deletePdbs();//keep memory clear
 		}
