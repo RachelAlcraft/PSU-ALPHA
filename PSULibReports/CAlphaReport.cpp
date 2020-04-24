@@ -2,13 +2,13 @@
 #include <LogFile.h>
 #include <ProteinManager.h>
 
-void CAlphaReport::printReport(PDBFile* pdb, string chain1, string chain2, string fileName)
+void CAlphaReport::printReport(PDBFile* pdb, string occupant, string chain1, string chain2, string fileName)
 {//produce data frame report for R reporting
 	
 	LogFile::getInstance()->writeMessage("Starting C Aplpha distance map");
 	if (chain1 != "" && chain2 != "")
 	{
-		printSingleChainReport(pdb, chain1, chain2, fileName);
+		printSingleChainReport(pdb, occupant, chain1, chain2, fileName);
 	}
 	else
 	{
@@ -16,13 +16,13 @@ void CAlphaReport::printReport(PDBFile* pdb, string chain1, string chain2, strin
 		//stringstream report_gnuX;
 		//stringstream report_gnuY;
 		report << getHeader() << "\n";
-		map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdb->pdbCode);
+		map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdb->pdbCode, occupant);
 		for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 		{
 			Chain* chain = iter->second;
 			string chainid = iter->first;
-			map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode, chainid);
-			vector<Atom*> calphas = ProteinManager::getInstance()->getCAlphas(pdb->pdbCode, chainid);
+			map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode, occupant,chainid);
+			vector<Atom*> calphas = ProteinManager::getInstance()->getCAlphas(pdb->pdbCode, occupant,chainid);
 
 			for (unsigned int i = 0; i < calphas.size(); ++i)
 			{
@@ -36,7 +36,7 @@ void CAlphaReport::printReport(PDBFile* pdb, string chain1, string chain2, strin
 				{
 					Chain* chainb = iterb->second;
 					vector<Atom*> atomsb = chainb->getCAlphas();
-					map<int, AminoAcid*> aminosb = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode, chainb->chainId);
+					map<int, AminoAcid*> aminosb = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode, "A",chainb->chainId);
 					unsigned int start = 0;
 					bool chainself = false;
 					if (iterb == iter)
@@ -71,15 +71,15 @@ void CAlphaReport::printReport(PDBFile* pdb, string chain1, string chain2, strin
 	}
 }
 
-void CAlphaReport::printSingleChainReport(PDBFile* pdb, string chain1, string chain2, string fileName)
+void CAlphaReport::printSingleChainReport(PDBFile* pdb, string occupant,string chain1, string chain2, string fileName)
 {//produce data frame report for R reporting
 
 	stringstream report;
 	report << getHeader() << "\n";
-	Chain* pchain1 = ProteinManager::getInstance()->getOrAddChain(pdb->pdbCode,chain1);
-	Chain* pchain2 = ProteinManager::getInstance()->getOrAddChain(pdb->pdbCode, chain2);		
-	map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode, chain1);
-	vector<Atom*> calphas = ProteinManager::getInstance()->getCAlphas(pdb->pdbCode, chain1);
+	Chain* pchain1 = ProteinManager::getInstance()->getOrAddChain(pdb->pdbCode,occupant,chain1);
+	Chain* pchain2 = ProteinManager::getInstance()->getOrAddChain(pdb->pdbCode, occupant, chain2);
+	map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode, occupant, chain1);
+	vector<Atom*> calphas = ProteinManager::getInstance()->getCAlphas(pdb->pdbCode, occupant, chain1);
 
 	for (unsigned int i = 0; i < calphas.size(); ++i)
 	{
@@ -90,7 +90,7 @@ void CAlphaReport::printSingleChainReport(PDBFile* pdb, string chain1, string ch
 		LogFile::getInstance()->writeMessage(ss.str());
 				
 		vector<Atom*> atomsb = pchain2->getCAlphas();
-		map<int, AminoAcid*> aminosb = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode, chain2);				
+		map<int, AminoAcid*> aminosb = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode, occupant, chain2);
 		for (unsigned int j = 0; j < atomsb.size(); ++j)
 		{
 			Atom* b = atomsb[j];
@@ -110,21 +110,21 @@ void CAlphaReport::printSingleChainReport(PDBFile* pdb, string chain1, string ch
 	
 }
 
-void CAlphaReport::printMultiReport(PDBFile* pdb1, PDBFile* pdb2, string fileName, bool shifted)
+void CAlphaReport::printMultiReport(PDBFile* pdb1, PDBFile* pdb2, string occupant, string fileName, bool shifted)
 {//produce data frame report for R reporting
 
 	LogFile::getInstance()->writeMessage("Starting C Aplpha distance map");
 	
 	stringstream report;
 	report << getHeader() << "\n";
-	map<string, Chain*> chains1 = ProteinManager::getInstance()->getChains(pdb1->pdbCode);
-	map<string, Chain*> chains2 = ProteinManager::getInstance()->getChains(pdb2->pdbCode);
+	map<string, Chain*> chains1 = ProteinManager::getInstance()->getChains(pdb1->pdbCode, occupant);
+	map<string, Chain*> chains2 = ProteinManager::getInstance()->getChains(pdb2->pdbCode, occupant);
 	for (map<string, Chain*>::iterator iter = chains1.begin(); iter != chains1.end(); ++iter)
 	{
 		Chain* chain = iter->second;
 		string chainid = iter->first;
-		map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdb1->pdbCode, chainid);
-		vector<Atom*> calphas = ProteinManager::getInstance()->getCAlphas(pdb1->pdbCode, chainid);
+		map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdb1->pdbCode, occupant, chainid);
+		vector<Atom*> calphas = ProteinManager::getInstance()->getCAlphas(pdb1->pdbCode, occupant, chainid);
 
 		for (unsigned int i = 0; i < calphas.size(); ++i)
 		{
@@ -138,7 +138,7 @@ void CAlphaReport::printMultiReport(PDBFile* pdb1, PDBFile* pdb2, string fileNam
 			{
 				Chain* chainb = iterb->second;
 				vector<Atom*> atomsb = chainb->getCAlphas();
-				map<int, AminoAcid*> aminosb = ProteinManager::getInstance()->getAminoAcids(pdb2->pdbCode, chainb->chainId);
+				map<int, AminoAcid*> aminosb = ProteinManager::getInstance()->getAminoAcids(pdb2->pdbCode, occupant, chainb->chainId);
 				unsigned int start = 0;								
 				for (unsigned int j = start; j < atomsb.size(); ++j)
 				{

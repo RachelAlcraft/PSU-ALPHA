@@ -3,7 +3,7 @@
 #include <ProteinManager.h>
 #include <FoldersFiles.h>
 
-void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string fileName2, string directory, string geodir)
+void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, /*string fileName2,*/ string directory, string geodir)
 {//produce data frame report for R reporting
 	
 	if (directory != "")
@@ -16,17 +16,20 @@ void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string f
 			string pdb = pdbs[i];
 			try
 			{
-				string file = directory + pdb;
-				string geofile = geodir + pdb + ".geo.txt";
+				string file = directory + pdb;				
 				LogFile::getInstance()->writeMessage(status.str() + " - Loading data for PDB1, file=" + pdb);
 				PDBFile* pf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, file);
 				pf->loadData();
 				pf->loadAtoms();
 				pf->loadBonds();
 				if (pf != nullptr)
-				{
-
-					printOneReport(pf, geofile, "");
+				{					
+					map<string, ProteinStructure*> versions = pf->getStructureVersions();
+					for (map<string, ProteinStructure*>::iterator iter = versions.begin(); iter != versions.end(); ++iter)
+					{
+						string geofile = geodir + pdb + "_" + iter->first + ".geo.txt";
+						printOneReport(pf,iter->first, geofile);
+					}
 				}
 			}
 			catch (...)
@@ -37,12 +40,16 @@ void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, string f
 	}
 	else
 	{
-		printOneReport(pdb, fileName1, fileName2);
+		map<string, ProteinStructure*> versions = pdb->getStructureVersions();
+		for (map<string, ProteinStructure*>::iterator iter = versions.begin(); iter != versions.end(); ++iter)
+		{			
+			//printOneReport(pdb, iter->first, fileName1 + "_" + iter->first + ".geo.txt", fileName2 + "_" + iter->first + ".geo.txt");
+			printOneReport(pdb, iter->first, fileName1 + "_" + iter->first + "_geo.txt");
+		}		
 	}
-
 }
 
-void GeometricalDataReport::printOneReport(PDBFile* pdb, string fileName1, string fileName2)
+void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string fileName1)//, string fileName2)
 {//produce data frame report for R reporting
 
 	
@@ -50,9 +57,9 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string fileName1, strin
 
 	stringstream report;
 	report << "Chain,AminoAcid,Id,SecStruct,DataType,ExperimentalMethod,Atoms,Value\n";
-	vector<AtomBond> bonds = ProteinManager::getInstance()->getAtomBonds(pdb->pdbCode);
-	vector<AtomAngle> angles = ProteinManager::getInstance()->getAtomAngles(pdb->pdbCode);
-	vector<AtomTorsion> torsions = ProteinManager::getInstance()->getAtomTorsions(pdb->pdbCode);
+	vector<AtomBond> bonds = ProteinManager::getInstance()->getAtomBonds(pdb->pdbCode, occupant);
+	vector<AtomAngle> angles = ProteinManager::getInstance()->getAtomAngles(pdb->pdbCode, occupant);
+	vector<AtomTorsion> torsions = ProteinManager::getInstance()->getAtomTorsions(pdb->pdbCode, occupant);
 
 	for (unsigned int i = 0; i < bonds.size(); ++i)
 	{
@@ -97,12 +104,12 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string fileName1, strin
 		outfile << report.str();
 	}
 
-	if (fileName2 != "")
+	/*if (fileName2 != "")
 	{
 		ofstream outfile2(fileName2);
 		if (outfile2.is_open())
 		{
 			outfile2 << report.str();
 		}
-	}
+	}*/
 }

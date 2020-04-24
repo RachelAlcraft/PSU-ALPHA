@@ -47,7 +47,7 @@ public:
 	//For chi,psi,omega
 	Atom* _atmCp;
 	Atom* _atmNpp;
-	Atom* _atmCApp;
+	Atom* _atmCApp;	
 	BackboneTorsion* _torsion;
 	SidechainTorsion* _sideTorsion;
 	map<string, Atom*> _atoms;
@@ -75,6 +75,7 @@ public:
 	vector<AtomBond> getAtomBonds() { return _bonds; }
 	vector<AtomAngle> getAtomAngles() { return _angles; }
 	vector<AtomTorsion> getAtomTorsions() { return _torsions; }
+
 private: //Helper functions
 	vector<Atom*> atomsFromString(string atomstring); //we pass around atom strings like N-CA-C and would like to be able to turn those into acrual atoms
 	

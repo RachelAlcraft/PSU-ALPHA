@@ -26,8 +26,8 @@ RMSD::RMSD(PDBFile* pdb1, PDBFile* pdb2, FastaFile* fasta, bool alignment, bool 
 
 void RMSD::SetupCAlphaPairs()
 {//For a very first implementation this will just be the best matching cAlphas
-	vector<Atom*> calphas1 = ProteinManager::getInstance()->getCAlphas(PDB1->pdbCode);
-	vector<Atom*> calphas2 = ProteinManager::getInstance()->getCAlphas(PDB2->pdbCode);
+	vector<Atom*> calphas1 = ProteinManager::getInstance()->getCAlphas(PDB1->pdbCode,"A");
+	vector<Atom*> calphas2 = ProteinManager::getInstance()->getCAlphas(PDB2->pdbCode,"A");
 	
 	int maxposs_calphas = min(calphas1.size(), calphas2.size());
 
@@ -141,8 +141,8 @@ double RMSD::calculateOptimalRMSD(int h,int i, int j, int k, string& report/*, i
 		ss << "Transformation 1=\n" << gt1->info();
 		ss << "Transformation 2=\n" << gt2->info();
 
-		PDB1->applyTransformation(gt1);
-		PDB2->applyTransformation(gt2);
+		PDB1->getStructureVersion("A")->applyTransformation(gt1);
+		PDB2->getStructureVersion("A")->applyTransformation(gt2);
 
 		double val = calculateOneRMSD();
 		ss << "RMSD Value = " << val;

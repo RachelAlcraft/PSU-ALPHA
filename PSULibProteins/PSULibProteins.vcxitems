@@ -21,6 +21,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)HetAtom.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)NucleicAcid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)PDBFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ProteinStructure.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Torsion.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +32,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)HetAtom.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)NucleicAcid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)PDBFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProteinStructure.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Torsion.h" />
   </ItemGroup>
 </Project>

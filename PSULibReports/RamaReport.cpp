@@ -5,18 +5,18 @@
 
 
 
-void RamaReport::printReport(PDBFile* pdb, string fileName)
+void RamaReport::printReport(PDBFile* pdb, string occupant, string fileName)
 {//produce data frame report for R reporting
 	LogFile::getInstance()->writeMessage("Starting Torsion report");
 
 	stringstream report;
 	report << "Chain,AminoAcid,Id,Hydrophobocity,Hydropathy,Volume,Donicity,Chemical,Physio,Charge,Polar,Phi,Psi,Omega,Chi1,Chi2,Chi3,Chi4,Chi5,SS\n";
-	map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdb->pdbCode);
+	map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdb->pdbCode, occupant);
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* chain = iter->second;
 		string chainid = iter->first;
-		map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode,chainid);
+		map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdb->pdbCode, occupant,chainid);
 		for (map<int, AminoAcid*>::iterator iter = aminos.begin(); iter != aminos.end(); ++iter)
 		{
 			double phi = 0;

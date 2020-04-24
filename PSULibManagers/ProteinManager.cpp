@@ -42,14 +42,12 @@ ProteinManager* ProteinManager::getInstance()
 	return instance;
 }
 
-void ProteinManager::createConfigData(string path)
-{
-	_configPath = path;
+void ProteinManager::createAminoAcidData(string filename)
+{	
 	//AMINO ACID GENERAL DATA//////////////////////////////////////////////
-	//Load the amino acid general info, note the chi definitions are actually used to create chi angles
-	string aafile = path + "data_aminoinfo.csv";
+	//Load the amino acid general info, note the chi definitions are actually used to create chi angles	
 	vector<string> file;
-	ifstream myfile(aafile);
+	ifstream myfile(filename);
 	if (myfile.is_open())
 	{
 		string line = "";
@@ -96,10 +94,11 @@ vector<string> ProteinManager::getAminoData(string aminoCode)
 	return StringManip::stringToVector(_aa_generaldata[aminoCode],",");//unvalidated. Whole system relies on data being good for now.
 }
 
-void ProteinManager::addAtom(string pdbCode, string chainId, int aminoId, Atom* atm)
+void ProteinManager::addAtom(string pdbCode, string occupant, string chainId, int aminoId, Atom* atm)
 {
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	Chain* chain = pdb->getChain(chainId);
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	Chain* chain = ps->getChain(chainId);
 	AminoAcid* aa = chain->getAminoAcid(aminoId);
 	aa->add(atm);
 }
@@ -118,7 +117,7 @@ bool ProteinManager::isNucleicAcid(string code)
 		return false;
 }
 
-NucleicAcid* ProteinManager::getOrAddNucleicAcid(string pdbCode, string chainId, int aminoId, string aminoCode, int& structure_id, int& nucleonum)
+NucleicAcid* ProteinManager::getOrAddNucleicAcid(string pdbCode, string occupant, string chainId, int aminoId, string aminoCode, int& structure_id, int& nucleonum)
 {
 	try
 	{
@@ -126,7 +125,8 @@ NucleicAcid* ProteinManager::getOrAddNucleicAcid(string pdbCode, string chainId,
 		id << pdbCode << chainId << aminoId;
 
 		PDBFile* pdb = _pdbfiles[pdbCode];
-		Chain* chain = pdb->getChain(chainId);
+		ProteinStructure* ps = pdb->getStructureVersion(occupant);
+		Chain* chain = ps->getChain(chainId);
 		if (chain)
 		{
 			NucleicAcid* na = chain->getNucleicAcid(aminoId);
@@ -157,7 +157,7 @@ NucleicAcid* ProteinManager::getOrAddNucleicAcid(string pdbCode, string chainId,
 
 }
 
-AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int aminoId, string aminoCode, int& structure_id, int& residuenum)
+AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string occupant, string chainId, int aminoId, string aminoCode, int& structure_id, int& residuenum)
 {
 	try
 	{
@@ -165,7 +165,8 @@ AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int
 		id << pdbCode << chainId << aminoId;
 
 		PDBFile* pdb = _pdbfiles[pdbCode];
-		Chain* chain = pdb->getChain(chainId);
+		ProteinStructure* ps = pdb->getStructureVersion(occupant);
+		Chain* chain = ps->getChain(chainId);
 		if (chain && aminoCode != "UNK")
 		{
 			AminoAcid* aa = chain->getAminoAcid(aminoId);
@@ -195,14 +196,20 @@ AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string chainId, int
 	}
 	
 }
-Chain* ProteinManager::getOrAddChain(string pdbCode, string chainId)
+Chain* ProteinManager::getOrAddChain(string pdbCode, string occupant, string chainId)
 {
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	Chain* chain = pdb->getChain(chainId);
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	if (!ps)
+	{//if it is a new protein structure it wants to be a copy of the previous one
+		pdb->addStructureVersion(occupant);
+		ps = pdb->getStructureVersion(occupant);
+	}
+	Chain* chain = ps->getChain(chainId);
 	if (!chain)
 	{
 		Chain* ch = new Chain(pdbCode, chainId);
-		pdb->addChain(ch);
+		ps->addChain(ch);
 		return ch;
 	}
 	else
@@ -210,31 +217,35 @@ Chain* ProteinManager::getOrAddChain(string pdbCode, string chainId)
 		return chain;
 	}	
 }
-map<string, Chain*> ProteinManager::getChains(string pdbCode)
+map<string, Chain*> ProteinManager::getChains(string pdbCode, string occupant)
 {
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	return pdb->getChains();
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	return ps->getChains();
 }
-map<int, AminoAcid*> ProteinManager::getAminoAcids(string pdbCode, string chainId)
+map<int, AminoAcid*> ProteinManager::getAminoAcids(string pdbCode, string occupant, string chainId)
 {
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	Chain* chain = pdb->getChain(chainId);
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	Chain* chain = ps->getChain(chainId);
 	return chain->getAminoAcids();
 
 }
 
-vector<Atom*>  ProteinManager::getCAlphas(string pdbCode, string chainId)
+vector<Atom*>  ProteinManager::getCAlphas(string pdbCode, string occupant, string chainId)
 {
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	Chain* chain = pdb->getChain(chainId);
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	Chain* chain = ps->getChain(chainId);
 	return chain->getCAlphas();	
 }
 
-vector<Atom*> ProteinManager::getCAlphas(string pdbCode)
+vector<Atom*> ProteinManager::getCAlphas(string pdbCode, string occupant)
 {
 	vector<Atom*> calphas;
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	map<string,Chain*> chains = pdb->getChains();
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	map<string,Chain*> chains = ps->getChains();
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* ch = iter->second;
@@ -245,11 +256,12 @@ vector<Atom*> ProteinManager::getCAlphas(string pdbCode)
 	return calphas;
 }
 
-vector<Atom*>  ProteinManager::getAtoms(string pdbCode)
+vector<Atom*>  ProteinManager::getAtoms(string pdbCode, string occupant)
 {
 	vector<Atom*> vecatoms;
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	map<string, Chain*> chains = pdb->getChains();
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	map<string, Chain*> chains = ps->getChains();
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* ch = iter->second;
@@ -265,11 +277,12 @@ vector<Atom*>  ProteinManager::getAtoms(string pdbCode)
 	return vecatoms;	
 }
 
-map<int,Atom*>  ProteinManager::getAtomsMap(string pdbCode)
+map<int,Atom*>  ProteinManager::getAtomsMap(string pdbCode, string occupant)
 {
 	map<int,Atom*> mapatoms;
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	map<string, Chain*> chains = pdb->getChains();
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	map<string, Chain*> chains = ps->getChains();
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* ch = iter->second;
@@ -288,11 +301,12 @@ map<int,Atom*>  ProteinManager::getAtomsMap(string pdbCode)
 	return mapatoms;
 }
 
-vector<AtomBond>  ProteinManager::getAtomBonds(string pdbCode)
+vector<AtomBond>  ProteinManager::getAtomBonds(string pdbCode, string occupant)
 {
 	vector<AtomBond> vecatoms;
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	map<string, Chain*> chains = pdb->getChains();
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	map<string, Chain*> chains = ps->getChains();
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* ch = iter->second;
@@ -308,11 +322,12 @@ vector<AtomBond>  ProteinManager::getAtomBonds(string pdbCode)
 	return vecatoms;
 }
 
-vector<AtomAngle>  ProteinManager::getAtomAngles(string pdbCode)
+vector<AtomAngle>  ProteinManager::getAtomAngles(string pdbCode, string occupant)
 {
 	vector<AtomAngle> vecatoms;
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	map<string, Chain*> chains = pdb->getChains();
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	map<string, Chain*> chains = ps->getChains();
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* ch = iter->second;
@@ -327,11 +342,12 @@ vector<AtomAngle>  ProteinManager::getAtomAngles(string pdbCode)
 	}
 	return vecatoms;
 }
-vector<AtomTorsion>  ProteinManager::getAtomTorsions(string pdbCode)
+vector<AtomTorsion>  ProteinManager::getAtomTorsions(string pdbCode, string occupant)
 {
 	vector<AtomTorsion> vecatoms;
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	map<string, Chain*> chains = pdb->getChains();
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	map<string, Chain*> chains = ps->getChains();
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* ch = iter->second;
@@ -347,11 +363,12 @@ vector<AtomTorsion>  ProteinManager::getAtomTorsions(string pdbCode)
 	return vecatoms;
 }
 
-bool ProteinManager::hasOccupancy(string pdbCode)
+bool ProteinManager::hasOccupancy(string pdbCode, string occupant)
 {
 	bool hasOccupancy = false;
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	map<string, Chain*> chains = pdb->getChains();
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	map<string, Chain*> chains = ps->getChains();
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* ch = iter->second;
@@ -365,21 +382,49 @@ bool ProteinManager::hasOccupancy(string pdbCode)
 				if (occ != 1)
 				{
 					hasOccupancy = true;
-				}
-				
+				}				
 			}
 		}
-
-	}
-	
+	}	
 	return hasOccupancy;
 }
 
-double ProteinManager::maxBFactor(string pdbCode)
+vector<string> ProteinManager::occupantList(string pdbCode)
+{
+	vector<string> occList;
+	PDBFile* pdb = _pdbfiles[pdbCode];
+	map <string, ProteinStructure*> pss = pdb->getStructureVersions();
+	for (map<string, ProteinStructure*>::iterator aiter = pss.begin(); aiter != pss.end(); ++aiter)
+	{
+		ProteinStructure* ps = aiter->second;
+		map<string, Chain*> chains = ps->getChains();
+		for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+		{
+			Chain* ch = iter->second;
+			map<int, AminoAcid*> aminos = ch->getAminoAcids();
+			for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
+			{
+				map<string, Atom*> atoms = biter->second->getAtoms();
+				for (map<string, Atom*>::iterator citer = atoms.begin(); citer != atoms.end(); ++citer)
+				{
+					string occ = citer->second->occupant;
+					if (std::find(occList.begin(), occList.end(), occ) == occList.end())
+					{
+						occList.push_back(occ);
+					}
+				}
+			}
+		}		
+	}
+	return occList;
+}
+
+double ProteinManager::maxBFactor(string pdbCode, string occupant)
 {
 	double maxbf = 0;
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	map<string, Chain*> chains = pdb->getChains();
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	map<string, Chain*> chains = ps->getChains();
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* ch = iter->second;
@@ -401,11 +446,12 @@ double ProteinManager::maxBFactor(string pdbCode)
 }
 
 
-bool ProteinManager::hasHydrogens(string pdbCode)
+bool ProteinManager::hasHydrogens(string pdbCode, string occupant)
 {
 	bool hasHyd = false;
 	PDBFile* pdb = _pdbfiles[pdbCode];
-	map<string, Chain*> chains = pdb->getChains();
+	ProteinStructure* ps = pdb->getStructureVersion(occupant);
+	map<string, Chain*> chains = ps->getChains();
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* ch = iter->second;

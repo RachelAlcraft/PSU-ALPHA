@@ -63,7 +63,7 @@ int main()
 		string calphareport = OUTPATH + "Reports\\" + PDB1 + "_calpha.txt";
 
 		// Set up data manager config ////////////////////
-		ProteinManager::getInstance()->createConfigData(inConfig);
+		ProteinManager::getInstance()->createAminoAcidData(inConfig + "data_aminoinfo.csv");
 
 		//Load pdb data if we have it first
 		PDBFile* pdb1 = nullptr;
@@ -91,14 +91,14 @@ int main()
 		{
 			LogFile::getInstance()->writeMessage("RAMACHANDRAN PLOT REPORT, outfile=" + ramareport);			
 			RamaReport rr;
-			rr.printReport(pdb1, ramareport);
+			rr.printReport(pdb1, ramareport,"A");
 		}
 		//Shall we run a CAlpha report
 		if (PDB1 != "" && CONTACT == "TRUE")
 		{
 			LogFile::getInstance()->writeMessage("CALPHA Contact Map REPORT, outfile=" + calphareport);
 			CAlphaReport ca;
-			ca.printReport(pdb1, CONTACTCHAIN1, CONTACTCHAIN2, calphareport);
+			ca.printReport(pdb1, "A",CONTACTCHAIN1, CONTACTCHAIN2, calphareport);
 
 		}
 		//Shall we run an RMSD report between 2 structures with fixed positions?
@@ -137,7 +137,7 @@ int main()
 				string rmsdcontact = OUTPATH + "Reports\\" + PDB1 + "_rmsdcontact.txt";
 				LogFile::getInstance()->writeMessage("RMSD CALPHA Contact Map REPORT, outfile=" + rmsdcontact);
 				CAlphaReport ca;
-				ca.printMultiReport(pdb1,pdb2, rmsdcontact,true);
+				ca.printMultiReport(pdb1,pdb2, "A",rmsdcontact,true);
 			}
 
 			
@@ -149,7 +149,8 @@ int main()
 			string geodata2 = GEODATABASE + PDB1 + "_geometricfeatures.csv";
 			LogFile::getInstance()->writeMessage("Outputting geometric features to, outfile=" + geodata1 + " and " + geodata2);
 			GeometricalDataReport gdr;
-			gdr.printReport(pdb1, geodata1, geodata2,PDBDATABASE,GEODATABASE);
+			//gdr.printReport(pdb1, geodata1, geodata2,PDBDATABASE,GEODATABASE);
+			gdr.printReport(pdb1, geodata1, PDBDATABASE, GEODATABASE);
 
 		}
 		//Shall we aggregate all of the existing geometrical data into a probability distribution file?

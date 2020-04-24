@@ -3,8 +3,8 @@
 class GeometricalDataReport
 {
 public:
-	void printReport(PDBFile* pdb, string filename1, string filename2, string directory, string geodir);
+	void printReport(PDBFile* pdb, string filename1/*, string filename2*/, string directory, string geodir);
 private:
-	void printOneReport(PDBFile* pdb, string filename1, string filename2);
+	void printOneReport(PDBFile* pdb, string occupant, string filename1);// , string filename2);
 };
 

@@ -26,9 +26,9 @@ int main()
 
 	string runID = "B";
 
-	bool success = LogFile::getInstance()->setLogFile("F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\logger.txt", "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\");
-	ProteinManager::getInstance()->createConfigData("F:\\PSUA\\Code\\PSU-ALPHA\\Config\\");
-
+	bool success = LogFile::getInstance()->setLogFile("F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\logger.txt", "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\");	
+	string aadata = "F:\\PSUA\\Code\\PSU-ALPHA\\Config\\data_aminoinfo.csv";
+	ProteinManager::getInstance()->createAminoAcidData(aadata);
 
 	string dir = "F:\\PSUA\\Code\\PSU-ALPHA\\Project\\PDBData\\";
 	string pdbdir = "F:\\PSUA\\ProjectData\\HighResFiles\\";
@@ -123,18 +123,18 @@ int main()
 
 
 				//occupancy
-				bool occupancy = ProteinManager::getInstance()->hasOccupancy(pdb);
+				bool occupancy = ProteinManager::getInstance()->hasOccupancy(pdb,"A");
 				occupancy ? occ = "Y" : occ = "N";
 
 				//BFactor
-				double bf = ProteinManager::getInstance()->maxBFactor(pdb);
+				double bf = ProteinManager::getInstance()->maxBFactor(pdb,"A");
 				stringstream ssbf;
 				ssbf.precision(5);
 				ssbf << bf;
 				bfactor = ssbf.str();
 
 				//hydrogens - level of detail of resolution such that hydrogen atoms are in the pdb structure
-				bool hydrogens = ProteinManager::getInstance()->hasHydrogens(pdb);
+				bool hydrogens = ProteinManager::getInstance()->hasHydrogens(pdb,"A");
 				hydrogens ? hyd = "Y" : hyd = "N";
 
 				//tbhis needs to be moved into the pdbfile class, but memory and state need to be sorted out

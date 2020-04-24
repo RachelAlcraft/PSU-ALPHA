@@ -23,8 +23,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-HighResList", "MSC-High
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-AnnotateHighResList", "MSC-AnnotateHighResList\MSC-AnnotateHighResList.vcxproj", "{1D465BAA-4076-4730-BA1D-9080B5BB848D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-CreatePDBGeometry", "MSC-CreatePDBGeometry\MSC-CreatePDBGeometry.vcxproj", "{02071CBC-B77F-4650-B097-D2E5B6AC823D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-GeometryAggregator", "MSC-GeometryAggregator\MSC-GeometryAggregator.vcxproj", "{FC32F4E2-CCDB-48D7-99D7-BC4D45649FCF}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		BTLLib\BTLLib.vcxitems*{02071cbc-b77f-4650-b097-d2e5b6ac823d}*SharedItemsImports = 4
+		PSULibAlgorithms\PSULibAlgorithms.vcxitems*{02071cbc-b77f-4650-b097-d2e5b6ac823d}*SharedItemsImports = 4
+		PSULibHelpers\PSULibHelpers.vcxitems*{02071cbc-b77f-4650-b097-d2e5b6ac823d}*SharedItemsImports = 4
+		PSULibManagers\PSULibManagers.vcxitems*{02071cbc-b77f-4650-b097-d2e5b6ac823d}*SharedItemsImports = 4
+		PSULibMaths\PSULibMaths.vcxitems*{02071cbc-b77f-4650-b097-d2e5b6ac823d}*SharedItemsImports = 4
+		PSULibProteins\PSULibProteins.vcxitems*{02071cbc-b77f-4650-b097-d2e5b6ac823d}*SharedItemsImports = 4
+		PSULibReports\PSULibReports.vcxitems*{02071cbc-b77f-4650-b097-d2e5b6ac823d}*SharedItemsImports = 4
 		PSULibReports\PSULibReports.vcxitems*{099c5818-8f67-483c-8fca-590c50f70bc4}*SharedItemsImports = 9
 		PSULibHelpers\PSULibHelpers.vcxitems*{1d465baa-4076-4730-ba1d-9080b5bb848d}*SharedItemsImports = 4
 		PSULibManagers\PSULibManagers.vcxitems*{1d465baa-4076-4730-ba1d-9080b5bb848d}*SharedItemsImports = 4
@@ -44,6 +55,13 @@ Global
 		PSULibProteins\PSULibProteins.vcxitems*{bd4d8915-ee81-4efa-a220-e5d604cc2c92}*SharedItemsImports = 9
 		PSULibAlgorithms\PSULibAlgorithms.vcxitems*{e1b09bcf-7ab9-41b5-9f55-22ecd42bebfe}*SharedItemsImports = 9
 		PSULibMaths\PSULibMaths.vcxitems*{f14a751f-2a3b-46f9-8341-a3277ae83e29}*SharedItemsImports = 9
+		BTLLib\BTLLib.vcxitems*{fc32f4e2-ccdb-48d7-99d7-bc4d45649fcf}*SharedItemsImports = 4
+		PSULibAlgorithms\PSULibAlgorithms.vcxitems*{fc32f4e2-ccdb-48d7-99d7-bc4d45649fcf}*SharedItemsImports = 4
+		PSULibHelpers\PSULibHelpers.vcxitems*{fc32f4e2-ccdb-48d7-99d7-bc4d45649fcf}*SharedItemsImports = 4
+		PSULibManagers\PSULibManagers.vcxitems*{fc32f4e2-ccdb-48d7-99d7-bc4d45649fcf}*SharedItemsImports = 4
+		PSULibMaths\PSULibMaths.vcxitems*{fc32f4e2-ccdb-48d7-99d7-bc4d45649fcf}*SharedItemsImports = 4
+		PSULibProteins\PSULibProteins.vcxitems*{fc32f4e2-ccdb-48d7-99d7-bc4d45649fcf}*SharedItemsImports = 4
+		PSULibReports\PSULibReports.vcxitems*{fc32f4e2-ccdb-48d7-99d7-bc4d45649fcf}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -76,6 +94,22 @@ Global
 		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Release|x64.Build.0 = Release|x64
 		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Release|x86.ActiveCfg = Release|Win32
 		{1D465BAA-4076-4730-BA1D-9080B5BB848D}.Release|x86.Build.0 = Release|Win32
+		{02071CBC-B77F-4650-B097-D2E5B6AC823D}.Debug|x64.ActiveCfg = Debug|x64
+		{02071CBC-B77F-4650-B097-D2E5B6AC823D}.Debug|x64.Build.0 = Debug|x64
+		{02071CBC-B77F-4650-B097-D2E5B6AC823D}.Debug|x86.ActiveCfg = Debug|Win32
+		{02071CBC-B77F-4650-B097-D2E5B6AC823D}.Debug|x86.Build.0 = Debug|Win32
+		{02071CBC-B77F-4650-B097-D2E5B6AC823D}.Release|x64.ActiveCfg = Release|x64
+		{02071CBC-B77F-4650-B097-D2E5B6AC823D}.Release|x64.Build.0 = Release|x64
+		{02071CBC-B77F-4650-B097-D2E5B6AC823D}.Release|x86.ActiveCfg = Release|Win32
+		{02071CBC-B77F-4650-B097-D2E5B6AC823D}.Release|x86.Build.0 = Release|Win32
+		{FC32F4E2-CCDB-48D7-99D7-BC4D45649FCF}.Debug|x64.ActiveCfg = Debug|x64
+		{FC32F4E2-CCDB-48D7-99D7-BC4D45649FCF}.Debug|x64.Build.0 = Debug|x64
+		{FC32F4E2-CCDB-48D7-99D7-BC4D45649FCF}.Debug|x86.ActiveCfg = Debug|Win32
+		{FC32F4E2-CCDB-48D7-99D7-BC4D45649FCF}.Debug|x86.Build.0 = Debug|Win32
+		{FC32F4E2-CCDB-48D7-99D7-BC4D45649FCF}.Release|x64.ActiveCfg = Release|x64
+		{FC32F4E2-CCDB-48D7-99D7-BC4D45649FCF}.Release|x64.Build.0 = Release|x64
+		{FC32F4E2-CCDB-48D7-99D7-BC4D45649FCF}.Release|x86.ActiveCfg = Release|Win32
+		{FC32F4E2-CCDB-48D7-99D7-BC4D45649FCF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

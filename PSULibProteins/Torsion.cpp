@@ -15,7 +15,7 @@ Torsion::Torsion(string aa_name, int aa_id)
 	//_CA = CA;
 	//_C = C;
 }
-BackboneTorsion::BackboneTorsion(string aa_name, int aa_id, vector<Atom*> atoms) :Torsion(aa, id)
+BackboneTorsion::BackboneTorsion(string aa_name, int aa_id, vector<Atom*> atoms) :Torsion(aa_name, aa_id)
 {
 	if (atoms.size() == 6)
 	{
@@ -38,11 +38,13 @@ BackboneTorsion::BackboneTorsion(string aa_name, int aa_id, vector<Atom*> atoms)
 	}
 	else
 	{
-		LogFile::getInstance()->writeMessage("Error creating backbone torsion angles");
+		stringstream ss;
+		ss << "Error creating backbone torsion angles. AA=" << aa_name << " Atom=" << aa_id;
+		LogFile::getInstance()->writeMessage(ss.str());		
 	}
 	
 }
-SidechainTorsion::SidechainTorsion(string aa_name, int aa_id, vector<vector<Atom*>> atomslist) :Torsion(aa, id)
+SidechainTorsion::SidechainTorsion(string aa_name, int aa_id, vector<vector<Atom*>> atomslist) :Torsion(aa_name, aa_id)
 {
 	for (unsigned int i = 0; i < atomslist.size(); ++i)
 	{
@@ -62,7 +64,9 @@ SidechainTorsion::SidechainTorsion(string aa_name, int aa_id, vector<vector<Atom
 		}
 		else
 		{
-			LogFile::getInstance()->writeMessage("Error creating sidechain torsion angles");
+			stringstream ss;
+			ss << "Error creating sidechain torsion angles. AA=" << aa_name << " Atom=" << aa_id;
+			LogFile::getInstance()->writeMessage(ss.str());
 		}
 	}
 }

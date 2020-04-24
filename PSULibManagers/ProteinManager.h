@@ -21,7 +21,7 @@ class ProteinManager
 private:
 	static ProteinManager* instance;
 	ProteinManager();
-	string _configPath;
+	//string _configPath;
 
 	//DATA HIERARCHY//////////////////////////////////////////
 	//Amino acids have general data
@@ -61,25 +61,26 @@ public:
 	static ProteinManager* getInstance();
 	~ProteinManager(); //responsible for pdbs
 	void deletePdbs();//in case we are just examining pdbs and don;t want loads
-	void createConfigData(string path);
+	void createAminoAcidData(string filename);
 	vector<string> getAminoData(string aminoCode);
-	void addAtom(string pdbCode, string chainId, int aminoId, Atom* atm);
+	void addAtom(string pdbCode, string occupant, string chainId, int aminoId, Atom* atm);
 	PDBFile* getOrAddPDBFile(string pdbCode, string filename);
-	AminoAcid* getOrAddAminoAcid(string pdbCode, string chainId, int aminoId, string amino_code, int& structure_id, int& residuenum);
-	NucleicAcid* getOrAddNucleicAcid(string pdbCode, string chainId, int aminoId, string amino_code, int& structure_id, int& residuenum);
-	Chain* getOrAddChain(string pdbCode, string chainId);
-	map<string, Chain*> getChains(string pdbCode);	
-	map<int, AminoAcid*> getAminoAcids(string pdbCode, string chainId);		
-	vector<Atom*> getCAlphas(string pdbCode, string chainId);
-	vector<Atom*> getCAlphas(string pdbCode);
-	vector<Atom*>  getAtoms(string pdbCode);
-	map<int,Atom*>  getAtomsMap(string pdbCode);
-	vector<AtomBond>  getAtomBonds(string pdbCode);
-	vector<AtomAngle>  getAtomAngles(string pdbCode);
-	vector<AtomTorsion>  getAtomTorsions(string pdbCode);
-	bool hasOccupancy(string pdbCode);
-	double maxBFactor(string pdbCode);
-	bool hasHydrogens(string pdbCode);
+	AminoAcid* getOrAddAminoAcid(string pdbCode, string occupant, string chainId, int aminoId, string amino_code, int& structure_id, int& residuenum);
+	NucleicAcid* getOrAddNucleicAcid(string pdbCode, string occupant, string chainId, int aminoId, string amino_code, int& structure_id, int& residuenum);
+	Chain* getOrAddChain(string pdbCode, string occupant, string chainId);
+	map<string, Chain*> getChains(string pdbCode, string occupant);
+	map<int, AminoAcid*> getAminoAcids(string pdbCode, string occupant, string chainId);
+	vector<Atom*> getCAlphas(string pdbCode, string occupant, string chainId);
+	vector<Atom*> getCAlphas(string pdbCode, string occupant);
+	vector<Atom*>  getAtoms(string pdbCode, string occupant);
+	map<int,Atom*>  getAtomsMap(string pdbCode, string occupant);
+	vector<AtomBond>  getAtomBonds(string pdbCode, string occupant);
+	vector<AtomAngle>  getAtomAngles(string pdbCode, string occupant);
+	vector<AtomTorsion>  getAtomTorsions(string pdbCode, string occupant);
+	bool hasOccupancy(string pdbCode, string occupant);
+	vector<string> occupantList(string pdbCode);
+	double maxBFactor(string pdbCode, string occupant);
+	bool hasHydrogens(string pdbCode, string occupant);
 	bool isAminoAcid(string code);
 	bool isNucleicAcid(string code);
 	

@@ -26,6 +26,11 @@ PDBFile::PDBFile(string filename, string pdb_code)
 
 PDBFile::~PDBFile()
 {
+	for (map<string, ProteinStructure*>::iterator iter = _proteinVersions.begin(); iter != _proteinVersions.end(); ++iter)
+	{
+		delete iter->second;
+	}
+	_proteinVersions.clear();
 }
 
 void PDBFile::loadData()
@@ -36,6 +41,16 @@ void PDBFile::loadData()
 
 void PDBFile::loadAtoms()
 {
+	/*
+	Clearly this is not how it should be done but
+	before we start, not knowing the occupancy and needing everything to be copied
+	create A,B,S,D occupant versions and then delete the ones we don;t need	
+	*/
+	addStructureVersion("A");
+	addStructureVersion("B");
+	addStructureVersion("C");
+	addStructureVersion("D");
+
 	Chain* currentChain = NULL;
 	int structureId = 0;
 	//AminoAcid* currentAmino = NULL;	
@@ -53,23 +68,50 @@ void PDBFile::loadAtoms()
 			string amino = atom->aminoCode;
 			int amino_id = atom->aminoId;
 			string chain = atom->chainId;
-			atom->isAmino = true;
-			if (ProteinManager::getInstance()->isNucleicAcid(amino))			
-				atom->isAmino = false;			
-			Chain* pchain = ProteinManager::getInstance()->getOrAddChain(pdbCode, chain);
-			
-			if (atom->isAmino)
+			string ocpnt = atom->occupant;
+			vector<string> alloccupants;
+			if (ocpnt == "X")
 			{
-				AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, chain, amino_id, amino, structureId, residues);
-				if (paa != nullptr)
-					ProteinManager::getInstance()->addAtom(pdbCode, chain, amino_id, atom);
+				alloccupants.push_back("A");
+				alloccupants.push_back("B");
+				alloccupants.push_back("C");
+				alloccupants.push_back("D");
 			}
 			else
 			{
-				NucleicAcid* pna = ProteinManager::getInstance()->getOrAddNucleicAcid(pdbCode, chain, amino_id, amino, structureId, nucleotides);
+				alloccupants.push_back(ocpnt);
+			}
+			atom->isAmino = true;
+			if (ProteinManager::getInstance()->isNucleicAcid(amino))			
+				atom->isAmino = false;		
+
+			for (unsigned int op = 0; op < alloccupants.size(); ++op)//the atom needs to be added to all the approrpaite occupant structures
+			{
+				Chain* pchain = ProteinManager::getInstance()->getOrAddChain(pdbCode, alloccupants[op], chain);
+
+				if (atom->isAmino)
+				{
+					AminoAcid* paa = ProteinManager::getInstance()->getOrAddAminoAcid(pdbCode, alloccupants[op], chain, amino_id, amino, structureId, residues);
+					if (paa != nullptr)
+						ProteinManager::getInstance()->addAtom(pdbCode, alloccupants[op], chain, amino_id, atom);
+				}
+				else
+				{
+					NucleicAcid* pna = ProteinManager::getInstance()->getOrAddNucleicAcid(pdbCode, alloccupants[op], chain, amino_id, amino, structureId, nucleotides);
+				}
 			}
 		}
 	}
+	//remove unnecessary occupants, this is obviously not ideal! TODO
+	vector<string> occupantList = ProteinManager::getInstance()->occupantList(pdbCode);
+	if (std::find(occupantList.begin(), occupantList.end(), "B") == occupantList.end())
+		removeStructureVersion("B");
+	if (std::find(occupantList.begin(), occupantList.end(), "C") == occupantList.end())
+		removeStructureVersion("C");
+	if (std::find(occupantList.begin(), occupantList.end(), "D") == occupantList.end())
+		removeStructureVersion("D");
+	
+
 	loadedAminos = true;
 	
 }
@@ -80,24 +122,15 @@ void PDBFile::loadBonds()
 	loadedTorsions = true;
 }
 void PDBFile::loadTorsions()
-{
-
+{//currently done as paert of loadBonds
 }
 
-void PDBFile::applyTransformation(GeoTransformations* trans)
-{
-	vector<Atom*> atoms = ProteinManager::getInstance()->getAtoms(pdbCode);
-	for (unsigned int i = 0; i < atoms.size(); ++i)
-	{
-		if (atoms[i])
-			atoms[i]->applyTransformation(trans);
-	}
-}
+
 
 void PDBFile::printShiftedFile(string fileRoot)
 {
 	string fileName = fileRoot + pdbCode + ".pdb";
-	map<int,Atom*> atoms = ProteinManager::getInstance()->getAtomsMap(pdbCode);
+	map<int,Atom*> atoms = ProteinManager::getInstance()->getAtomsMap(pdbCode,"A");
 	ofstream outfile(fileName);
 	if (outfile.is_open())
 	{
@@ -143,21 +176,7 @@ void PDBFile::printShiftedFile(string fileRoot)
 	}
 }
 
-string PDBFile::getSequence() // TODO make it per chain if required
-{
-	string seq = "";
-	map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdbCode);
-	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
-	{
-		Chain* chain = iter->second;
-		map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdbCode, chain->chainId);
-		for (map<int, AminoAcid*>::iterator iteraa = aminos.begin(); iteraa != aminos.end(); ++iteraa)
-		{
-			seq += iteraa->second->AminoLetter;
-		}		
-	}
-	return seq;
-}
+
 
 string PDBFile::getFileString()
 {
@@ -190,61 +209,74 @@ void PDBFile::createFileVector()
 	}
 }
 
-void PDBFile::addLinks()
+void PDBFile::prepareStructureVersions()
 {
-	map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdbCode);
-	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
-	{
-		Chain* chain = iter->second;		
-		map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdbCode, chain->chainId);
-		AminoAcid* lastaa = NULL;
-		AminoAcid* nextaa = NULL;
-		map<int, AminoAcid*>::iterator iteraa = aminos.begin();
-		while (iteraa != aminos.end())
-		{
-			AminoAcid* aa = iteraa->second;
-			++iteraa;
-			if (iteraa != aminos.end())
-			{
-				nextaa = iteraa->second;
-				if (lastaa && iteraa != aminos.end())//For now ignore first and last of each chain as per chimera ramachandran plots
-				{
-					aa->createBonds(lastaa, nextaa);
-					aa->createScoringAtoms();
-				}
-			}
-			
-			lastaa = aa;
-
-		}
-	}	
 }
 
-Chain* PDBFile::getChain(string chainId)
+void PDBFile::addLinks()
 {
-	map<string, Chain*>::iterator iter = _chains.find(chainId);
-	if (iter == _chains.end())
+	for (map<string, ProteinStructure*>::iterator iter = _proteinVersions.begin(); iter != _proteinVersions.end(); ++iter)
+	{
+		string occupant = iter->first;
+		ProteinStructure* ps = iter->second;		
+		map<string, Chain*> chains = ps->getChains();
+		for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+		{
+			Chain* chain = iter->second;
+			map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdbCode, occupant,chain->chainId);
+			AminoAcid* lastaa = NULL;
+			AminoAcid* nextaa = NULL;
+			map<int, AminoAcid*>::iterator iteraa = aminos.begin();
+			while (iteraa != aminos.end())
+			{
+				AminoAcid* aa = iteraa->second;
+				++iteraa;
+				if (iteraa != aminos.end())
+				{
+					nextaa = iteraa->second;
+					if (lastaa && iteraa != aminos.end())//For now ignore first and last of each chain as per chimera ramachandran plots
+					{
+						aa->createBonds(lastaa, nextaa);
+						aa->createScoringAtoms();
+					}
+				}
+
+				lastaa = aa;
+
+			}
+		}
+	}
+}
+
+ProteinStructure* PDBFile::getStructureVersion(string occupant)
+{
+
+	map<string, ProteinStructure*>::iterator iter = _proteinVersions.find(occupant);
+	if (iter == _proteinVersions.end())
 		return nullptr;
 	else
 		return iter->second;
 }
 
-map<int, Atom*> PDBFile::getAtoms(string pdbCode)
-{
-	map<int, Atom*> atoms;
-	for (map<string, Chain*>::iterator iter = _chains.begin(); iter != _chains.end(); ++iter)
-	{
-		Chain* ch = iter->second;
-
+void PDBFile::addStructureVersion(string occupant)
+{	
+	map<string, ProteinStructure*>::iterator iter = _proteinVersions.find(occupant);
+	if (iter == _proteinVersions.end())
+	{		
+		_proteinVersions.insert(pair<string, ProteinStructure*>(occupant, new ProteinStructure(pdbCode, occupant)));		
 	}
-	
-	return atoms;
 }
 
-void PDBFile::addChain(Chain* ch)
+void PDBFile::removeStructureVersion(string occupant)
 {
-	map<string, Chain*>::iterator iter = _chains.find(ch->chainId);
-	if (iter == _chains.end())
-		_chains.insert(pair<string, Chain*>(ch->chainId, ch));
+	map<string, ProteinStructure*>::iterator iter = _proteinVersions.find(occupant);
+	if (iter != _proteinVersions.end())
+	{
+		_proteinVersions.erase(occupant);		
+	}
 }
+
+
+
+
 

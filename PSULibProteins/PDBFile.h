@@ -8,6 +8,7 @@
 //#include "Bond.h"
 #include "Atom.h"
 #include "Chain.h"
+#include <ProteinStructure.h>
 
 class PDBFile
 {
@@ -26,30 +27,36 @@ public:
 	bool loadedTorsions;
 
 private:
-	map<string, Chain*> _chains;
+	//map<string, Chain*> _chains;
+	map<string, ProteinStructure*> _proteinVersions;
 
 public:
 	PDBFile(string,string);
 	~PDBFile();
 	string getFileString();	
 	void addLinks();
-	map<string, Chain*> getChains() { return _chains; }
-	Chain* getChain(string chainId);
-	map<int, Atom*> getAtoms(string pdbCode);
-	void addChain(Chain* ch);
+	ProteinStructure* getStructureVersion(string occupant);
+	void addStructureVersion(string occupant);
+	void removeStructureVersion(string occupant);
+	map<string, ProteinStructure*> getStructureVersions() { return _proteinVersions; }
+	//map<string, Chain*> getChains() { return _chains; }
+	//Chain* getChain(string chainId);
+	//map<int, Atom*> getAtoms(string pdbCode);
+	//void addChain(Chain* ch);
 	void loadData();
 	void loadAtoms();
 	void loadBonds();
 	void loadTorsions();
-	void applyTransformation(GeoTransformations* trans);
+	//void applyTransformation(GeoTransformations* trans);
 	void printShiftedFile(string);
-	string getSequence();
+	//string getSequence();
 
 	
 
 
 private:
 	void createFileVector();
+	void prepareStructureVersions();
 	
 	
 

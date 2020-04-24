@@ -1,9 +1,19 @@
 #include "AminoAcid.h"
 #include "ProteinManager.h"
 #include <StringManip.h>
+#include <sstream>
+#include <LogFile.h>
 
 AminoAcid::AminoAcid(string pdb_code, string chain_id, int amino_id, int structure_id, string amino_Code)
 {
+	_torsion = nullptr;
+	_sideTorsion = nullptr;
+	_aaPrev = nullptr;
+	_aaNext = nullptr;
+	_atmCp = nullptr;
+	_atmNpp = nullptr;
+	_atmCApp = nullptr;
+
 	aminoId = amino_id;	
 	structureAaId = structure_id;
 	pdbCode = pdb_code;
@@ -50,15 +60,13 @@ AminoAcid::~AminoAcid()
 	_atmNpp = nullptr;
 	_atmCApp = nullptr;
 	
-	
-
-	
 	for (map<string, Atom*>::iterator iter = _atoms.begin(); iter != _atoms.end(); ++iter)
 	{
-		delete iter->second;
+		//possibly atoms can live in multiple places due to occupancy...
+		//if (iter->second)
+		//	delete iter->second;
 	}
-	_atoms.clear();
-	
+	//_atoms.clear();
 }
 
 void AminoAcid::createBonds(AminoAcid* aaP, AminoAcid* aaPP)
@@ -67,13 +75,31 @@ void AminoAcid::createBonds(AminoAcid* aaP, AminoAcid* aaPP)
 	_aaPrev = aaP;
 	_aaNext = aaPP;
 
-	//Set all atom references
-	_atmCp = _aaPrev->_atoms["C"];
-	_atmCApp = _aaNext->_atoms["CA"];
-	_atmNpp = _aaNext->_atoms["N"];
+	//if we are at the beginning or end of a chain we don't do the backbone phi psi omega
+	if (_aaPrev && _aaNext)
+	{
+		//Set all atom references
+		_atmCp = _aaPrev->_atoms["C"];
+		_atmCApp = _aaNext->_atoms["CA"];
+		_atmNpp = _aaNext->_atoms["N"];
 
-	vector<Atom*> backbones = atomsFromString("CP-N-CA-C-NPP-CAPP");
-	_torsion = new BackboneTorsion(aminoCode, aminoId, backbones);
+		if (!_atmCp || !_atmCApp || !_atmNpp)
+		{
+			//raise an error here
+			stringstream ss;
+			ss << "Some missing atoms on either side :AA=" << aminoCode << " Id=" << aminoId;
+			LogFile::getInstance()->writeMessage(ss.str());
+		}
+
+		vector<Atom*> backbones = atomsFromString("CP-N-CA-C-NPP-CAPP");
+		_torsion = new BackboneTorsion(aminoCode, aminoId, backbones);
+	}
+	else
+	{		
+		stringstream ss;
+		ss << "No backbone - chain end :AA=" << aminoCode << " Id=" << aminoId;
+		LogFile::getInstance()->writeMessage(ss.str());
+	}
 
 	vector<vector<Atom*>> sidechains;
 	if (Chi1 != "None")
@@ -107,30 +133,26 @@ vector<Atom*> AminoAcid::atomsFromString(string atomstring)
 		Atom* atm = nullptr;
 		string stratom = stratoms[i];
 		if (stratom == "CP")
-		{
-			if (_atmCp)
-				atm = _atmCp;
-			else
-				bCompleteSet = false;
+		{			
+			atm = _aaPrev->_atoms["C"];		
 		}
 		else if (stratom == "NPP")
-		{
-			if (_atmNpp)
-				atm = _atmNpp;
-			else
-				bCompleteSet = false;
+		{			
+			atm = _aaNext->_atoms["N"];			
 		}
 		else if (stratom == "CAPP")
-		{
-			if (_atmCApp)
-				atm = _atmCApp;
-			else
-				bCompleteSet = false;
+		{			
+			atm = _aaNext->_atoms["CA"];			
 		}
 		else
+		{
 			atm = _atoms[stratom];
+		}
 		if (atm)
 			vecatoms.push_back(atm);
+		else
+			bCompleteSet = false;
+		
 	}
 	if (bCompleteSet)
 		return vecatoms;

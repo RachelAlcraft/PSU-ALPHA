@@ -11,17 +11,26 @@
 
 using namespace std;
 
-
 void GeometricalAggregationReport::printReport(string datadir)
 {
 	LogFile::getInstance()->writeMessage("Starting Aggregation report for " + datadir);
 	vector<string> files = FoldersFiles::getFilesWithinFolder(datadir);
+	for (unsigned int i = 0; i < files.size(); ++i)
+	{
+		files[i] = datadir + files[i];
+	}
+	printReport(files,datadir);
+}
+
+void GeometricalAggregationReport::printReport(vector<string> files, string outdir)
+{
+	LogFile::getInstance()->writeMessage("Starting Aggregation report for given files");	
 	map<string,map<string, vector<double>>> probabilities;
 	for (unsigned int i = 0; i < files.size(); ++i)
 	{
 		stringstream status;
 		status << i << " out of " << files.size() << " ";
-		string file = datadir + files[i];
+		string file = files[i];
 		LogFile::getInstance()->writeMessage(status.str() + files[i]);
 		try
 		{					
@@ -31,10 +40,10 @@ void GeometricalAggregationReport::printReport(string datadir)
 				if (csv.fileVector[i].size() > 7)
 				{
 					string key = csv.fileVector[i][1] + ":"; //ALA
-					key += csv.fileVector[i][3] + ":"; //SS
+					//key += csv.fileVector[i][3] + ":"; //SS
 					key += csv.fileVector[i][4] + ":"; // ANGLE
-					key += csv.fileVector[i][5] + ":"; // METHOD
-					key += csv.fileVector[i][6]; // chain			
+					//key += csv.fileVector[i][5] + ":"; // METHOD
+					key += csv.fileVector[i][6]; // atoms			
 					double value = atof((csv.fileVector[i][7]).c_str());
 					map<string, map<string, vector<double>>>::iterator aiter = probabilities.find(csv.fileVector[i][1]);
 					if (aiter == probabilities.end())
@@ -83,15 +92,18 @@ void GeometricalAggregationReport::printReport(string datadir)
 			{
 				string key = biter->first;
 				vector<double> vals = biter->second;
-				report << key;
+				report << key << ",";
+				//unsure of the best way to delimit, but comma does not make sense in this format
 				for (unsigned int i = 0; i < vals.size(); ++i)
 				{
-					report << "," << vals[i];
+					if (i > 0)
+						report << ":";
+					report << vals[i];
 				}
 				report << "\n";
 			}
 
-			string filename = datadir + aa + "_geoprobdist.csv";
+			string filename = outdir + aa + "_geoprobdist.csv";
 			ofstream outfile(filename);
 			if (outfile.is_open())
 			{

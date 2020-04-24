@@ -20,8 +20,8 @@ LeastSquares::LeastSquares(PDBFile* pdb1, PDBFile* pdb2, bool align)
 
 void LeastSquares::setupAtomPairs()
 {//For a very first implementation this will just be the best matching cAlphas
-	vector<Atom*> calphas1 = ProteinManager::getInstance()->getCAlphas(PDB1->pdbCode);
-	vector<Atom*> calphas2 = ProteinManager::getInstance()->getCAlphas(PDB2->pdbCode);
+	vector<Atom*> calphas1 = ProteinManager::getInstance()->getCAlphas(PDB1->pdbCode,"A");
+	vector<Atom*> calphas2 = ProteinManager::getInstance()->getCAlphas(PDB2->pdbCode,"A");
 
 	
 	if (!Alignment)
@@ -36,8 +36,8 @@ void LeastSquares::setupAtomPairs()
 	}
 	else
 	{//use alignment file to match off
-		string seq1 = PDB1->getSequence();
-		string seq2 = PDB2->getSequence();		
+		string seq1 = PDB1->getStructureVersion("A")->getSequence();
+		string seq2 = PDB2->getStructureVersion("A")->getSequence();
 		/*FOR TESTING*/
 		//seq1 = "AADDE";
 		//seq2 = "AADE";
@@ -58,8 +58,8 @@ void LeastSquares::setupAtomPairs()
 		//Now create CAlphas based on the alignment
 		vector<AminoAcid*> aminos1;
 		vector<AminoAcid*> aminos2;
-		map<string, Chain*> chains1 = PDB1->getChains();
-		map<string, Chain*> chains2 = PDB2->getChains();
+		map<string, Chain*> chains1 = PDB1->getStructureVersion("A")->getChains();
+		map<string, Chain*> chains2 = PDB2->getStructureVersion("A")->getChains();
 		for (map<string, Chain*>::iterator iter = chains1.begin(); iter != chains1.end(); ++iter)
 		{
 			map<int, AminoAcid*> aminos = iter->second->getAminoAcids();
@@ -172,7 +172,7 @@ void LeastSquares::applyRMSDLeastSquares()
 
 	//Build vectors of all atoms
 	vector<double> vAForAll;	
-	vector<Atom*> atoms = ProteinManager::getInstance()->getAtoms(PDB1->pdbCode);
+	vector<Atom*> atoms = ProteinManager::getInstance()->getAtoms(PDB1->pdbCode,"A");
 	for (unsigned int i = 0; i < atoms.size(); ++i)
 	{
 		Atom* atm = atoms[i];
