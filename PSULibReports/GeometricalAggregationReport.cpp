@@ -8,6 +8,7 @@
 #include <CSVFile.h>
 #include <map>
 #include <FoldersFiles.h>
+#include <GeometryObservation.h>
 
 using namespace std;
 
@@ -25,7 +26,8 @@ void GeometricalAggregationReport::printReport(string datadir)
 void GeometricalAggregationReport::printReport(vector<string> files, string outdir)
 {
 	LogFile::getInstance()->writeMessage("Starting Aggregation report for given files");	
-	map<string,map<string, vector<double>>> probabilities;
+	//map<string,map<string, vector<double>>> probabilities;
+	map<string, vector<GeometryObservation>> probabilities;
 	for (unsigned int i = 0; i < files.size(); ++i)
 	{
 		stringstream status;
@@ -39,28 +41,27 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 			{
 				if (csv.fileVector[i].size() > 7)
 				{
-					string key = csv.fileVector[i][1] + ":"; //ALA
+					GeometryObservation geo;					
+					geo.aminoCode = csv.fileVector[i][1]; //eg ALA
+					geo.geoType = csv.fileVector[i][4]; //eg ANGLE
+					geo.geoAtoms = csv.fileVector[i][6]; // atoms
+										
+					/*string key = csv.fileVector[i][1] + ":"; //ALA
 					//key += csv.fileVector[i][3] + ":"; //SS
 					key += csv.fileVector[i][4] + ":"; // ANGLE
 					//key += csv.fileVector[i][5] + ":"; // METHOD
 					key += csv.fileVector[i][6]; // atoms			
-					double value = atof((csv.fileVector[i][7]).c_str());
-					map<string, map<string, vector<double>>>::iterator aiter = probabilities.find(csv.fileVector[i][1]);
+					double value = */
+					geo.value = atof((csv.fileVector[i][7]).c_str());
+					
+					map<string, vector<GeometryObservation>>::iterator aiter = probabilities.find(geo.aminoCode);
 					if (aiter == probabilities.end())
 					{
-						map<string, vector<double>> emptydata;
-						probabilities.insert(pair<string, map<string, vector<double>>>(csv.fileVector[i][1], emptydata));
+						vector<GeometryObservation> emptydata;
+						probabilities.insert(pair<string, vector<GeometryObservation>>(geo.aminoCode, emptydata));
 					}
 					//Now it is there for sure
-					map<string, map<string, vector<double>>>::iterator biter = probabilities.find(csv.fileVector[i][1]);
-					map<string, vector<double>>::iterator citer = biter->second.find(key);
-					if (citer == biter->second.end())
-					{
-						vector<double> emptydata;
-						probabilities[csv.fileVector[i][1]].insert(pair<string, vector<double>>(key, emptydata));
-					}
-					//Now it is there for sure
-					probabilities[csv.fileVector[i][1]][key].push_back(value);
+					probabilities[geo.aminoCode].push_back(geo);					
 				}
 				else
 				{
@@ -77,7 +78,7 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 	//now print out the probability distribution file per amino acid so it is easy to look at
 	
 	
-	for (map<string,map<string, vector<double>>>::iterator iter = probabilities.begin(); iter != probabilities.end(); ++iter)
+	for (map<string, vector<GeometryObservation>>::iterator iter = probabilities.begin(); iter != probabilities.end(); ++iter)
 	{
 		try
 		{
@@ -85,21 +86,16 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 			// AA,Exmp_meth,geo type, SS,atoms,values as a : delim list
 			// Then the prob dist can be got at whatever preferre granularity
 			stringstream report;
-			report << "ProabilityID,Values\n";
-
+			report << "AminoAcid,GeoType,GeoAtoms,Value\n";
 			string aa = iter->first;
-			for (map<string, vector<double>>::iterator biter = iter->second.begin(); biter != iter->second.end(); ++biter)
+			vector<GeometryObservation> obs = iter->second;
+			for (unsigned int i = 0; i < obs.size(); ++i)
 			{
-				string key = biter->first;
-				vector<double> vals = biter->second;
-				report << key << ",";
-				//unsure of the best way to delimit, but comma does not make sense in this format
-				for (unsigned int i = 0; i < vals.size(); ++i)
-				{
-					if (i > 0)
-						report << ":";
-					report << vals[i];
-				}
+				GeometryObservation geo = obs[i];				
+				report << geo.aminoCode << ",";				
+				report << geo.geoType << ",";
+				report << geo.geoAtoms << ",";
+				report << geo.value << ",";				
 				report << "\n";
 			}
 
