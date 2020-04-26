@@ -1,12 +1,7 @@
-﻿  ProteinManager.cpp
-  AminoAcid.cpp
-  Chain.cpp
-  PDBFile.cpp
-  ProteinStructure.cpp
-  MSC-AnnotateHighResList.cpp
+﻿  Atom.cpp
   Generating code
   0 of 1390 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    15 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   MSC-AnnotateHighResList.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Release\MSC-AnnotateHighResList.exe

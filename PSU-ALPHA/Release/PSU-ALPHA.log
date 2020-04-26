@@ -1,8 +1,7 @@
 ﻿  GeometricalAggregationReport.cpp
-  GeometryObservation.cpp
   Generating code
-  195 of 2720 functions ( 7.2%) were compiled, the rest were copied from previous compilation.
-    164 functions were new in current compilation
-    315 functions had inline decision re-evaluated but remain unchanged
+  2 of 2608 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    35 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   PSU-ALPHA.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Release\PSU-ALPHA.exe

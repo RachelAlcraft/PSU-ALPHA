@@ -35,7 +35,37 @@ int main()
 	*/	
 	LogFile::getInstance()->writeMessage("Outputting geometric features to, outfile=" + geopath);
 	GeometricalAggregationReport gar;
-	gar.printReport(datafiles,outpath);	
+	/*Memory versus time
+	My laptop can't cope with all the data in internal memory at once
+	So I am going through every file and pulling out the data for each amino acid in turn
+	It takes longer but releases memory
+	*/
+	vector<string> aminos;	
+	aminos.push_back("ALA");
+	aminos.push_back("CYS");
+	aminos.push_back("ASP");
+	aminos.push_back("GLU");
+	aminos.push_back("PHE");
+	aminos.push_back("GLY");
+	aminos.push_back("HIS");
+	aminos.push_back("ILE");
+	aminos.push_back("LYS");
+	aminos.push_back("LEU");
+	aminos.push_back("MET");
+	aminos.push_back("ASN");
+	aminos.push_back("PRO");
+	aminos.push_back("GLN");
+	aminos.push_back("ARG");
+	aminos.push_back("SER");
+	aminos.push_back("THR");
+	aminos.push_back("VAL");
+	aminos.push_back("TRP");
+	aminos.push_back("TYR");
+	for (unsigned int a = 0; a < aminos.size(); ++a)
+	{
+		LogFile::getInstance()->writeMessage("-- Aggregating " + aminos[a] + "--");
+		gar.printReport(datafiles, outpath, aminos[a]);
+	}
 
 
 	cout << "finished";

@@ -20,14 +20,38 @@ void GeometricalAggregationReport::printReport(string datadir)
 	{
 		files[i] = datadir + files[i];
 	}
-	printReport(files,datadir);
+	vector<string> aminos;
+	aminos.push_back("");
+	aminos.push_back("ALA");
+	aminos.push_back("CYS");
+	aminos.push_back("ASP");
+	aminos.push_back("GLU");
+	aminos.push_back("PHE");
+	aminos.push_back("GLY");
+	aminos.push_back("HIS");
+	aminos.push_back("ILE");
+	aminos.push_back("LYS");
+	aminos.push_back("LEU");
+	aminos.push_back("MET");
+	aminos.push_back("ASN");
+	aminos.push_back("PRO");
+	aminos.push_back("GLN");
+	aminos.push_back("ARG");
+	aminos.push_back("SER");
+	aminos.push_back("THR");
+	aminos.push_back("VAL");
+	aminos.push_back("TRP");
+	aminos.push_back("TYR");
+	for (unsigned int a = 0; a < aminos.size(); ++a)		
+		printReport(files,datadir,aminos[a]);
 }
 
-void GeometricalAggregationReport::printReport(vector<string> files, string outdir)
+void GeometricalAggregationReport::printReport(vector<string> files, string outdir, string aa)
 {
 	LogFile::getInstance()->writeMessage("Starting Aggregation report for given files");	
 	//map<string,map<string, vector<double>>> probabilities;
-	map<string, vector<GeometryObservation>> probabilities;
+	//map<string, vector<GeometryObservation>> probabilities;
+	vector<GeometryObservation> probabilities;
 	for (unsigned int i = 0; i < files.size(); ++i)
 	{
 		stringstream status;
@@ -39,29 +63,24 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 			CSVFile csv(file,",",true);
 			for (unsigned int i = 1; i < csv.fileVector.size(); ++i) // TODO a bit hard coded, skipping the header and we know we want 1,3,4,5,6 then 7 is the value
 			{
+				//Headers of the geofile
+				//PdbCode,Chain,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,Value
 				if (csv.fileVector[i].size() > 7)
 				{
 					GeometryObservation geo;					
-					geo.aminoCode = csv.fileVector[i][1]; //eg ALA
-					geo.geoType = csv.fileVector[i][4]; //eg ANGLE
-					geo.geoAtoms = csv.fileVector[i][6]; // atoms
-										
-					/*string key = csv.fileVector[i][1] + ":"; //ALA
-					//key += csv.fileVector[i][3] + ":"; //SS
-					key += csv.fileVector[i][4] + ":"; // ANGLE
-					//key += csv.fileVector[i][5] + ":"; // METHOD
-					key += csv.fileVector[i][6]; // atoms			
-					double value = */
-					geo.value = atof((csv.fileVector[i][7]).c_str());
-					
-					map<string, vector<GeometryObservation>>::iterator aiter = probabilities.find(geo.aminoCode);
-					if (aiter == probabilities.end())
+					geo.pdbCode = csv.fileVector[i][0]; //eg 4REK
+					geo.aminoCode = csv.fileVector[i][2]; //eg ALA
+					geo.aminoNo = csv.fileVector[i][3]; //eg 4
+					geo.pdbAtoms = csv.fileVector[i][4]; // 1-2-4
+					geo.secStruc = csv.fileVector[i][5]; //eg A = alpha helix this is dummy code for now
+					geo.geoType = csv.fileVector[i][6]; //eg ANGLE					
+					geo.geoAtoms = csv.fileVector[i][8]; // eg N-Ca
+
+					if (geo.aminoCode == aa)
 					{
-						vector<GeometryObservation> emptydata;
-						probabilities.insert(pair<string, vector<GeometryObservation>>(geo.aminoCode, emptydata));
+						geo.value = atof((csv.fileVector[i][9]).c_str());					
+						probabilities.push_back(geo);
 					}
-					//Now it is there for sure
-					probabilities[geo.aminoCode].push_back(geo);					
 				}
 				else
 				{
@@ -78,7 +97,7 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 	//now print out the probability distribution file per amino acid so it is easy to look at
 	
 	
-	for (map<string, vector<GeometryObservation>>::iterator iter = probabilities.begin(); iter != probabilities.end(); ++iter)
+	//for (map<string, vector<GeometryObservation>>::iterator iter = probabilities.begin(); iter != probabilities.end(); ++iter)
 	{
 		try
 		{
@@ -86,16 +105,19 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 			// AA,Exmp_meth,geo type, SS,atoms,values as a : delim list
 			// Then the prob dist can be got at whatever preferre granularity
 			stringstream report;
-			report << "AminoAcid,GeoType,GeoAtoms,Value\n";
-			string aa = iter->first;
-			vector<GeometryObservation> obs = iter->second;
-			for (unsigned int i = 0; i < obs.size(); ++i)
+			//report << "PdbCode,AminoAcid,GeoType,GeoAtoms,PdbAtoms,Value\n";
+			report << "PdbCode,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,GeoAtoms,Value\n";					
+			for (unsigned int i = 0; i < probabilities.size(); ++i)
 			{
-				GeometryObservation geo = obs[i];				
+				GeometryObservation geo = probabilities[i];
+				report << geo.pdbCode << ",";
 				report << geo.aminoCode << ",";				
+				report << geo.aminoNo << ",";
+				report << geo.pdbAtoms << ",";
+				report << geo.secStruc << ",";
 				report << geo.geoType << ",";
-				report << geo.geoAtoms << ",";
-				report << geo.value << ",";				
+				report << geo.geoAtoms << ",";				
+				report << geo.value;				
 				report << "\n";
 			}
 

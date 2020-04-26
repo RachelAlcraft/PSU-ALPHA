@@ -55,17 +55,20 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string
 	
 	LogFile::getInstance()->writeMessage("Starting Scoring Data report for " + pdb->pdbCode);
 
-	stringstream report;
-	report << "Chain,AminoAcid,Id,SecStruct,DataType,ExperimentalMethod,Atoms,Value\n";
+	stringstream report;	
+	//report << "Chain,AminoAcid,Id,SecStruct,DataType,ExperimentalMethod,Atoms,Value\n";
+	report << "PdbCode,Chain,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,Value\n";
 	vector<AtomBond> bonds = ProteinManager::getInstance()->getAtomBonds(pdb->pdbCode, occupant);
 	vector<AtomAngle> angles = ProteinManager::getInstance()->getAtomAngles(pdb->pdbCode, occupant);
 	vector<AtomTorsion> torsions = ProteinManager::getInstance()->getAtomTorsions(pdb->pdbCode, occupant);
 
 	for (unsigned int i = 0; i < bonds.size(); ++i)
 	{
+		report << pdb->pdbCode << "_" << occupant << ",";
 		report << bonds[i].getChain() << ",";
 		report << bonds[i].getAA() << ",";
 		report << bonds[i].getId() << ",";
+		report << bonds[i].getAtomNos() << ",";
 		report << bonds[i].getSS() << ",";
 		report << "BOND,";
 		report << pdb->experimentalMethod << ",";
@@ -75,9 +78,11 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string
 	}
 	for (unsigned int i = 0; i < angles.size(); ++i)
 	{
+		report << pdb->pdbCode << "_" << occupant << ",";
 		report << angles[i].getChain() << ",";
 		report << angles[i].getAA() << ",";
 		report << angles[i].getId() << ",";
+		report << angles[i].getAtomNos() << ",";
 		report << angles[i].getSS() << ",";
 		report << "ANGLE,";
 		report << pdb->experimentalMethod << ",";
@@ -87,9 +92,11 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string
 	}
 	for (unsigned int i = 0; i < torsions.size(); ++i)
 	{
+		report << pdb->pdbCode << "_" << occupant << ",";
 		report << torsions[i].getChain() << ",";
-		report << torsions[i].getAA() << ",";
+		report << torsions[i].getAA() << ",";		
 		report << torsions[i].getId() << ",";
+		report << torsions[i].getAtomNos() << ",";
 		report << torsions[i].getSS() << ",";
 		report << "TORSION,";
 		report << pdb->experimentalMethod << ",";

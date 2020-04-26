@@ -1,8 +1,7 @@
 ﻿  GeometricalAggregationReport.cpp
-  GeometryObservation.cpp
   Generating code
-  0 of 1728 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  0 of 1730 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    172 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   MSC-CreatePDBGeometry.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Release\MSC-CreatePDBGeometry.exe

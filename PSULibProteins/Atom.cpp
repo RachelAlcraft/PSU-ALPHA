@@ -134,7 +134,10 @@ AtomBond::AtomBond(string ss, Atom* a1, Atom* a2)
 	_A1 = a1;
 	_A2 = a2;	
 	_SS = ss;
-	_atomString = a1->elementName + "-" + a2->elementName;
+	_atomString = a1->elementName + "-" + a2->elementName;	
+	stringstream ass;
+	ass << a1->atomId << "-" << a2->atomId;
+	_atomNoString = ass.str();
 
 }
 double AtomBond::getValue()
@@ -150,7 +153,9 @@ AtomAngle::AtomAngle(string ss, Atom* a1, Atom* a2, Atom* a3):AtomBond(ss,a1,a2)
 	_A2 = a2;
 	_A3 = a3;
 	_atomString += "-" + a3->elementName;
-
+	stringstream ass;
+	ass << "-" << a3->atomId;
+	_atomNoString += ass.str();	
 }
 
 double AtomAngle::getValue()
@@ -169,6 +174,9 @@ AtomTorsion::AtomTorsion(string ss, Atom* a1, Atom* a2, Atom* a3, Atom* a4) :Ato
 	_A3 = a3;
 	_A4 = a4;
 	_atomString += "-" + a3->elementName + "-" + a4->elementName;
+	stringstream ass;
+	ass << "-" << a3->atomId << "-" << a4->atomId;
+	_atomNoString += ass.str();	
 }
 
 double AtomTorsion::getValue()

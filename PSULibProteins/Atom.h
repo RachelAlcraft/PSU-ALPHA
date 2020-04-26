@@ -52,6 +52,7 @@ protected:
 	Atom* _A1;
 	Atom* _A2;
 	string _atomString;
+	string _atomNoString;
 	string _SS;
 public:
 	AtomBond(string ss, Atom* a1, Atom* a2);
@@ -59,6 +60,7 @@ public:
 	string getAA() { return _A1->aminoCode; }
 	int getId() { return _A1->atomId; }	
 	string getAtoms() { return _atomString; }
+	string getAtomNos() { return _atomNoString; }
 	string getSS() { return _SS; }
 	virtual double getValue();
 };
