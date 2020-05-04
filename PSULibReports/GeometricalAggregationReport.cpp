@@ -64,7 +64,7 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 			for (unsigned int i = 1; i < csv.fileVector.size(); ++i) // TODO a bit hard coded, skipping the header and we know we want 1,3,4,5,6 then 7 is the value
 			{
 				//Headers of the geofile
-				//PdbCode,Chain,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,Value
+				//PdbCode,Chain,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,AllAAs,Value
 				if (csv.fileVector[i].size() > 7)
 				{
 					GeometryObservation geo;					
@@ -75,10 +75,11 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 					geo.secStruc = csv.fileVector[i][5]; //eg A = alpha helix this is dummy code for now
 					geo.geoType = csv.fileVector[i][6]; //eg ANGLE					
 					geo.geoAtoms = csv.fileVector[i][8]; // eg N-Ca
+					geo.allAAs = csv.fileVector[i][9]; // eg N-Ca
 
 					if (geo.aminoCode == aa)
 					{
-						geo.value = atof((csv.fileVector[i][9]).c_str());					
+						geo.value = atof((csv.fileVector[i][10]).c_str());					
 						probabilities.push_back(geo);
 					}
 				}
@@ -106,7 +107,7 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 			// Then the prob dist can be got at whatever preferre granularity
 			stringstream report;
 			//report << "PdbCode,AminoAcid,GeoType,GeoAtoms,PdbAtoms,Value\n";
-			report << "PdbCode,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,GeoAtoms,Value\n";					
+			report << "PdbCode,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,GeoAtoms,AllAAs,Value\n";					
 			for (unsigned int i = 0; i < probabilities.size(); ++i)
 			{
 				GeometryObservation geo = probabilities[i];
@@ -117,6 +118,7 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 				report << geo.secStruc << ",";
 				report << geo.geoType << ",";
 				report << geo.geoAtoms << ",";				
+				report << geo.allAAs << ",";
 				report << geo.value;				
 				report << "\n";
 			}

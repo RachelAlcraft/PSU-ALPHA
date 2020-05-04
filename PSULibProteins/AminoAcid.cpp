@@ -69,6 +69,11 @@ AminoAcid::~AminoAcid()
 	//_atoms.clear();
 }
 
+/*void AminoAcid::createBondsFromGeoDef(AminoAcid* aaP, AminoAcid* aaPP, GeoDataReport& gdr)
+{
+
+}*/
+
 void AminoAcid::createBonds(AminoAcid* aaP, AminoAcid* aaPP)
 { //Bonds are formed in the order
 	//C'-N-CA-C-N''-CA''
@@ -127,22 +132,154 @@ vector<Atom*> AminoAcid::atomsFromString(string atomstring)
 {//For beginning and end of chains we return nothing by checking the pointers to the previous and next
 	vector<string> stratoms = StringManip::stringToVector(atomstring, "-");
 	vector<Atom*> vecatoms;
-	bool bCompleteSet = true;
+	bool bCompleteSet = true;	
 	for (unsigned int i = 0; i < stratoms.size(); ++i)
 	{
 		Atom* atm = nullptr;
 		string stratom = stratoms[i];
-		if (stratom == "CP")
+		if (stratom == "CP" && _aaPrev)
 		{			
 			atm = _aaPrev->_atoms["C"];		
 		}
-		else if (stratom == "NPP")
+		else if (stratom == "NPP" && _aaNext)
 		{			
 			atm = _aaNext->_atoms["N"];			
 		}
-		else if (stratom == "CAPP")
+		else if (stratom == "CAPP" && _aaNext)
 		{			
 			atm = _aaNext->_atoms["CA"];			
+		}
+		else if (stratom == "CAP" && _aaPrev)
+		{
+			atm = _aaPrev->_atoms["CA"];
+		}
+		else if (stratom == "CAP2" && _aaPrev)
+		{
+			if (_aaPrev->_aaPrev)
+				atm = _aaPrev->_aaPrev->_atoms["CA"];
+		}
+		else if (stratom == "CAPP2" && _aaNext)
+		{
+			if (_aaNext->_aaNext)
+			{				
+				atm = _aaNext->_aaNext->_atoms["CA"];		
+			}
+		}
+		else if (stratom == "CAP3" && _aaPrev)
+		{
+			if (_aaPrev->_aaPrev)
+			{
+				if (_aaPrev->_aaPrev->_aaPrev)
+				{
+					atm = _aaPrev->_aaPrev->_aaPrev->_atoms["CA"];
+				}
+			}
+		}
+		else if (stratom == "CAPP3" && _aaNext)
+		{
+			if (_aaNext->_aaNext)
+			{
+				if (_aaNext->_aaNext->_aaNext)
+				{										
+					atm = _aaNext->_aaNext->_aaNext->_atoms["CA"];					
+				}
+			}
+		}
+		else if (stratom == "CAP4" && _aaPrev)
+		{
+			if (_aaPrev->_aaPrev)
+			{
+				if (_aaPrev->_aaPrev->_aaPrev)
+				{
+					if (_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+					{
+						atm = _aaPrev->_aaPrev->_aaPrev->_aaPrev->_atoms["CA"];
+					}
+				}
+			}
+		}
+		else if (stratom == "CAPP4" && _aaNext)
+		{
+			if (_aaNext->_aaNext)
+			{
+				if (_aaNext->_aaNext->_aaNext)
+				{
+					if (_aaNext->_aaNext->_aaNext->_aaNext)
+					{
+						atm = _aaNext->_aaNext->_aaNext->_aaNext->_atoms["CA"];
+					}
+				}
+			}
+		}
+		else if (stratom == "CAP5" && _aaPrev)
+		{
+			if (_aaPrev->_aaPrev)
+			{
+				if (_aaPrev->_aaPrev->_aaPrev)
+				{
+					if (_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+					{
+						if (_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+						{
+							atm = _aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_atoms["CA"];
+						}
+					}
+				}
+			}
+		}
+		else if (stratom == "CAPP5" && _aaNext)
+		{
+			if (_aaNext->_aaNext)
+			{
+				if (_aaNext->_aaNext->_aaNext)
+				{
+					if (_aaNext->_aaNext->_aaNext->_aaNext)
+					{
+						if (_aaNext->_aaNext->_aaNext->_aaNext->_aaNext)
+						{														
+							atm = _aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_atoms["CA"];							
+						}
+					}
+				}
+			}
+		}
+		else if (stratom == "CAP6" && _aaPrev)
+		{
+			if (_aaPrev->_aaPrev)
+			{
+				if (_aaPrev->_aaPrev->_aaPrev)
+				{
+					if (_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+					{
+						if (_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+						{
+							if (_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+							{
+								atm = _aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_atoms["CA"];
+							}
+						}
+					}
+				}
+			}
+		}
+		else if (stratom == "CAPP6" && _aaNext)
+		{
+			if (_aaNext->_aaNext)
+			{
+				if (_aaNext->_aaNext->_aaNext)
+				{
+					if (_aaNext->_aaNext->_aaNext->_aaNext)
+					{
+						if (_aaNext->_aaNext->_aaNext->_aaNext->_aaNext)
+						{
+							if (_aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_aaNext)
+							{
+								atm = _aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_atoms["CA"];
+							}
+						}
+					}
+				}
+			}
 		}
 		else
 		{
@@ -215,14 +352,14 @@ void AminoAcid::createScoringAtoms()
 	{
 		Atom* a1 = aaatoms[i];
 		Atom* a2 = aaatoms[i + 1];		
-		_bonds.push_back(AtomBond(ss,a1, a2));
+		_bonds.push_back(AtomBond(ss,a1, a2,""));
 		last = a2;
 	}
 	//Then we need the bond that goes to the next atom (unless it is the end)
 	//TODO although currently I don't think this is being called if it is either the first or last
 	if (_atmNpp && last)
 	{		
-		_bonds.push_back(AtomBond(ss, last, _atmNpp));
+		_bonds.push_back(AtomBond(ss, last, _atmNpp, ""));
 	}
 	// ANGLES #########################
 	Atom* last1 = nullptr;
@@ -232,14 +369,14 @@ void AminoAcid::createScoringAtoms()
 		Atom* a1 = aaatoms[i];
 		Atom* a2 = aaatoms[i + 1];
 		Atom* a3 = aaatoms[i + 2];		
-		_angles.push_back(AtomAngle(ss, a1, a2, a3));
+		_angles.push_back(AtomAngle(ss, a1, a2, a3, ""));
 		last1 = a2;
 		last2 = a3;
 	}
 	if (_atmNpp && _atmCApp && last1 && last2)
 	{		
-		_angles.push_back(AtomAngle(ss, last1, last2, _atmNpp));		
-		_angles.push_back(AtomAngle(ss, last2, _atmNpp, _atmCApp));
+		_angles.push_back(AtomAngle(ss, last1, last2, _atmNpp, ""));
+		_angles.push_back(AtomAngle(ss, last2, _atmNpp, _atmCApp, ""));
 	}
 	// TORSIONS ######################### //This is entirely made up sets of angles but consistent for now anyway
 	last1 = nullptr;
@@ -251,14 +388,110 @@ void AminoAcid::createScoringAtoms()
 		Atom* a2 = aaatoms[i + 1];
 		Atom* a3 = aaatoms[i + 2];
 		Atom* a4 = aaatoms[i + 3];		
-		_torsions.push_back(AtomTorsion(ss, a1, a2, a3, a4));
+		_torsions.push_back(AtomTorsion(ss, a1, a2, a3, a4, ""));
 		last1 = a2;
 		last2 = a3;
 		last3 = a4;
 	}
 	if (_atmNpp && _atmCApp && last1 && last2&& last3)
 	{		
-		_torsions.push_back(AtomTorsion(ss, last1, last2, last3, _atmNpp));	
-		_torsions.push_back(AtomTorsion(ss, last2, last3, _atmNpp, _atmCApp));
+		_torsions.push_back(AtomTorsion(ss, last1, last2, last3, _atmNpp, ""));
+		_torsions.push_back(AtomTorsion(ss, last2, last3, _atmNpp, _atmCApp, ""));
 	}
+}
+
+//Geometric definitions features
+vector<AtomGeo*> AminoAcid::getAtomBonds(vector<string> atoms)
+{
+	vector<AtomGeo*> vab;
+	for (unsigned int i = 0; i < atoms.size(); ++i)
+	{
+		vector<Atom*> vatoms = atomsFromString(atoms[i]);
+		if (vatoms.size() == 2)
+		{
+			Atom* a1 = vatoms[0];
+			Atom* a2 = vatoms[1];
+			vab.push_back(new AtomBond(getSS(), a1, a2, atoms[i]));
+
+		}
+		else
+		{
+			int hpos = atoms[i].find("H");// don't report hydrogens or there will be too many
+			int ppos = atoms[i].find("P");// don't report previous and last again we will have too many messages for chain ends
+			if (hpos == -1 && ppos == -1)
+			{
+				stringstream ss;
+				ss << "-----Some missing bond atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atoms[i];
+				LogFile::getInstance()->writeMessage(ss.str());
+			}
+		}
+	}
+	return vab;
+}
+vector<AtomGeo*> AminoAcid::getAtomCAlphas(vector<string> atoms)
+{
+	return getAtomBonds(atoms);
+}
+vector<AtomGeo*> AminoAcid::getAtomOneFours(vector<string> atoms)
+{
+	return getAtomBonds(atoms);
+}
+vector<AtomGeo*> AminoAcid::getAtomAngles(vector<string> atoms)
+{
+	vector<AtomGeo*> vab;
+	for (unsigned int i = 0; i < atoms.size(); ++i)
+	{
+		vector<Atom*> vatoms = atomsFromString(atoms[i]);
+		if (vatoms.size() == 3)
+		{
+			Atom* a1 = vatoms[0];
+			Atom* a2 = vatoms[1];
+			Atom* a3 = vatoms[2];
+			vab.push_back(new AtomAngle(getSS(), a1, a2,a3,atoms[i]));
+		}
+		else
+		{
+			int hpos = atoms[i].find("H");// don't report hydrogens or there will be too many
+			int ppos = atoms[i].find("P");// don't report previous and last again we will have too many messages for chain ends
+			if (hpos == -1 && ppos == -1)
+			{
+				stringstream ss;
+				ss << "-----Some missing angle atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atoms[i];
+				LogFile::getInstance()->writeMessage(ss.str());
+			}
+		}
+	}
+	return vab;
+}
+vector<AtomGeo*> AminoAcid::getAtomDihedrals(vector<string> atoms)
+{
+	vector<AtomGeo*> vab;
+	for (unsigned int i = 0; i < atoms.size(); ++i)
+	{
+		vector<Atom*> vatoms = atomsFromString(atoms[i]);
+		if (vatoms.size() == 4)
+		{
+			Atom* a1 = vatoms[0];
+			Atom* a2 = vatoms[1];
+			Atom* a3 = vatoms[2];
+			Atom* a4 = vatoms[3];
+			vab.push_back(new AtomTorsion(getSS(), a1, a2, a3,a4,atoms[i])); 
+		}
+		else
+		{
+			int hpos = atoms[i].find("H");// don't report hydrogens or there will be too many
+			int ppos = atoms[i].find("P");// don't report previous and last again we will have too many messages for chain ends
+			if (hpos == -1 && ppos == -1)
+			{
+				stringstream ss;
+				ss << "-----Some missing dihedral atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atoms[i];
+				LogFile::getInstance()->writeMessage(ss.str());
+			}
+		}
+	}
+	return vab;
+}
+vector<AtomGeo*> AminoAcid::getAtomImpropers(vector<string> atoms)
+{
+	return getAtomDihedrals(atoms);
 }

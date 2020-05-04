@@ -15,8 +15,9 @@ public:
 	string aminoNo;
 	string pdbAtoms;
 	string secStruc;
-	string geoType;
-	string geoAtoms;
+	string geoType; //ANGLE, BOND, ONEFOUR, IMPROPER, DIHEDRAL
+	string geoAtoms; //N-C-O
+	string allAAs; //Ala-Pro-Met
 	
 };
 

@@ -38,9 +38,9 @@ BackboneTorsion::BackboneTorsion(string aa_name, int aa_id, vector<Atom*> atoms)
 	}
 	else
 	{
-		stringstream ss;
-		ss << "Error creating backbone torsion angles. AA=" << aa_name << " Atom=" << aa_id;
-		LogFile::getInstance()->writeMessage(ss.str());		
+		//stringstream ss;
+		//ss << "Error creating backbone torsion angles. AA=" << aa_name << " Atom=" << aa_id;
+		//LogFile::getInstance()->writeMessage(ss.str());		
 	}
 	
 }
@@ -64,9 +64,9 @@ SidechainTorsion::SidechainTorsion(string aa_name, int aa_id, vector<vector<Atom
 		}
 		else
 		{
-			stringstream ss;
-			ss << "Error creating sidechain torsion angles. AA=" << aa_name << " Atom=" << aa_id;
-			LogFile::getInstance()->writeMessage(ss.str());
+			//stringstream ss;
+			//ss << "Error creating sidechain torsion angles. AA=" << aa_name << " Atom=" << aa_id;
+			//LogFile::getInstance()->writeMessage(ss.str());
 		}
 	}
 }

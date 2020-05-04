@@ -9,10 +9,10 @@ class CSVFile
 {
 private: 
 	string _filename;
-public:
-	vector < vector<string>> fileVector;
+public:		
+	vector < vector<string>> fileVector;	
 	bool exists;
 public:
-	CSVFile(string filepath, string sep, bool load);
+	CSVFile(string filepath, string sep, bool load);	
 };
 

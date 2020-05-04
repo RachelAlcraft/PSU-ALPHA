@@ -143,7 +143,7 @@ int main()
 			
 		}
 		//Shall we write out a database file of the geometric features of this pdb?
-		if (GEOREPORT == "TRUE")
+		/*if (GEOREPORT == "TRUE")
 		{
 			string geodata1 = OUTPATH + "Reports\\" + PDB1 + "_geometricfeatures.csv";
 			string geodata2 = GEODATABASE + PDB1 + "_geometricfeatures.csv";
@@ -162,7 +162,7 @@ int main()
 			GeometricalAggregationReport gar;
 			gar.printReport(geodata);
 
-		}
+		}*/
 
 		LogFile::getInstance()->writeMessage("########### PSU-Alpha concluded ##############");
 	}

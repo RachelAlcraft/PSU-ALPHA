@@ -28,3 +28,5 @@ CSVFile::CSVFile(string filepath, string sep, bool load)
 		exists = false;
 	}
 }
+
+

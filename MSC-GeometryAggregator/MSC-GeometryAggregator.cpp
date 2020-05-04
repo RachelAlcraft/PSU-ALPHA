@@ -12,9 +12,9 @@
 
 int main()
 {
-	string geopath = "F:\\PSUA\\ProjectData\\GeoData\\";
-	string outpath = "F:\\PSUA\\ProjectData\\Aggregation\\";
-	string logfile = "F:\\PSUA\\ProjectData\\Aggregation\\logger.txt";
+	string geopath = "F:\\PSUA\\ProjectData\\GeoTest3\\GeoValues\\";
+	string outpath = "F:\\PSUA\\ProjectData\\GeoTest3\\Aggregation\\";
+	string logfile = "F:\\PSUA\\ProjectData\\GeoTest3\\agglogger.txt";
 	string pdblist = "F:\\PSUA\\Code\\PSU-ALPHA\\Project\\PDBData\\CandidateList1.csv";
 	
 	bool success = LogFile::getInstance()->setLogFile(logfile, outpath);
@@ -27,7 +27,9 @@ int main()
 	{
 		string pdb = pdblistfile.fileVector[i][0];
 		string filename = geopath + pdb + "_A_geo.txt";
+		string filename2 = geopath + "Dih" + pdb + "_A_geo.txt"; //tmp code as missed off phi psi and omega
 		datafiles.push_back(filename);
+		datafiles.push_back(filename2);
 	}
 
 	/*

@@ -236,6 +236,7 @@ void PDBFile::addLinks()
 					nextaa = iteraa->second;
 					if (lastaa && iteraa != aminos.end())//For now ignore first and last of each chain as per chimera ramachandran plots
 					{
+						//aa->createBonds(lastaa, nextaa);
 						aa->createBonds(lastaa, nextaa);
 						aa->createScoringAtoms();
 					}

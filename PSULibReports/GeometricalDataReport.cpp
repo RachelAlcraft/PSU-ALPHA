@@ -27,8 +27,8 @@ void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, /*string
 					map<string, ProteinStructure*> versions = pf->getStructureVersions();
 					for (map<string, ProteinStructure*>::iterator iter = versions.begin(); iter != versions.end(); ++iter)
 					{
-						string geofile = geodir + pdb + "_" + iter->first + ".geo.txt";
-						printOneReport(pf,iter->first, geofile);
+						string geofile = geodir + pdb + "_" + iter->first + ".geo.txt";						
+						printOneReportWithGeoDef(pf, iter->first, geofile);
 					}
 				}
 			}
@@ -44,9 +44,112 @@ void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, /*string
 		for (map<string, ProteinStructure*>::iterator iter = versions.begin(); iter != versions.end(); ++iter)
 		{			
 			//printOneReport(pdb, iter->first, fileName1 + "_" + iter->first + ".geo.txt", fileName2 + "_" + iter->first + ".geo.txt");
-			printOneReport(pdb, iter->first, fileName1 + "_" + iter->first + "_geo.txt");
+			//printOneReportWithGeoDef(pdb, iter->first, fileName1 + "_" + iter->first + "_geo.txt");
+			printOneReportWithGeoDef(pdb, iter->first, fileName1 + "_" + iter->first + "_geo.txt");
 		}		
 	}
+}
+
+void GeometricalDataReport::printOneReportWithGeoDef(PDBFile* pdb, string occupant, string fileName1)
+{
+	LogFile::getInstance()->writeMessage("Starting Geometric Data report for " + pdb->pdbCode);
+
+	stringstream report;	
+	report << "PdbCode,Chain,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,AllAAs,Value\n";
+	
+	map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdb->pdbCode, occupant);
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		map<int, AminoAcid*> aminos = ch->getAminoAcids();
+		vector<AtomGeo*> v1;
+		vector<AtomGeo*> v2;
+		vector<AtomGeo*> v3;
+		vector<AtomGeo*> v4;
+		vector<AtomGeo*> v5;
+		vector<AtomGeo*> v6;
+
+		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
+		{
+			AminoAcid* aa = biter->second;
+			v1 = aa->getAtomBonds(getGeoDefinitions(aa->aminoCode, "BOND"));
+			v2 = aa->getAtomCAlphas(getGeoDefinitions(aa->aminoCode, "CALPHA"));
+			v3 = aa->getAtomOneFours(getGeoDefinitions(aa->aminoCode, "ONEFOUR"));
+			v4 = aa->getAtomAngles(getGeoDefinitions(aa->aminoCode, "ANGLE"));
+			v5 = aa->getAtomDihedrals(getGeoDefinitions(aa->aminoCode, "DIHEDRAL"));
+			v6 = aa->getAtomImpropers(getGeoDefinitions(aa->aminoCode, "IMPROPER"));
+
+			// we can delete the pointers to AtomGeo as we go
+			for (unsigned int i = 0; i < v1.size(); ++i)
+			{
+				report << getReportString(v1[i], pdb, occupant, "BOND");
+				delete v1[i];
+				v1[i] = nullptr;
+			}
+
+			for (unsigned int i = 0; i < v2.size(); ++i)
+			{
+				report << getReportString(v2[i], pdb, occupant, "CALPHA");
+				delete v2[i];
+				v2[i] = nullptr;
+			}
+
+			for (unsigned int i = 0; i < v3.size(); ++i)
+			{
+				report << getReportString(v3[i], pdb, occupant, "ONEFOUR");
+				delete v3[i];
+				v3[i] = nullptr;
+			}
+
+			for (unsigned int i = 0; i < v4.size(); ++i)
+			{
+				report << getReportString(v4[i], pdb, occupant, "ANGLE");
+				delete v4[i];
+				v4[i] = nullptr;
+			}
+
+			for (unsigned int i = 0; i < v5.size(); ++i)
+			{
+				report << getReportString(v5[i], pdb, occupant, "DIHEDRAL");
+				delete v5[i];
+				v5[i] = nullptr;
+			}
+
+			for (unsigned int i = 0; i < v6.size(); ++i)
+			{
+				report << getReportString(v6[i], pdb, occupant, "IMPROPER");
+				delete v6[i];
+				v6[i] = nullptr;
+			}
+		}
+
+	}
+
+	ofstream outfile(fileName1);
+	if (outfile.is_open())
+	{
+		outfile << report.str();
+	}
+
+	
+}
+
+string GeometricalDataReport::getReportString(AtomGeo* ab, PDBFile* pdb, string occupant, string geoType)
+{
+	stringstream report;
+	report << pdb->pdbCode << "_" << occupant << ",";
+	report << ab->getChain() << ",";
+	report << ab->getAA() << ",";
+	report << ab->getId() << ",";
+	report << ab->getAtomNos() << ",";
+	report << ab->getSS() << ",";
+	report << geoType << ",";
+	report << pdb->experimentalMethod << ",";
+	//report << ab.getAtoms() << ",";
+	report << ab->geoDef << ",";
+	report << ab->allAAs << ",";
+	report << ab->getValue() << "\n";
+	return report.str();
 }
 
 void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string fileName1)//, string fileName2)
@@ -57,7 +160,7 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string
 
 	stringstream report;	
 	//report << "Chain,AminoAcid,Id,SecStruct,DataType,ExperimentalMethod,Atoms,Value\n";
-	report << "PdbCode,Chain,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,Value\n";
+	report << "PdbCode,Chain,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,Value\n";	
 	vector<AtomBond> bonds = ProteinManager::getInstance()->getAtomBonds(pdb->pdbCode, occupant);
 	vector<AtomAngle> angles = ProteinManager::getInstance()->getAtomAngles(pdb->pdbCode, occupant);
 	vector<AtomTorsion> torsions = ProteinManager::getInstance()->getAtomTorsions(pdb->pdbCode, occupant);
@@ -119,4 +222,31 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string
 			outfile2 << report.str();
 		}
 	}*/
+}
+vector<string> GeometricalDataReport::getGeoDefinitions(string aminoCode, string geoType)
+{
+	/*
+	the file is of the format
+	-------------------------------
+	AminoAcid, GeoType, Atoms
+	#Previousand next atoms, ,
+	*,BOND,CP-N
+	ILE,ONEFOUR,CD1-CG2
+	-------------------------------
+	Where a # means ignore, and a * means all amino acids
+	*/
+	vector<string> vatoms;
+	for (unsigned int i = 1; i < geoDefinitions.size(); ++i)//skip the header
+	{
+		vector<string> row = geoDefinitions[i];		
+		if (row.size() == 3)
+		{
+			string amino = row[0];
+			string geo = row[1];
+			string atoms = row[2];
+			if ((amino == aminoCode || amino == "*") && geoType == geo)
+				vatoms.push_back(atoms);
+		}
+	}		
+	return vatoms;
 }
