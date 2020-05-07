@@ -27,5 +27,6 @@ private:
 	void printOneReportWithGeoDef(PDBFile* pdb, string occupant, string fileName1);
 	vector<string> getGeoDefinitions(string aminoCode, string geoType);
 	string getReportString(AtomGeo* ab, PDBFile* pdb, string occupant, string geoType);
+	double quickRound(double val);
 };
 

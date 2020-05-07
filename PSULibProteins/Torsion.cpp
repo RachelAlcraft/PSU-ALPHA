@@ -29,7 +29,7 @@ BackboneTorsion::BackboneTorsion(string aa_name, int aa_id, vector<Atom*> atoms)
 		_Psi.push_back(atoms[2]);
 		_Psi.push_back(atoms[3]);
 		_Psi.push_back(atoms[4]);
-		//Omega is N-CA-C-NPP
+		//Omega is CA-C-NPP-CAPP
 		_Omega.push_back(atoms[2]);
 		_Omega.push_back(atoms[3]);
 		_Omega.push_back(atoms[4]);
@@ -99,7 +99,8 @@ double Torsion::getDihedralAngle(vector<Atom*> atoms)
 		if (dotsign > 0)
 			theta *= -1;
 		double theta_deg = (theta / 3.141592653589793238463) * 180;//convert to degrees 		
-		return round(theta_deg);
+		//return round(theta_deg);		
+		return theta_deg;
 	}
 	else
 	{

@@ -63,17 +63,19 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 			CSVFile csv(file,",",true);
 			for (unsigned int i = 1; i < csv.fileVector.size(); ++i) // TODO a bit hard coded, skipping the header and we know we want 1,3,4,5,6 then 7 is the value
 			{
-				//Headers of the geofile
-				//PdbCode,Chain,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,AllAAs,Value
+				//Headers of the geofile				
+				//PdbCode, Chain, AminoAcid, AminoNo, PdbAtoms, SecStruct, GeoType, ExperimentalMethod, GeoAtoms, AminoCodes, Value
 				if (csv.fileVector[i].size() > 7)
 				{
 					GeometryObservation geo;					
 					geo.pdbCode = csv.fileVector[i][0]; //eg 4REK
+					//no chain
 					geo.aminoCode = csv.fileVector[i][2]; //eg ALA
-					geo.aminoNo = csv.fileVector[i][3]; //eg 4
+					geo.aminoNo = csv.fileVector[i][3]; //eg 4					
 					geo.pdbAtoms = csv.fileVector[i][4]; // 1-2-4
 					geo.secStruc = csv.fileVector[i][5]; //eg A = alpha helix this is dummy code for now
-					geo.geoType = csv.fileVector[i][6]; //eg ANGLE					
+					geo.geoType = csv.fileVector[i][6]; //eg ANGLE															
+					//no exp method
 					geo.geoAtoms = csv.fileVector[i][8]; // eg N-Ca
 					geo.allAAs = csv.fileVector[i][9]; // eg N-Ca
 
@@ -107,13 +109,13 @@ void GeometricalAggregationReport::printReport(vector<string> files, string outd
 			// Then the prob dist can be got at whatever preferre granularity
 			stringstream report;
 			//report << "PdbCode,AminoAcid,GeoType,GeoAtoms,PdbAtoms,Value\n";
-			report << "PdbCode,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,GeoAtoms,AllAAs,Value\n";					
+			report << "PdbCode,AminoAcid,AminoNo,AtomNos,SecStruct,GeoType,GeoAtoms,AminoCodes,Value\n";					
 			for (unsigned int i = 0; i < probabilities.size(); ++i)
 			{
 				GeometryObservation geo = probabilities[i];
 				report << geo.pdbCode << ",";
 				report << geo.aminoCode << ",";				
-				report << geo.aminoNo << ",";
+				report << geo.aminoNo << ",";				
 				report << geo.pdbAtoms << ",";
 				report << geo.secStruc << ",";
 				report << geo.geoType << ",";

@@ -112,7 +112,7 @@ double GeoVector::angle(GeoVector b)
 	theta = (theta / PI) * 180;//convert to degrees
 	//if (theta > 180)
 	//	theta = theta - 180;
-	theta = round(theta);
+	//theta = round(theta);
 	//ATAN2 version?	I prefer this but the decision on sign is effectively the same thing.
 	return theta;
 }

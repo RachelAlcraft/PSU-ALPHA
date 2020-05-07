@@ -129,22 +129,28 @@ void Atom::applyTransformation(GeoTransformations* trans)
 }
 
 // BONDS ################################################################
-AtomGeo::AtomGeo(string ss, Atom* a1, Atom* a2, string geo)
+AtomGeo::AtomGeo()
 {
-	_A1 = a1;
-	_A2 = a2;	
-	_SS = ss;
-	geoDef = geo;	
-	_atomString = a1->elementName + "-" + a2->elementName;	
-	stringstream ass;
-	ass << a1->atomId << "-" << a2->atomId;	
-	_atomNoString = ass.str();
-	allAAs = a1->aminoCode + "-" + a2->aminoCode;
-
+	_A1 = nullptr;
+	_A2 = nullptr;
 }
-AtomBond::AtomBond(string ss, Atom* a1, Atom* a2, string geo) :AtomGeo(ss, a1, a2, geo)
+AtomBond::AtomBond(string aCode, string chain, int aId, string ss, Atom* a1, Atom* a2, string geo) :AtomGeo()
 {
-
+	_aminoCode = aCode;
+	_chain = chain;
+	_aminoId = aId;
+	_A1 = a1;
+	_A2 = a2;
+	_SS = ss;
+	_geoDef = geo;
+	_atomString = a1->elementName + "-" + a2->elementName;
+	_allAAs = a1->aminoCode + "-" + a2->aminoCode;	
+	stringstream ass;
+	ass << a1->atomId << "-" << a2->atomId;
+	_atomNoString = ass.str();	
+	stringstream aass;
+	aass << a1->aminoId << "-" << a2->aminoId;
+	_aaNos = aass.str();	
 }
 double AtomBond::getValue()
 {
@@ -153,16 +159,24 @@ double AtomBond::getValue()
 	return a.getMagnitude();
 }
 // ANGLES ################################################################
-AtomAngle::AtomAngle(string ss, Atom* a1, Atom* a2, Atom* a3, string geo ):AtomGeo(ss,a1,a2,geo)
+AtomAngle::AtomAngle (string aCode, string chain, int aId, string ss, Atom* a1, Atom* a2, Atom* a3, string geo ):AtomGeo()
 {
+	_aminoCode = aCode;
+	_chain = chain;
+	_aminoId = aId;
 	_A1 = a1;
 	_A2 = a2;
-	_A3 = a3;
-	_atomString += "-" + a3->elementName;
+	_A3 = a3;	
+	_SS = ss;
+	_geoDef = geo;
+	_atomString = a1->elementName + "-" + a2->elementName + "-" + a3->elementName;
 	stringstream ass;
-	ass << "-" << a3->atomId;
-	_atomNoString += ass.str();	
-	allAAs += "-" + a3->aminoCode;
+	ass << a1->atomId << "-" << a2->atomId << "-" << a3->atomId;
+	_atomNoString = ass.str();
+	_allAAs = a1->aminoCode + "-" + a2->aminoCode + "-" + a3->aminoCode;
+	stringstream aass;
+	aass << a1->aminoId << "-" << a2->aminoId << "-" << a3->aminoId;
+	_aaNos = aass.str();
 }
 
 double AtomAngle::getValue()
@@ -174,17 +188,25 @@ double AtomAngle::getValue()
 }
 
 // TORSIONS ################################################################
-AtomTorsion::AtomTorsion(string ss, Atom* a1, Atom* a2, Atom* a3, Atom* a4, string geo) :AtomGeo( ss, a1, a2,geo)
+AtomTorsion::AtomTorsion(string aCode, string chain, int aId, string ss, Atom* a1, Atom* a2, Atom* a3, Atom* a4, string geo) :AtomGeo()
 {
+	_aminoCode = aCode;
+	_chain = chain;
+	_aminoId = aId;
 	_A1 = a1;
 	_A2 = a2;
 	_A3 = a3;
 	_A4 = a4;
-	_atomString += "-" + a3->elementName + "-" + a4->elementName;
+	_SS = ss;
+	_geoDef = geo;
+	_atomString = a1->elementName + "-" + a2->elementName + "-" + a3->elementName + "-" + a4->elementName;
 	stringstream ass;
-	ass << "-" << a3->atomId << "-" << a4->atomId;
-	_atomNoString += ass.str();	
-	allAAs += "-" + a3->aminoCode + "-" + a4->aminoCode;
+	ass << a1->atomId << "-" << a2->atomId << "-" << a3->atomId << "-" << a4->atomId;
+	_atomNoString = ass.str();	
+	_allAAs = a1->aminoCode + "-" + a2->aminoCode + "-" + a3->aminoCode + "-" + a4->aminoCode;
+	stringstream aass;
+	aass << a1->aminoId << "-" << a2->aminoId <<  "-" << a3->aminoId << "-" << a4->aminoId;
+	_aaNos = aass.str();
 }
 
 double AtomTorsion::getValue()

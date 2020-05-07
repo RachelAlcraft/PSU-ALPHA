@@ -79,6 +79,7 @@ public:
 	vector<AtomGeo*> getAtomBonds(vector<string> atoms);
 	vector<AtomGeo*> getAtomCAlphas(vector<string> atoms);
 	vector<AtomGeo*> getAtomOneFours(vector<string> atoms);
+	vector<AtomGeo*> getAtomInter(vector<string> atoms);
 	vector<AtomGeo*> getAtomAngles(vector<string> atoms);
 	vector<AtomGeo*> getAtomDihedrals(vector<string> atoms);
 	vector<AtomGeo*> getAtomImpropers(vector<string> atoms);

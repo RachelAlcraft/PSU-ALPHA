@@ -137,148 +137,174 @@ vector<Atom*> AminoAcid::atomsFromString(string atomstring)
 	{
 		Atom* atm = nullptr;
 		string stratom = stratoms[i];
-		if (stratom == "CP" && _aaPrev)
-		{			
-			atm = _aaPrev->_atoms["C"];		
-		}
-		else if (stratom == "NPP" && _aaNext)
-		{			
-			atm = _aaNext->_atoms["N"];			
-		}
-		else if (stratom == "CAPP" && _aaNext)
-		{			
-			atm = _aaNext->_atoms["CA"];			
-		}
-		else if (stratom == "CAP" && _aaPrev)
+		string strtype = stratom;
+		int npos = stratom.find("N");
+		int capos = stratom.find("CA");		
+		int opos = stratom.find("O");
+		int cbpos = stratom.find("CB");
+		int cpos = stratom.find("C");
+		if (npos == 0)//identify the type if an NPP2 or CAP4 for example
+			strtype = "N";
+		else if (capos == 0)
+			strtype = "CA";
+		else if (opos == 0)
+			strtype = "O";
+		else if (cbpos == 0)
+			strtype = "CB";
+		else if (cpos == 0)//C last as there is CA and CB
+			strtype = "C";
+		int howManyPre = 0;
+		int howManyNext = 0;
+
+		int nextpos = stratom.find("PP");
+		int prepos = stratom.find("P");
+		bool isNext = nextpos > 0 ? true : false;
+		bool isPre = false;
+		if (!isNext) // PP trumps P in the find
+			isPre = prepos > 0 ? true : false;
+
+		if (isPre && _aaPrev)
 		{
-			atm = _aaPrev->_atoms["CA"];
-		}
-		else if (stratom == "CAP2" && _aaPrev)
-		{
-			if (_aaPrev->_aaPrev)
-				atm = _aaPrev->_aaPrev->_atoms["CA"];
-		}
-		else if (stratom == "CAPP2" && _aaNext)
-		{
-			if (_aaNext->_aaNext)
-			{				
-				atm = _aaNext->_aaNext->_atoms["CA"];		
-			}
-		}
-		else if (stratom == "CAP3" && _aaPrev)
-		{
-			if (_aaPrev->_aaPrev)
+			if (stratom.find("P6") != string::npos)
 			{
-				if (_aaPrev->_aaPrev->_aaPrev)
+				if (_aaPrev->_aaPrev)
 				{
-					atm = _aaPrev->_aaPrev->_aaPrev->_atoms["CA"];
-				}
-			}
-		}
-		else if (stratom == "CAPP3" && _aaNext)
-		{
-			if (_aaNext->_aaNext)
-			{
-				if (_aaNext->_aaNext->_aaNext)
-				{										
-					atm = _aaNext->_aaNext->_aaNext->_atoms["CA"];					
-				}
-			}
-		}
-		else if (stratom == "CAP4" && _aaPrev)
-		{
-			if (_aaPrev->_aaPrev)
-			{
-				if (_aaPrev->_aaPrev->_aaPrev)
-				{
-					if (_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+					if (_aaPrev->_aaPrev->_aaPrev)
 					{
-						atm = _aaPrev->_aaPrev->_aaPrev->_aaPrev->_atoms["CA"];
-					}
-				}
-			}
-		}
-		else if (stratom == "CAPP4" && _aaNext)
-		{
-			if (_aaNext->_aaNext)
-			{
-				if (_aaNext->_aaNext->_aaNext)
-				{
-					if (_aaNext->_aaNext->_aaNext->_aaNext)
-					{
-						atm = _aaNext->_aaNext->_aaNext->_aaNext->_atoms["CA"];
-					}
-				}
-			}
-		}
-		else if (stratom == "CAP5" && _aaPrev)
-		{
-			if (_aaPrev->_aaPrev)
-			{
-				if (_aaPrev->_aaPrev->_aaPrev)
-				{
-					if (_aaPrev->_aaPrev->_aaPrev->_aaPrev)
-					{
-						if (_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+						if (_aaPrev->_aaPrev->_aaPrev->_aaPrev)
 						{
-							atm = _aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_atoms["CA"];
+							if (_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+							{
+								if (_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+								{
+									atm = _aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_atoms[strtype];
+								}
+							}
 						}
 					}
 				}
 			}
-		}
-		else if (stratom == "CAPP5" && _aaNext)
-		{
-			if (_aaNext->_aaNext)
+			else if (stratom.find("P5") != string::npos)
 			{
-				if (_aaNext->_aaNext->_aaNext)
+				if (_aaPrev->_aaPrev)
 				{
-					if (_aaNext->_aaNext->_aaNext->_aaNext)
+					if (_aaPrev->_aaPrev->_aaPrev)
 					{
-						if (_aaNext->_aaNext->_aaNext->_aaNext->_aaNext)
+						if (_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+						{
+							if (_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+							{																
+								atm = _aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_atoms[strtype];								
+							}
+						}
+					}
+				}
+			}
+			else if (stratom.find("P4") != string::npos)
+			{
+				if (_aaPrev->_aaPrev)
+				{
+					if (_aaPrev->_aaPrev->_aaPrev)
+					{
+						if (_aaPrev->_aaPrev->_aaPrev->_aaPrev)
 						{														
-							atm = _aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_atoms["CA"];							
+							atm = _aaPrev->_aaPrev->_aaPrev->_aaPrev->_atoms[strtype];							
 						}
 					}
 				}
 			}
-		}
-		else if (stratom == "CAP6" && _aaPrev)
-		{
-			if (_aaPrev->_aaPrev)
+			else if (stratom.find("P3") != string::npos)
 			{
-				if (_aaPrev->_aaPrev->_aaPrev)
+				if (_aaPrev->_aaPrev)
 				{
-					if (_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+					if (_aaPrev->_aaPrev->_aaPrev)
+					{												
+						atm = _aaPrev->_aaPrev->_aaPrev->_atoms[strtype];						
+					}
+				}
+			}
+			else if (stratom.find("P2") != string::npos)
+			{
+				if (_aaPrev->_aaPrev)
+				{										
+					atm = _aaPrev->_aaPrev->_atoms[strtype];					
+				}
+			}
+			else
+			{
+				atm = _aaPrev->_atoms[strtype];
+			}												
+		}
+		else if (isNext && _aaNext)
+		{
+			if (stratom.find("PP6") != string::npos)
+			{
+				if (_aaNext->_aaNext)
+				{
+					if (_aaNext->_aaNext->_aaNext)
 					{
-						if (_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+						if (_aaNext->_aaNext->_aaNext->_aaNext)
 						{
-							if (_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev)
+							if (_aaNext->_aaNext->_aaNext->_aaNext->_aaNext)
 							{
-								atm = _aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_aaPrev->_atoms["CA"];
+								if (_aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_aaNext)
+								{
+									atm = _aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_atoms[strtype];
+								}
 							}
 						}
 					}
 				}
 			}
-		}
-		else if (stratom == "CAPP6" && _aaNext)
-		{
-			if (_aaNext->_aaNext)
+			else if (stratom.find("PP5") != string::npos)
 			{
-				if (_aaNext->_aaNext->_aaNext)
+				if (_aaNext->_aaNext)
 				{
-					if (_aaNext->_aaNext->_aaNext->_aaNext)
+					if (_aaNext->_aaNext->_aaNext)
 					{
-						if (_aaNext->_aaNext->_aaNext->_aaNext->_aaNext)
+						if (_aaNext->_aaNext->_aaNext->_aaNext)
 						{
-							if (_aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_aaNext)
+							if (_aaNext->_aaNext->_aaNext->_aaNext->_aaNext)
 							{
-								atm = _aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_atoms["CA"];
+								atm = _aaNext->_aaNext->_aaNext->_aaNext->_aaNext->_atoms[strtype];
 							}
 						}
 					}
 				}
+			}
+			else if (stratom.find("PP4") != string::npos)
+			{
+				if (_aaNext->_aaNext)
+				{
+					if (_aaNext->_aaNext->_aaNext)
+					{
+						if (_aaNext->_aaNext->_aaNext->_aaNext)
+						{
+							atm = _aaNext->_aaNext->_aaNext->_aaNext->_atoms[strtype];
+						}
+					}
+				}
+			}
+			else if (stratom.find("PP3") != string::npos)
+			{
+				if (_aaNext->_aaNext)
+				{
+					if (_aaNext->_aaNext->_aaNext)
+					{
+						atm = _aaNext->_aaNext->_aaNext->_atoms[strtype];
+					}
+				}
+			}
+			else if (stratom.find("PP2") != string::npos)
+			{
+				if (_aaNext->_aaNext)
+				{
+					atm = _aaNext->_aaNext->_atoms[strtype];
+				}
+			}
+			else
+			{
+				atm = _aaNext->_atoms[strtype];
 			}
 		}
 		else
@@ -352,14 +378,14 @@ void AminoAcid::createScoringAtoms()
 	{
 		Atom* a1 = aaatoms[i];
 		Atom* a2 = aaatoms[i + 1];		
-		_bonds.push_back(AtomBond(ss,a1, a2,""));
+		_bonds.push_back(AtomBond(this->AminoCode,this->chainId,this->aminoId,ss,a1, a2,""));
 		last = a2;
 	}
 	//Then we need the bond that goes to the next atom (unless it is the end)
 	//TODO although currently I don't think this is being called if it is either the first or last
 	if (_atmNpp && last)
 	{		
-		_bonds.push_back(AtomBond(ss, last, _atmNpp, ""));
+		_bonds.push_back(AtomBond(this->AminoCode, this->chainId, this->aminoId, ss, last, _atmNpp, ""));
 	}
 	// ANGLES #########################
 	Atom* last1 = nullptr;
@@ -369,14 +395,14 @@ void AminoAcid::createScoringAtoms()
 		Atom* a1 = aaatoms[i];
 		Atom* a2 = aaatoms[i + 1];
 		Atom* a3 = aaatoms[i + 2];		
-		_angles.push_back(AtomAngle(ss, a1, a2, a3, ""));
+		_angles.push_back(AtomAngle(this->AminoCode, this->chainId, this->aminoId, ss, a1, a2, a3, ""));
 		last1 = a2;
 		last2 = a3;
 	}
 	if (_atmNpp && _atmCApp && last1 && last2)
 	{		
-		_angles.push_back(AtomAngle(ss, last1, last2, _atmNpp, ""));
-		_angles.push_back(AtomAngle(ss, last2, _atmNpp, _atmCApp, ""));
+		_angles.push_back(AtomAngle(this->AminoCode, this->chainId, this->aminoId, ss, last1, last2, _atmNpp, ""));
+		_angles.push_back(AtomAngle(this->AminoCode, this->chainId, this->aminoId, ss, last2, _atmNpp, _atmCApp, ""));
 	}
 	// TORSIONS ######################### //This is entirely made up sets of angles but consistent for now anyway
 	last1 = nullptr;
@@ -388,15 +414,15 @@ void AminoAcid::createScoringAtoms()
 		Atom* a2 = aaatoms[i + 1];
 		Atom* a3 = aaatoms[i + 2];
 		Atom* a4 = aaatoms[i + 3];		
-		_torsions.push_back(AtomTorsion(ss, a1, a2, a3, a4, ""));
+		_torsions.push_back(AtomTorsion(this->AminoCode, this->chainId, this->aminoId, ss, a1, a2, a3, a4, ""));
 		last1 = a2;
 		last2 = a3;
 		last3 = a4;
 	}
 	if (_atmNpp && _atmCApp && last1 && last2&& last3)
 	{		
-		_torsions.push_back(AtomTorsion(ss, last1, last2, last3, _atmNpp, ""));
-		_torsions.push_back(AtomTorsion(ss, last2, last3, _atmNpp, _atmCApp, ""));
+		_torsions.push_back(AtomTorsion(this->AminoCode, this->chainId, this->aminoId, ss, last1, last2, last3, _atmNpp, ""));
+		_torsions.push_back(AtomTorsion(this->AminoCode, this->chainId, this->aminoId, ss, last2, last3, _atmNpp, _atmCApp, ""));
 	}
 }
 
@@ -411,7 +437,7 @@ vector<AtomGeo*> AminoAcid::getAtomBonds(vector<string> atoms)
 		{
 			Atom* a1 = vatoms[0];
 			Atom* a2 = vatoms[1];
-			vab.push_back(new AtomBond(getSS(), a1, a2, atoms[i]));
+			vab.push_back(new AtomBond(this->AminoCode, this->chainId, this->aminoId, getSS(), a1, a2, atoms[i]));
 
 		}
 		else
@@ -436,6 +462,10 @@ vector<AtomGeo*> AminoAcid::getAtomOneFours(vector<string> atoms)
 {
 	return getAtomBonds(atoms);
 }
+vector<AtomGeo*> AminoAcid::getAtomInter(vector<string> atoms)
+{
+	return getAtomBonds(atoms);
+}
 vector<AtomGeo*> AminoAcid::getAtomAngles(vector<string> atoms)
 {
 	vector<AtomGeo*> vab;
@@ -447,7 +477,7 @@ vector<AtomGeo*> AminoAcid::getAtomAngles(vector<string> atoms)
 			Atom* a1 = vatoms[0];
 			Atom* a2 = vatoms[1];
 			Atom* a3 = vatoms[2];
-			vab.push_back(new AtomAngle(getSS(), a1, a2,a3,atoms[i]));
+			vab.push_back(new AtomAngle(this->AminoCode, this->chainId, this->aminoId, getSS(), a1, a2,a3,atoms[i]));
 		}
 		else
 		{
@@ -475,7 +505,7 @@ vector<AtomGeo*> AminoAcid::getAtomDihedrals(vector<string> atoms)
 			Atom* a2 = vatoms[1];
 			Atom* a3 = vatoms[2];
 			Atom* a4 = vatoms[3];
-			vab.push_back(new AtomTorsion(getSS(), a1, a2, a3,a4,atoms[i])); 
+			vab.push_back(new AtomTorsion(this->AminoCode, this->chainId, this->aminoId, getSS(), a1, a2, a3,a4,atoms[i]));
 		}
 		else
 		{

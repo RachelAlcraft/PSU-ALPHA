@@ -55,7 +55,7 @@ void GeometricalDataReport::printOneReportWithGeoDef(PDBFile* pdb, string occupa
 	LogFile::getInstance()->writeMessage("Starting Geometric Data report for " + pdb->pdbCode);
 
 	stringstream report;	
-	report << "PdbCode,Chain,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,AllAAs,Value\n";
+	report << "PdbCode,Occupant,Chain,AminoNo,GeoAtoms,AminoCode,AminoNos,AminoCodes,AtomNos,SecStruct,GeoType,Value\n";
 	
 	map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdb->pdbCode, occupant);
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
@@ -68,16 +68,18 @@ void GeometricalDataReport::printOneReportWithGeoDef(PDBFile* pdb, string occupa
 		vector<AtomGeo*> v4;
 		vector<AtomGeo*> v5;
 		vector<AtomGeo*> v6;
+		vector<AtomGeo*> v7;
 
 		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
 		{
 			AminoAcid* aa = biter->second;
 			v1 = aa->getAtomBonds(getGeoDefinitions(aa->aminoCode, "BOND"));
 			v2 = aa->getAtomCAlphas(getGeoDefinitions(aa->aminoCode, "CALPHA"));
-			v3 = aa->getAtomOneFours(getGeoDefinitions(aa->aminoCode, "ONEFOUR"));
+			v3 = aa->getAtomOneFours(getGeoDefinitions(aa->aminoCode, "ONEFOUR"));			
 			v4 = aa->getAtomAngles(getGeoDefinitions(aa->aminoCode, "ANGLE"));
 			v5 = aa->getAtomDihedrals(getGeoDefinitions(aa->aminoCode, "DIHEDRAL"));
 			v6 = aa->getAtomImpropers(getGeoDefinitions(aa->aminoCode, "IMPROPER"));
+			v7 = aa->getAtomInter(getGeoDefinitions(aa->aminoCode, "INTER"));
 
 			// we can delete the pointers to AtomGeo as we go
 			for (unsigned int i = 0; i < v1.size(); ++i)
@@ -121,6 +123,13 @@ void GeometricalDataReport::printOneReportWithGeoDef(PDBFile* pdb, string occupa
 				delete v6[i];
 				v6[i] = nullptr;
 			}
+			
+			for (unsigned int i = 0; i < v7.size(); ++i)
+			{
+				report << getReportString(v7[i], pdb, occupant, "INTER");
+				delete v7[i];
+				v7[i] = nullptr;
+			}
 		}
 
 	}
@@ -136,20 +145,29 @@ void GeometricalDataReport::printOneReportWithGeoDef(PDBFile* pdb, string occupa
 
 string GeometricalDataReport::getReportString(AtomGeo* ab, PDBFile* pdb, string occupant, string geoType)
 {
+	//PdbCode, Occupant, Chain, AminoNo, GeoAtoms, AminoCode, AminoNos, AminoCodes, AtomNos, SecStruct, GeoType, Value
 	stringstream report;
-	report << pdb->pdbCode << "_" << occupant << ",";
+	report << pdb->pdbCode << ",";
+	report << occupant << ",";
 	report << ab->getChain() << ",";
+	report << ab->getAminoId() << ",";
+	report << ab->getGeoDef() << ",";
 	report << ab->getAA() << ",";
-	report << ab->getId() << ",";
+	report << ab->getAminoNos() << ",";
+	report << ab->getAACodes() << ",";
 	report << ab->getAtomNos() << ",";
 	report << ab->getSS() << ",";
-	report << geoType << ",";
-	report << pdb->experimentalMethod << ",";
-	//report << ab.getAtoms() << ",";
-	report << ab->geoDef << ",";
-	report << ab->allAAs << ",";
-	report << ab->getValue() << "\n";
+	report << geoType << ",";		
+	report << quickRound(ab->getValue()) << "\n"; // 3 decimal places
 	return report.str();
+}
+
+double GeometricalDataReport::quickRound(double val)
+{	 
+	double dVal = val * 1000;
+	int iVal = (int)round(dVal);
+	dVal = (double)iVal / 1000;
+	return dVal;
 }
 
 void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string fileName1)//, string fileName2)
@@ -160,7 +178,7 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string
 
 	stringstream report;	
 	//report << "Chain,AminoAcid,Id,SecStruct,DataType,ExperimentalMethod,Atoms,Value\n";
-	report << "PdbCode,Chain,AminoAcid,AminoNo,PdbAtoms,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,Value\n";	
+	report << "PdbCode,Chain,AminoAcid,AminoNo,AtomNo,AtomNos,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,Value\n";	
 	vector<AtomBond> bonds = ProteinManager::getInstance()->getAtomBonds(pdb->pdbCode, occupant);
 	vector<AtomAngle> angles = ProteinManager::getInstance()->getAtomAngles(pdb->pdbCode, occupant);
 	vector<AtomTorsion> torsions = ProteinManager::getInstance()->getAtomTorsions(pdb->pdbCode, occupant);
@@ -170,7 +188,7 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string
 		report << pdb->pdbCode << "_" << occupant << ",";
 		report << bonds[i].getChain() << ",";
 		report << bonds[i].getAA() << ",";
-		report << bonds[i].getId() << ",";
+		report << bonds[i].getAminoId() << ",";		
 		report << bonds[i].getAtomNos() << ",";
 		report << bonds[i].getSS() << ",";
 		report << "BOND,";
@@ -184,7 +202,7 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string
 		report << pdb->pdbCode << "_" << occupant << ",";
 		report << angles[i].getChain() << ",";
 		report << angles[i].getAA() << ",";
-		report << angles[i].getId() << ",";
+		report << angles[i].getAminoId() << ",";	
 		report << angles[i].getAtomNos() << ",";
 		report << angles[i].getSS() << ",";
 		report << "ANGLE,";
@@ -198,7 +216,7 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string
 		report << pdb->pdbCode << "_" << occupant << ",";
 		report << torsions[i].getChain() << ",";
 		report << torsions[i].getAA() << ",";		
-		report << torsions[i].getId() << ",";
+		report << torsions[i].getAminoId() << ",";		
 		report << torsions[i].getAtomNos() << ",";
 		report << torsions[i].getSS() << ",";
 		report << "TORSION,";

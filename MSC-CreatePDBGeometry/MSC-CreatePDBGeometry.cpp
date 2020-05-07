@@ -16,16 +16,19 @@ int main()
 	
 	string pdbdir = "F:\\PSUA\\ProjectData\\HighResFiles\\";
 	string aadata = "F:\\PSUA\\Code\\PSU-ALPHA\\Config\\data_aminoinfo.csv";
-	string logpath = "F:\\PSUA\\ProjectData\\GeoTest3\\";
-	string logfile = "F:\\PSUA\\ProjectData\\GeoTest3\\logger.txt";
+	
+	string logpath = "F:\\PSUA\\ProjectData\\GeoTest5\\";
+	string logfile = "F:\\PSUA\\ProjectData\\GeoTest5\\logger.txt";
+	string geoOutput = "F:\\PSUA\\ProjectData\\GeoTest5\\GeoValues\\";
+	string pdblist = "F:\\PSUA\\ProjectData\\GeoTest5\\CandidateList1.csv";
+	string geo = "F:\\PSUA\\ProjectData\\GeoTest5\\GeoFeatures.csv";
 	
 	bool success = LogFile::getInstance()->setLogFile(logfile, logpath);
 	LogFile::getInstance()->writeMessage("********** Starting Geometry calculations for PSU-BETA **************");
 	
 	ProteinManager::getInstance()->createAminoAcidData(aadata);
 
-	string pdblist = "F:\\PSUA\\ProjectData\\GeoTest3\\CandidateList1.csv";
-	string geo = "F:\\PSUA\\ProjectData\\GeoTest3\\GeoFeaturesDih.csv";
+	
 	CSVFile pdblistfile(pdblist, ",", true);	
 	CSVFile geoFile(geo, ",", true);
 	
@@ -33,8 +36,7 @@ int main()
 
 	for (unsigned int i = 1; i < pdblistfile.fileVector.size(); ++i)
 	{
-		string pdb = pdblistfile.fileVector[i][0];
-		string geoOutput = "F:\\PSUA\\ProjectData\\GeoTest3\\GeoValues\\Dih" + pdb;
+		string pdb = pdblistfile.fileVector[i][0];		
 		stringstream ss;
 		ss << "-----" << i << " -" << pdb << "--------";
 		LogFile::getInstance()->writeMessage(ss.str());
@@ -44,7 +46,7 @@ int main()
 		pdbf->loadData();
 		pdbf->loadAtoms();
 		pdbf->loadBonds();		
-		gdr.printReport(pdbf, geoOutput, "", "");
+		gdr.printReport(pdbf, geoOutput + pdb, "", "");
 
 		ProteinManager::getInstance()->deletePdbs();//keep memory clear
 	}
