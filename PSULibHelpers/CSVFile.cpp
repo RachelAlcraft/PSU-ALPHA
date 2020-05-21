@@ -29,4 +29,20 @@ CSVFile::CSVFile(string filepath, string sep, bool load)
 	}
 }
 
+bool CSVFile::in(string match)
+{
+	bool isIn = false;
+	for (unsigned int i = 0; i < fileVector.size(); ++i)
+	{
+		for (unsigned int j = 0; j < fileVector[i].size(); ++j)
+		{
+			int pos = fileVector[i][j].find(match);
+			if (pos >= 0)
+				isIn = true;
+
+		}
+	}
+	return isIn;
+}
+
 

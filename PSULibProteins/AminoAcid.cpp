@@ -378,14 +378,14 @@ void AminoAcid::createScoringAtoms()
 	{
 		Atom* a1 = aaatoms[i];
 		Atom* a2 = aaatoms[i + 1];		
-		_bonds.push_back(AtomBond(this->AminoCode,this->chainId,this->aminoId,ss,a1, a2,""));
+		_bonds.push_back(AtomBond(this->AminoCode,this->chainId,this->aminoId,ss,a1, a2,"","", ""));
 		last = a2;
 	}
 	//Then we need the bond that goes to the next atom (unless it is the end)
 	//TODO although currently I don't think this is being called if it is either the first or last
 	if (_atmNpp && last)
 	{		
-		_bonds.push_back(AtomBond(this->AminoCode, this->chainId, this->aminoId, ss, last, _atmNpp, ""));
+		_bonds.push_back(AtomBond(this->AminoCode, this->chainId, this->aminoId, ss, last, _atmNpp, "","", ""));
 	}
 	// ANGLES #########################
 	Atom* last1 = nullptr;
@@ -395,14 +395,14 @@ void AminoAcid::createScoringAtoms()
 		Atom* a1 = aaatoms[i];
 		Atom* a2 = aaatoms[i + 1];
 		Atom* a3 = aaatoms[i + 2];		
-		_angles.push_back(AtomAngle(this->AminoCode, this->chainId, this->aminoId, ss, a1, a2, a3, ""));
+		_angles.push_back(AtomAngle(this->AminoCode, this->chainId, this->aminoId, ss, a1, a2, a3, "","", ""));
 		last1 = a2;
 		last2 = a3;
 	}
 	if (_atmNpp && _atmCApp && last1 && last2)
 	{		
-		_angles.push_back(AtomAngle(this->AminoCode, this->chainId, this->aminoId, ss, last1, last2, _atmNpp, ""));
-		_angles.push_back(AtomAngle(this->AminoCode, this->chainId, this->aminoId, ss, last2, _atmNpp, _atmCApp, ""));
+		_angles.push_back(AtomAngle(this->AminoCode, this->chainId, this->aminoId, ss, last1, last2, _atmNpp, "","", ""));
+		_angles.push_back(AtomAngle(this->AminoCode, this->chainId, this->aminoId, ss, last2, _atmNpp, _atmCApp, "","", ""));
 	}
 	// TORSIONS ######################### //This is entirely made up sets of angles but consistent for now anyway
 	last1 = nullptr;
@@ -414,114 +414,108 @@ void AminoAcid::createScoringAtoms()
 		Atom* a2 = aaatoms[i + 1];
 		Atom* a3 = aaatoms[i + 2];
 		Atom* a4 = aaatoms[i + 3];		
-		_torsions.push_back(AtomTorsion(this->AminoCode, this->chainId, this->aminoId, ss, a1, a2, a3, a4, ""));
+		_torsions.push_back(AtomTorsion(this->AminoCode, this->chainId, this->aminoId, ss, a1, a2, a3, a4, "","",""));
 		last1 = a2;
 		last2 = a3;
 		last3 = a4;
 	}
 	if (_atmNpp && _atmCApp && last1 && last2&& last3)
 	{		
-		_torsions.push_back(AtomTorsion(this->AminoCode, this->chainId, this->aminoId, ss, last1, last2, last3, _atmNpp, ""));
-		_torsions.push_back(AtomTorsion(this->AminoCode, this->chainId, this->aminoId, ss, last2, last3, _atmNpp, _atmCApp, ""));
+		_torsions.push_back(AtomTorsion(this->AminoCode, this->chainId, this->aminoId, ss, last1, last2, last3, _atmNpp, "","", ""));
+		_torsions.push_back(AtomTorsion(this->AminoCode, this->chainId, this->aminoId, ss, last2, last3, _atmNpp, _atmCApp, "","", ""));
 	}
 }
 
 //Geometric definitions features
-vector<AtomGeo*> AminoAcid::getAtomBonds(vector<string> atoms)
+vector<AtomGeo*> AminoAcid::getAtomDistance(vector<pair<string, string>> atoms, string geotype)
 {
 	vector<AtomGeo*> vab;
 	for (unsigned int i = 0; i < atoms.size(); ++i)
 	{
-		vector<Atom*> vatoms = atomsFromString(atoms[i]);
+		string atomsdef = atoms[i].first;
+		string alias = atoms[i].second;
+		vector<Atom*> vatoms = atomsFromString(atomsdef);
 		if (vatoms.size() == 2)
 		{
 			Atom* a1 = vatoms[0];
 			Atom* a2 = vatoms[1];
-			vab.push_back(new AtomBond(this->AminoCode, this->chainId, this->aminoId, getSS(), a1, a2, atoms[i]));
+			vab.push_back(new AtomBond(this->AminoCode, this->chainId, this->aminoId, getSS(), a1, a2, atomsdef, alias,geotype));
 
 		}
 		else
 		{
-			int hpos = atoms[i].find("H");// don't report hydrogens or there will be too many
-			int ppos = atoms[i].find("P");// don't report previous and last again we will have too many messages for chain ends
+			int hpos = atomsdef.find("H");// don't report hydrogens or there will be too many
+			int ppos = atomsdef.find("P");// don't report previous and last again we will have too many messages for chain ends
 			if (hpos == -1 && ppos == -1)
 			{
 				stringstream ss;
-				ss << "-----Some missing bond atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atoms[i];
+				ss << "-----Some missing bond atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atomsdef;
 				LogFile::getInstance()->writeMessage(ss.str());
 			}
 		}
 	}
 	return vab;
 }
-vector<AtomGeo*> AminoAcid::getAtomCAlphas(vector<string> atoms)
-{
-	return getAtomBonds(atoms);
-}
-vector<AtomGeo*> AminoAcid::getAtomOneFours(vector<string> atoms)
-{
-	return getAtomBonds(atoms);
-}
-vector<AtomGeo*> AminoAcid::getAtomInter(vector<string> atoms)
-{
-	return getAtomBonds(atoms);
-}
-vector<AtomGeo*> AminoAcid::getAtomAngles(vector<string> atoms)
+
+vector<AtomGeo*> AminoAcid::getAtomAngles(vector<pair<string, string>> atoms, string geotype)
 {
 	vector<AtomGeo*> vab;
 	for (unsigned int i = 0; i < atoms.size(); ++i)
 	{
-		vector<Atom*> vatoms = atomsFromString(atoms[i]);
+		string atomsdef = atoms[i].first;
+		string alias = atoms[i].second;
+
+		vector<Atom*> vatoms = atomsFromString(atomsdef);
 		if (vatoms.size() == 3)
 		{
 			Atom* a1 = vatoms[0];
 			Atom* a2 = vatoms[1];
 			Atom* a3 = vatoms[2];
-			vab.push_back(new AtomAngle(this->AminoCode, this->chainId, this->aminoId, getSS(), a1, a2,a3,atoms[i]));
+			vab.push_back(new AtomAngle(this->AminoCode, this->chainId, this->aminoId, getSS(), a1, a2,a3,atomsdef,alias, geotype));
 		}
 		else
 		{
-			int hpos = atoms[i].find("H");// don't report hydrogens or there will be too many
-			int ppos = atoms[i].find("P");// don't report previous and last again we will have too many messages for chain ends
+			int hpos = atomsdef.find("H");// don't report hydrogens or there will be too many
+			int ppos = atomsdef.find("P");// don't report previous and last again we will have too many messages for chain ends
 			if (hpos == -1 && ppos == -1)
 			{
 				stringstream ss;
-				ss << "-----Some missing angle atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atoms[i];
+				ss << "-----Some missing angle atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atomsdef;
 				LogFile::getInstance()->writeMessage(ss.str());
 			}
 		}
 	}
 	return vab;
 }
-vector<AtomGeo*> AminoAcid::getAtomDihedrals(vector<string> atoms)
+vector<AtomGeo*> AminoAcid::getAtomDihedrals(vector<pair<string, string>> atoms, string geotype)
 {
 	vector<AtomGeo*> vab;
 	for (unsigned int i = 0; i < atoms.size(); ++i)
 	{
-		vector<Atom*> vatoms = atomsFromString(atoms[i]);
+		string atomsdef = atoms[i].first;
+		string alias = atoms[i].second;
+
+		vector<Atom*> vatoms = atomsFromString(atomsdef);
 		if (vatoms.size() == 4)
 		{
 			Atom* a1 = vatoms[0];
 			Atom* a2 = vatoms[1];
 			Atom* a3 = vatoms[2];
 			Atom* a4 = vatoms[3];
-			vab.push_back(new AtomTorsion(this->AminoCode, this->chainId, this->aminoId, getSS(), a1, a2, a3,a4,atoms[i]));
+			vab.push_back(new AtomTorsion(this->AminoCode, this->chainId, this->aminoId, getSS(), a1, a2, a3,a4,atomsdef,alias, geotype));
 		}
 		else
 		{
-			int hpos = atoms[i].find("H");// don't report hydrogens or there will be too many
-			int ppos = atoms[i].find("P");// don't report previous and last again we will have too many messages for chain ends
+			int hpos = atomsdef.find("H");// don't report hydrogens or there will be too many
+			int ppos = atomsdef.find("P");// don't report previous and last again we will have too many messages for chain ends
 			if (hpos == -1 && ppos == -1)
 			{
 				stringstream ss;
-				ss << "-----Some missing dihedral atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atoms[i];
+				ss << "-----Some missing dihedral atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atomsdef;
 				LogFile::getInstance()->writeMessage(ss.str());
 			}
 		}
 	}
 	return vab;
 }
-vector<AtomGeo*> AminoAcid::getAtomImpropers(vector<string> atoms)
-{
-	return getAtomDihedrals(atoms);
-}
+

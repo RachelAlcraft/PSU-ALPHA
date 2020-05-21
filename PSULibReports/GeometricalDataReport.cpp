@@ -3,6 +3,7 @@
 #include <ProteinManager.h>
 #include <FoldersFiles.h>
 
+
 void GeometricalDataReport::printReport(PDBFile* pdb, string fileName1, /*string fileName2,*/ string directory, string geodir)
 {//produce data frame report for R reporting
 	
@@ -73,60 +74,60 @@ void GeometricalDataReport::printOneReportWithGeoDef(PDBFile* pdb, string occupa
 		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
 		{
 			AminoAcid* aa = biter->second;
-			v1 = aa->getAtomBonds(getGeoDefinitions(aa->aminoCode, "BOND"));
-			v2 = aa->getAtomCAlphas(getGeoDefinitions(aa->aminoCode, "CALPHA"));
-			v3 = aa->getAtomOneFours(getGeoDefinitions(aa->aminoCode, "ONEFOUR"));			
-			v4 = aa->getAtomAngles(getGeoDefinitions(aa->aminoCode, "ANGLE"));
-			v5 = aa->getAtomDihedrals(getGeoDefinitions(aa->aminoCode, "DIHEDRAL"));
-			v6 = aa->getAtomImpropers(getGeoDefinitions(aa->aminoCode, "IMPROPER"));
-			v7 = aa->getAtomInter(getGeoDefinitions(aa->aminoCode, "INTER"));
+			v1 = aa->getAtomDistance(getGeoDefinitions(aa->aminoCode, "BOND"),"BOND");
+			v2 = aa->getAtomDistance(getGeoDefinitions(aa->aminoCode, "CALPHA"),"CALPHA");
+			v3 = aa->getAtomDistance(getGeoDefinitions(aa->aminoCode, "ONEFOUR"),"ONEFOUR");
+			v4 = aa->getAtomAngles(getGeoDefinitions(aa->aminoCode, "ANGLE"),"ANGLE");
+			v5 = aa->getAtomDihedrals(getGeoDefinitions(aa->aminoCode, "DIHEDRAL"),"DIHEDRAL");
+			v6 = aa->getAtomDihedrals(getGeoDefinitions(aa->aminoCode, "IMPROPER"),"IMPROPER");
+			v7 = aa->getAtomDistance(getGeoDefinitions(aa->aminoCode, "INTER"),"INTER");
 
 			// we can delete the pointers to AtomGeo as we go
 			for (unsigned int i = 0; i < v1.size(); ++i)
 			{
-				report << getReportString(v1[i], pdb, occupant, "BOND");
+				report << getReportString(v1[i], pdb, occupant);
 				delete v1[i];
 				v1[i] = nullptr;
 			}
 
 			for (unsigned int i = 0; i < v2.size(); ++i)
 			{
-				report << getReportString(v2[i], pdb, occupant, "CALPHA");
+				report << getReportString(v2[i], pdb, occupant);
 				delete v2[i];
 				v2[i] = nullptr;
 			}
 
 			for (unsigned int i = 0; i < v3.size(); ++i)
 			{
-				report << getReportString(v3[i], pdb, occupant, "ONEFOUR");
+				report << getReportString(v3[i], pdb, occupant);
 				delete v3[i];
 				v3[i] = nullptr;
 			}
 
 			for (unsigned int i = 0; i < v4.size(); ++i)
 			{
-				report << getReportString(v4[i], pdb, occupant, "ANGLE");
+				report << getReportString(v4[i], pdb, occupant);
 				delete v4[i];
 				v4[i] = nullptr;
 			}
 
 			for (unsigned int i = 0; i < v5.size(); ++i)
 			{
-				report << getReportString(v5[i], pdb, occupant, "DIHEDRAL");
+				report << getReportString(v5[i], pdb, occupant);
 				delete v5[i];
 				v5[i] = nullptr;
 			}
 
 			for (unsigned int i = 0; i < v6.size(); ++i)
 			{
-				report << getReportString(v6[i], pdb, occupant, "IMPROPER");
+				report << getReportString(v6[i], pdb, occupant);
 				delete v6[i];
 				v6[i] = nullptr;
 			}
 			
 			for (unsigned int i = 0; i < v7.size(); ++i)
 			{
-				report << getReportString(v7[i], pdb, occupant, "INTER");
+				report << getReportString(v7[i], pdb, occupant);
 				delete v7[i];
 				v7[i] = nullptr;
 			}
@@ -143,7 +144,7 @@ void GeometricalDataReport::printOneReportWithGeoDef(PDBFile* pdb, string occupa
 	
 }
 
-string GeometricalDataReport::getReportString(AtomGeo* ab, PDBFile* pdb, string occupant, string geoType)
+string GeometricalDataReport::getReportString(AtomGeo* ab, PDBFile* pdb, string occupant)
 {
 	//PdbCode, Occupant, Chain, AminoNo, GeoAtoms, AminoCode, AminoNos, AminoCodes, AtomNos, SecStruct, GeoType, Value
 	stringstream report;
@@ -157,7 +158,7 @@ string GeometricalDataReport::getReportString(AtomGeo* ab, PDBFile* pdb, string 
 	report << ab->getAACodes() << ",";
 	report << ab->getAtomNos() << ",";
 	report << ab->getSS() << ",";
-	report << geoType << ",";		
+	report << ab->getAlias() << ",";
 	report << quickRound(ab->getValue()) << "\n"; // 3 decimal places
 	return report.str();
 }
@@ -241,7 +242,7 @@ void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string
 		}
 	}*/
 }
-vector<string> GeometricalDataReport::getGeoDefinitions(string aminoCode, string geoType)
+vector<pair<string,string>> GeometricalDataReport::getGeoDefinitions(string aminoCode, string geoType)
 {
 	/*
 	the file is of the format
@@ -253,17 +254,18 @@ vector<string> GeometricalDataReport::getGeoDefinitions(string aminoCode, string
 	-------------------------------
 	Where a # means ignore, and a * means all amino acids
 	*/
-	vector<string> vatoms;
+	vector<pair<string,string>> vatoms;
 	for (unsigned int i = 1; i < geoDefinitions.size(); ++i)//skip the header
 	{
 		vector<string> row = geoDefinitions[i];		
-		if (row.size() == 3)
+		if (row.size() == 4)
 		{
 			string amino = row[0];
 			string geo = row[1];
 			string atoms = row[2];
+			string alias = row[3];
 			if ((amino == aminoCode || amino == "*") && geoType == geo)
-				vatoms.push_back(atoms);
+				vatoms.push_back(pair<string,string>(atoms,alias));			
 		}
 	}		
 	return vatoms;

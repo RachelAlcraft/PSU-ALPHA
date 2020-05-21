@@ -24,39 +24,53 @@ int main()
 	This runs in 2 sections because of memroty problems which I will fix another time!
 	*/
 
+	string set_label = "2019";
 	string runID = "B";
 
-	bool success = LogFile::getInstance()->setLogFile("F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\logger.txt", "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\");	
-	string aadata = "F:\\PSUA\\Code\\PSU-ALPHA\\Config\\data_aminoinfo.csv";
-	ProteinManager::getInstance()->createAminoAcidData(aadata);
+	string filePath = "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-RemoveSimilarity\\";
+	
+	string inputname = "2019nonsim90.csv";
+	string outputname = "2019nonsim90_annotated";
 
 	string dir = "F:\\PSUA\\Code\\PSU-ALPHA\\Project\\PDBData\\";
 	string pdbdir = "F:\\PSUA\\ProjectData\\HighResFiles\\";
-	string highResFile = "highres_and_unique.txt";
-	string annHighResFile = "ann_highres_unique_v5_" + runID + ".txt";
+	
+	string annPDBFile = outputname + runID + ".csv";
 
-	CSVFile highRes(dir + highResFile, ",",true);
-	DataFrame annHighRes(dir + annHighResFile);
-	annHighRes.headerVector.push_back("PDB"); //pdb code
-	annHighRes.headerVector.push_back("RES"); //the resolution
-	annHighRes.headerVector.push_back("CLASS"); //header class
-	annHighRes.headerVector.push_back("COMPLEX"); //is the structure a complex?
-	annHighRes.headerVector.push_back("RVALUE"); // the r value
-	annHighRes.headerVector.push_back("RFREE");  // the r free value
-	annHighRes.headerVector.push_back("OCCUPANCY"); //any atoms with occupancy less than 1?
-	annHighRes.headerVector.push_back("BFACTOR"); //is there ever a b factor > 30? Y or N
-	annHighRes.headerVector.push_back("HYDROGENS"); //level of detail of resolution such that hydrogen atoms are in the pdb structure
-	annHighRes.headerVector.push_back("STRUCFAC"); //are there structure factors in the pdb
-	annHighRes.headerVector.push_back("CHAINS"); //How many chains
-	annHighRes.headerVector.push_back("RESIDUES"); //how many residies
-	annHighRes.headerVector.push_back("NUCLEOTIDES"); //how many nucleotides
-	annHighRes.headerVector.push_back("DATE"); //what date was it deposited
-	annHighRes.headerVector.push_back("COMMENTS"); //NA here comments can be annoted later
+	CSVFile inPDBs(dir + inputname, ",", true);
+	DataFrame annPDBs(dir + annPDBFile);
 
-	for (unsigned int i = 1; i < highRes.fileVector.size(); ++i)
+
+	
+	
+	
+	
+	
+	bool success = LogFile::getInstance()->setLogFile("F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\logger.txt", "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\");	
+	string aadata = "F:\\PSUA\\Code\\PSU-ALPHA\\Config\\data_aminoinfo.csv";
+	ProteinManager::getInstance()->createAminoAcidData(aadata);
+	
+
+	annPDBs.headerVector.push_back("PDB"); //pdb code
+	annPDBs.headerVector.push_back("RES"); //the resolution
+	annPDBs.headerVector.push_back("CLASS"); //header class
+	annPDBs.headerVector.push_back("COMPLEX"); //is the structure a complex?
+	annPDBs.headerVector.push_back("RVALUE"); // the r value
+	annPDBs.headerVector.push_back("RFREE");  // the r free value
+	annPDBs.headerVector.push_back("OCCUPANCY"); //any atoms with occupancy less than 1?
+	annPDBs.headerVector.push_back("BFACTOR"); //is there ever a b factor > 30? Y or N
+	annPDBs.headerVector.push_back("HYDROGENS"); //level of detail of resolution such that hydrogen atoms are in the pdb structure
+	annPDBs.headerVector.push_back("STRUCFAC"); //are there structure factors in the pdb
+	annPDBs.headerVector.push_back("CHAINS"); //How many chains
+	annPDBs.headerVector.push_back("RESIDUES"); //how many residies
+	annPDBs.headerVector.push_back("NUCLEOTIDES"); //how many nucleotides
+	annPDBs.headerVector.push_back("DATE"); //what date was it deposited
+	annPDBs.headerVector.push_back("STATUS"); //NA here comments can be annoted later
+
+	for (unsigned int i = 1; i < inPDBs.fileVector.size(); ++i)
 	{
 		vector<string> observation;
-		string pdb = highRes.fileVector[i][0];
+		string pdb = inPDBs.fileVector[i][0];
 
 		/* shall we run this pdb?*/
 		bool shallRun = false;
@@ -74,7 +88,7 @@ int main()
 
 		if (shallRun)
 		{
-			string res = highRes.fileVector[i][1];
+			string res = inPDBs.fileVector[i][1];
 			// header problems mneans I cannot actually use my pdb class or the whole project stops building, needs fixing TODO
 			CSVFile pdbfile(pdbdir + pdb + ".pdb", "@", true); //dummy seperator as I want the whole line
 			CSVFile structurefile(pdbdir + pdb + "-sf.cif", "@", false); //dummy seperator only checking file exists
@@ -90,7 +104,7 @@ int main()
 			string complex = "NA";
 			string residues = "NA";
 			string nucleotides = "NA";
-			string comments = "NA";
+			
 			/*
 			HEADER    OXIDOREDUCTASE                          17-SEP-98   1BVR
 			COMPND   3 CHAIN: A, B, C, D, E, F;
@@ -243,13 +257,13 @@ int main()
 			observation.push_back(residues);
 			observation.push_back(nucleotides);
 			observation.push_back(date);
-			observation.push_back(comments);
-			annHighRes.fileVector.push_back(observation);
+			observation.push_back(set_label);
+			annPDBs.fileVector.push_back(observation);
 			ProteinManager::getInstance()->deletePdbs();//keep memory clear
 		}
 	}
 	LogFile::getInstance()->writeMessage("Success, now printing");
-	annHighRes.print();
+	annPDBs.print();
 }
 
 

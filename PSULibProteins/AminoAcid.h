@@ -76,13 +76,13 @@ public:
 	vector<AtomAngle> getAtomAngles() { return _angles; }
 	vector<AtomTorsion> getAtomTorsions() { return _torsions; }
 //New GeoDefinitions
-	vector<AtomGeo*> getAtomBonds(vector<string> atoms);
-	vector<AtomGeo*> getAtomCAlphas(vector<string> atoms);
-	vector<AtomGeo*> getAtomOneFours(vector<string> atoms);
-	vector<AtomGeo*> getAtomInter(vector<string> atoms);
-	vector<AtomGeo*> getAtomAngles(vector<string> atoms);
-	vector<AtomGeo*> getAtomDihedrals(vector<string> atoms);
-	vector<AtomGeo*> getAtomImpropers(vector<string> atoms);
+	vector<AtomGeo*> getAtomDistance(vector<pair<string,string>> atoms,string geotype);
+	//vector<AtomGeo*> getAtomCAlphas(vector<string> atoms, string geotype);
+	//vector<AtomGeo*> getAtomOneFours(vector<string> atoms, string geotype);
+	//vector<AtomGeo*> getAtomInter(vector<string> atoms, string geotype);
+	vector<AtomGeo*> getAtomAngles(vector<pair<string, string>> atoms,string geotype);
+	vector<AtomGeo*> getAtomDihedrals(vector<pair<string, string>> atoms,string geotype);
+	//vector<AtomGeo*> getAtomImpropers(vector<string> atoms, string geotype);
 
 private: //Helper functions
 	vector<Atom*> atomsFromString(string atomstring); //we pass around atom strings like N-CA-C and would like to be able to turn those into acrual atoms

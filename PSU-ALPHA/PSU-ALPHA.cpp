@@ -57,7 +57,7 @@ int main()
 
 		//// INPUT CONSTRUCTION ////
 		string inConfig = INPATH;
-		string inPDB = INPATH + "PDB\\" + PDB1 + ".pdb";
+		string inPDB = PDBDATABASE + PDB1 + ".pdb";
 		string inPDB2 = INPATH + "PDB\\" + PDB2 + ".pdb";
 		string ramareport = OUTPATH + "Reports\\" + PDB1 + "_torsion.txt";
 		string calphareport = OUTPATH + "Reports\\" + PDB1 + "_calpha.txt";
@@ -91,7 +91,7 @@ int main()
 		{
 			LogFile::getInstance()->writeMessage("RAMACHANDRAN PLOT REPORT, outfile=" + ramareport);			
 			RamaReport rr;
-			rr.printReport(pdb1, ramareport,"A");
+			rr.printReport(pdb1, "A", ramareport);
 		}
 		//Shall we run a CAlpha report
 		if (PDB1 != "" && CONTACT == "TRUE")
