@@ -14,5 +14,6 @@ public:
 	bool exists;
 public:
 	CSVFile(string filepath, string sep, bool load);	
+	bool in(string match);
 };
 

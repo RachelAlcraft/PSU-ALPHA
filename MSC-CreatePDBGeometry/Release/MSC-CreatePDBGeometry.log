@@ -1,11 +1,7 @@
-﻿  GeoVector.cpp
-  Atom.cpp
-  Torsion.cpp
-  GeometricalDataReport.cpp
-  MSC-CreatePDBGeometry.cpp
+﻿  CSVFile.cpp
   Generating code
-  14 of 1755 functions ( 0.8%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    8 functions had inline decision re-evaluated but remain unchanged
+  7 of 1803 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    17 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   MSC-CreatePDBGeometry.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Release\MSC-CreatePDBGeometry.exe

@@ -13,15 +13,16 @@ using namespace std;
 
 int main()
 {
-	
-	string pdbdir = "F:\\PSUA\\ProjectData\\HighResFiles\\";
+	string setname = "\\ProjectData\\GeoPhi\\";
+
+	string logpath = "F:\\PSUA" + setname;
+	string logfile = "F:\\PSUA" + setname + "logger.txt";
+	string geoOutput = "F:\\PSUA" + setname + "GeoValues\\";
+	string pdblist = "F:\\PSUA" + setname + "CandidateList1.csv";
+	string geo = "F:\\PSUA" + setname + "GeoCalcPhi.csv";
+
 	string aadata = "F:\\PSUA\\Code\\PSU-ALPHA\\Config\\data_aminoinfo.csv";
-	
-	string logpath = "F:\\PSUA\\ProjectData\\GeoTest5\\";
-	string logfile = "F:\\PSUA\\ProjectData\\GeoTest5\\logger.txt";
-	string geoOutput = "F:\\PSUA\\ProjectData\\GeoTest5\\GeoValues\\";
-	string pdblist = "F:\\PSUA\\ProjectData\\GeoTest5\\CandidateList1.csv";
-	string geo = "F:\\PSUA\\ProjectData\\GeoTest5\\GeoFeatures.csv";
+	string pdbdir = "F:\\PSUA\\ProjectData\\HighResFiles\\";
 	
 	bool success = LogFile::getInstance()->setLogFile(logfile, logpath);
 	LogFile::getInstance()->writeMessage("********** Starting Geometry calculations for PSU-BETA **************");

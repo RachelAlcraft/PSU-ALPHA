@@ -1,14 +1,14 @@
 #The Strucutre of data is fixed once the config location and output location are given
 # This is the DEBUG config file
-RUNID=GEO1
-PDB1=1ga6
-PDB2=sml2
+RUNID=GEO2
+PDB1=2xji
+#PDB2=sml2
 OUTPUTPATH=F:\\PSUA\\Output\\
 CONFIGPATH=F:\\PSUA\\Code\\PSU-ALPHA\\Config\\
 
 ### Whether to create a database file of the geometric features of a pdb
-GEODATABASE=F:\\PSUA\\GeoDatabase\\
-PDBDATABASE=F:\\PSUA\\PDBDatabase\\
+#GEODATABASE=F:\\PSUA\\GeoDatabase\\
+PDBDATABASE=F:\\PSUA\\ProjectData\\HighResFiles\\
 #GEOREPORT=TRUE
 GEOAGGREGATION=TRUE
 
@@ -22,7 +22,7 @@ GEOAGGREGATION=TRUE
 #RMSDFIX=FALSE
 
 ###Whether to run a ramachandran plot
-#RAMA=TRUE
+RAMA=TRUE
 
 ###Whether to run a c-alpha copntact map plot
 #CONTACT=TRUE

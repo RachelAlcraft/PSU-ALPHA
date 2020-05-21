@@ -60,6 +60,7 @@ protected:
 	string _geoDef;
 	string _allAAs;
 	string _aaNos;
+	string _alias;
 
 
 public:
@@ -73,13 +74,14 @@ public:
 	string getAACodes() { return _allAAs; }
 	string getAminoNos() { return _aaNos; }
 	string getSS() { return _SS; }
+	string getAlias() { return _alias; }
 	virtual double getValue() = 0;
 };
 
 class AtomBond: public AtomGeo
 {
 public:	
-	AtomBond(string aCode, string chain, int aId, string ss, Atom* a1, Atom* a2, string geo);
+	AtomBond(string aCode, string chain, int aId, string ss, Atom* a1, Atom* a2, string geo, string alias,string geotype);
 	double getValue() override;
 };
 
@@ -87,7 +89,7 @@ class AtomAngle : public AtomGeo
 {	
 	Atom* _A3;
 public:
-	AtomAngle(string aCode, string chain, int aId, string ss, Atom* a1, Atom* a2, Atom* a3, string geo);
+	AtomAngle(string aCode, string chain, int aId, string ss, Atom* a1, Atom* a2, Atom* a3, string geo, string alias,string geotype);
 	double getValue() override;
 	
 
@@ -98,7 +100,7 @@ class AtomTorsion: public AtomGeo
 	Atom* _A3;
 	Atom* _A4;
 public:
-	AtomTorsion(string aCode, string chain, int aId, string ss, Atom* a1, Atom* a2, Atom* a3, Atom* a4, string geo);
+	AtomTorsion(string aCode, string chain, int aId, string ss, Atom* a1, Atom* a2, Atom* a3, Atom* a4, string geo, string alias,string geotype);
 	double getValue() override;
 	
 };
