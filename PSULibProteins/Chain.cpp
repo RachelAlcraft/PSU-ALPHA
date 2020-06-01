@@ -35,12 +35,12 @@ NucleicAcid* Chain::getNucleicAcid(int nucleicId)
 		return iter->second;
 }
 
-vector<Atom*> Chain::getCAlphas()
+vector<Atom*> Chain::getCAlphas(string atom)
 {
 	vector<Atom*> calphas;
 	for (map<int, AminoAcid*>::iterator iter = _aminos.begin(); iter != _aminos.end(); ++iter)
 	{
-		Atom* calpha = iter->second->getCAlpha();
+		Atom* calpha = iter->second->getCAlpha(atom);
 		if (calpha)
 			calphas.push_back(calpha);
 	}

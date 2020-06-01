@@ -127,6 +127,20 @@ void Atom::applyTransformation(GeoTransformations* trans)
 	GeoCoords newCoords = trans->applyTransformation(coords);
 	shifted_coords = newCoords;
 }
+vector<string> Atom::getObservation()
+{
+	vector<string> observation;
+	observation.push_back(pdbCode);
+	observation.push_back(StringManip::quickInt(atomId));
+	observation.push_back(occupant);
+	observation.push_back(elementType);
+	observation.push_back(StringManip::quickRound(coords.x));
+	observation.push_back(StringManip::quickRound(coords.y));
+	observation.push_back(StringManip::quickRound(coords.z));
+	observation.push_back(StringManip::quickRound(occupancy));
+	observation.push_back(StringManip::quickRound(bfactor));
+	return observation;
+}
 
 // BONDS ################################################################
 AtomGeo::AtomGeo()
@@ -140,8 +154,9 @@ AtomBond::AtomBond(string aCode, string chain, int aId, string ss, Atom* a1, Ato
 	_chain = chain;
 	_aminoId = aId;
 	_alias = alias;
+	_geoType = geotype;
 	if (_alias == "")
-		_alias = geotype;
+		_alias = geo;
 	_A1 = a1;
 	_A2 = a2;
 	_SS = ss;
@@ -168,8 +183,9 @@ AtomAngle::AtomAngle (string aCode, string chain, int aId, string ss, Atom* a1, 
 	_chain = chain;
 	_aminoId = aId;
 	_alias = alias;
+	_geoType = geotype;
 	if (_alias == "")
-		_alias = geotype;
+		_alias = geo;
 	_A1 = a1;
 	_A2 = a2;
 	_A3 = a3;	
@@ -200,8 +216,9 @@ AtomTorsion::AtomTorsion(string aCode, string chain, int aId, string ss, Atom* a
 	_chain = chain;
 	_aminoId = aId;
 	_alias = alias;
+	_geoType = geotype;
 	if (_alias == "")
-		_alias = geotype;
+		_alias = geo;
 	_A1 = a1;
 	_A2 = a2;
 	_A3 = a3;

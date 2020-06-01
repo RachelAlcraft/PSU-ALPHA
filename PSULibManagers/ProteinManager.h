@@ -65,13 +65,13 @@ public:
 	vector<string> getAminoData(string aminoCode);
 	void addAtom(string pdbCode, string occupant, string chainId, int aminoId, Atom* atm);
 	PDBFile* getOrAddPDBFile(string pdbCode, string filename);
-	AminoAcid* getOrAddAminoAcid(string pdbCode, string occupant, string chainId, int aminoId, string amino_code, int& structure_id, int& residuenum);
+	AminoAcid* getOrAddAminoAcid(string pdbCode, string occupant, string chainId, int aminoId, string amino_code, int& structure_id);
 	NucleicAcid* getOrAddNucleicAcid(string pdbCode, string occupant, string chainId, int aminoId, string amino_code, int& structure_id, int& residuenum);
 	Chain* getOrAddChain(string pdbCode, string occupant, string chainId);
 	map<string, Chain*> getChains(string pdbCode, string occupant);
 	map<int, AminoAcid*> getAminoAcids(string pdbCode, string occupant, string chainId);
-	vector<Atom*> getCAlphas(string pdbCode, string occupant, string chainId);
-	vector<Atom*> getCAlphas(string pdbCode, string occupant);
+	vector<Atom*> getCAlphas(string pdbCode, string occupant, string chainId, string atom);
+	vector<Atom*> getCAlphas(string pdbCode, string occupant, string atom);
 	vector<Atom*>  getAtoms(string pdbCode, string occupant);
 	map<int,Atom*>  getAtomsMap(string pdbCode, string occupant);
 	vector<AtomBond>  getAtomBonds(string pdbCode, string occupant);
@@ -83,6 +83,7 @@ public:
 	bool hasHydrogens(string pdbCode, string occupant);
 	bool isAminoAcid(string code);
 	bool isNucleicAcid(string code);
+
 	
 
 private:

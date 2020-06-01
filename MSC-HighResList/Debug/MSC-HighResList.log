@@ -1,8 +1,5 @@
 ﻿  CSVFile.cpp
-  DataFrame.cpp
   FoldersFiles.cpp
   StringManip.cpp
-  MSC-HighResList.cpp
   Generating Code...
   MSC-HighResList.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Debug\MSC-HighResList.exe
-  MSC-HighResList.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Debug\MSC-HighResList.pdb (Partial -> Full PDB)

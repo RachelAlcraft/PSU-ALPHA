@@ -40,6 +40,7 @@ public:
 	GeoVector vectorDifference(Atom*);
 	double atomicDistance(Atom*,bool shifted);
 	void applyTransformation(GeoTransformations* trans);
+	vector<string> getObservation();
 
 private:
 	//string trim(string);
@@ -61,6 +62,7 @@ protected:
 	string _allAAs;
 	string _aaNos;
 	string _alias;
+	string _geoType;
 
 
 public:
@@ -75,6 +77,7 @@ public:
 	string getAminoNos() { return _aaNos; }
 	string getSS() { return _SS; }
 	string getAlias() { return _alias; }
+	string getGeoType() { return _geoType; }
 	virtual double getValue() = 0;
 };
 

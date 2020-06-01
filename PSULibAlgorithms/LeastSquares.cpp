@@ -20,8 +20,8 @@ LeastSquares::LeastSquares(PDBFile* pdb1, PDBFile* pdb2, bool align)
 
 void LeastSquares::setupAtomPairs()
 {//For a very first implementation this will just be the best matching cAlphas
-	vector<Atom*> calphas1 = ProteinManager::getInstance()->getCAlphas(PDB1->pdbCode,"A");
-	vector<Atom*> calphas2 = ProteinManager::getInstance()->getCAlphas(PDB2->pdbCode,"A");
+	vector<Atom*> calphas1 = ProteinManager::getInstance()->getCAlphas(PDB1->pdbCode,"A","CA");
+	vector<Atom*> calphas2 = ProteinManager::getInstance()->getCAlphas(PDB2->pdbCode,"A","CA");
 
 	
 	if (!Alignment)
@@ -108,8 +108,8 @@ void LeastSquares::setupAtomPairs()
 						gaps = true;
 					if (!gaps && a < aminos1.size() && b < aminos2.size())
 					{
-						Atom* a1 = aminos1[a]->getCAlpha();
-						Atom* a2 = aminos2[b]->getCAlpha();
+						Atom* a1 = aminos1[a]->getCAlpha("CA");
+						Atom* a2 = aminos2[b]->getCAlpha("CA");
 						_atomPairsAlignment.push_back(AtomPair(a1, a2));
 						LogFile::getInstance()->writeMessage("RMSD Match: " + a1->getDescription() + " " + a2->getDescription());
 						reportStream << "RMSD Match: " + a1->getDescription() + " " + a2->getDescription() << "\n";

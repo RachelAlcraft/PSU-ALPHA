@@ -32,6 +32,7 @@ public:
 	void addChain(Chain* ch);
 	void applyTransformation(GeoTransformations* trans);	
 	string getSequence();
+	void removeRepeatedChains();
 private:
 	
 

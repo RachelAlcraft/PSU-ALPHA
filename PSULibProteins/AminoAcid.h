@@ -40,7 +40,7 @@ public:
 	//Unique
 	string dataId;
 	int aminoId;//unique id within the pdb file
-	int structureAaId;//this is within the structure within the chain (for contact maps)
+	//int structureAaId;//this is within the structure within the chain (for contact maps)
 	string aminoCode; //the 3 letter code
 	AminoAcid* _aaPrev;
 	AminoAcid* _aaNext;
@@ -68,7 +68,7 @@ public:
 	void add(Atom*);
 	BackboneTorsion* getBackboneTorsion() { return _torsion; }
 	SidechainTorsion* getSidechainTorsion() { return _sideTorsion; }
-	Atom* getCAlpha() { return _atoms["CA"]; }//obviously this needs error checking, but the whole system fails if there are no CA on each aa so it doesn't matter how badly it crashes TODO
+	Atom* getCAlpha(string atom) { return _atoms[atom]; }//obviously this needs error checking, but the whole system fails if there are no CA on each aa so it doesn't matter how badly it crashes TODO
 	map<string, Atom*> getAtoms() { return _atoms; }
 	string getSS();
 	void createScoringAtoms();

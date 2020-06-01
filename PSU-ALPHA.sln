@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-GeometryAggregator", "M
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-RemoveSimilarity", "MSC-RemoveSimilarity\MSC-RemoveSimilarity.vcxproj", "{FBBD4F0B-4A50-4DEA-859F-731C1B00444F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-ContactMap", "MSC-ContactMap\MSC-ContactMap.vcxproj", "{D37B9A42-DCBD-4BEE-9615-77277A4240FD}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		BTLLib\BTLLib.vcxitems*{02071cbc-b77f-4650-b097-d2e5b6ac823d}*SharedItemsImports = 4
@@ -55,6 +57,13 @@ Global
 		BTLLib\BTLLib.vcxitems*{568648aa-2549-4936-96ff-4639c4285340}*SharedItemsImports = 9
 		PSULibHelpers\PSULibHelpers.vcxitems*{73ec3ec4-52b5-4d17-b623-27ba5154e908}*SharedItemsImports = 9
 		PSULibProteins\PSULibProteins.vcxitems*{bd4d8915-ee81-4efa-a220-e5d604cc2c92}*SharedItemsImports = 9
+		BTLLib\BTLLib.vcxitems*{d37b9a42-dcbd-4bee-9615-77277a4240fd}*SharedItemsImports = 4
+		PSULibAlgorithms\PSULibAlgorithms.vcxitems*{d37b9a42-dcbd-4bee-9615-77277a4240fd}*SharedItemsImports = 4
+		PSULibHelpers\PSULibHelpers.vcxitems*{d37b9a42-dcbd-4bee-9615-77277a4240fd}*SharedItemsImports = 4
+		PSULibManagers\PSULibManagers.vcxitems*{d37b9a42-dcbd-4bee-9615-77277a4240fd}*SharedItemsImports = 4
+		PSULibMaths\PSULibMaths.vcxitems*{d37b9a42-dcbd-4bee-9615-77277a4240fd}*SharedItemsImports = 4
+		PSULibProteins\PSULibProteins.vcxitems*{d37b9a42-dcbd-4bee-9615-77277a4240fd}*SharedItemsImports = 4
+		PSULibReports\PSULibReports.vcxitems*{d37b9a42-dcbd-4bee-9615-77277a4240fd}*SharedItemsImports = 4
 		PSULibAlgorithms\PSULibAlgorithms.vcxitems*{e1b09bcf-7ab9-41b5-9f55-22ecd42bebfe}*SharedItemsImports = 9
 		PSULibMaths\PSULibMaths.vcxitems*{f14a751f-2a3b-46f9-8341-a3277ae83e29}*SharedItemsImports = 9
 		PSULibHelpers\PSULibHelpers.vcxitems*{fbbd4f0b-4a50-4dea-859f-731c1b00444f}*SharedItemsImports = 4
@@ -121,6 +130,14 @@ Global
 		{FBBD4F0B-4A50-4DEA-859F-731C1B00444F}.Release|x64.Build.0 = Release|x64
 		{FBBD4F0B-4A50-4DEA-859F-731C1B00444F}.Release|x86.ActiveCfg = Release|Win32
 		{FBBD4F0B-4A50-4DEA-859F-731C1B00444F}.Release|x86.Build.0 = Release|Win32
+		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Debug|x64.ActiveCfg = Debug|x64
+		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Debug|x64.Build.0 = Debug|x64
+		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Debug|x86.ActiveCfg = Debug|Win32
+		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Debug|x86.Build.0 = Debug|Win32
+		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Release|x64.ActiveCfg = Release|x64
+		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Release|x64.Build.0 = Release|x64
+		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Release|x86.ActiveCfg = Release|Win32
+		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

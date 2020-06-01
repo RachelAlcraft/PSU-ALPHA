@@ -1,6 +1,7 @@
 #include "StringManip.h"
 #include <xlocbuf>
 #include <codecvt>
+#include <sstream>
 
 
 
@@ -20,13 +21,13 @@ string StringManip::trim(string string_to_trim)
 	return string_trimmed;
 }
 
-string StringManip::removeChar(string string_to_trim, string char_remove)
+string StringManip::removeChar(string string_to_trim, string char_remove, string replace)
 {
 	string string_trimmed = string_to_trim;
 	int startpos = string_trimmed.find(char_remove);
 	while (startpos > -1)
 	{
-		string_trimmed = string_trimmed.replace(startpos, 1, "");
+		string_trimmed = string_trimmed.replace(startpos, 1, replace);
 		startpos = string_trimmed.find(char_remove);
 	}	
 	return string_trimmed;
@@ -62,4 +63,22 @@ std::string StringManip::ws2s(const std::wstring& wstr)
 	std::wstring_convert<convert_typeX, wchar_t> converterX;
 
 	return converterX.to_bytes(wstr);
+}
+
+
+string StringManip::quickRound(double val)
+{
+	double dVal = val * 1000;
+	int iVal = (int)round(dVal);
+	dVal = (double)iVal / 1000;
+	stringstream ss;
+	ss << dVal;
+	return ss.str();
+}
+
+string StringManip::quickInt(int val)
+{	
+	stringstream ss;
+	ss << val;
+	return ss.str();
 }

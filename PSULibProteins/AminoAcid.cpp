@@ -15,7 +15,7 @@ AminoAcid::AminoAcid(string pdb_code, string chain_id, int amino_id, int structu
 	_atmCApp = nullptr;
 
 	aminoId = amino_id;	
-	structureAaId = structure_id;
+	//structureAaId = structure_id;
 	pdbCode = pdb_code;
 	chainId = chain_id;
 	aminoCode = amino_Code;

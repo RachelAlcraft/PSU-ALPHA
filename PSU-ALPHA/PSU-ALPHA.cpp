@@ -98,7 +98,7 @@ int main()
 		{
 			LogFile::getInstance()->writeMessage("CALPHA Contact Map REPORT, outfile=" + calphareport);
 			CAlphaReport ca;
-			ca.printReport(pdb1, "A",CONTACTCHAIN1, CONTACTCHAIN2, calphareport);
+			ca.printReport(pdb1, "A",CONTACTCHAIN1, CONTACTCHAIN2, "CA", "CA", calphareport,25);
 
 		}
 		//Shall we run an RMSD report between 2 structures with fixed positions?
@@ -132,13 +132,13 @@ int main()
 			
 			
 
-			if (RMSDCONTACT == "TRUE")
+			/*if (RMSDCONTACT == "TRUE")
 			{
 				string rmsdcontact = OUTPATH + "Reports\\" + PDB1 + "_rmsdcontact.txt";
 				LogFile::getInstance()->writeMessage("RMSD CALPHA Contact Map REPORT, outfile=" + rmsdcontact);
 				CAlphaReport ca;
 				ca.printMultiReport(pdb1,pdb2, "A",rmsdcontact,true);
-			}
+			}*/
 
 			
 		}

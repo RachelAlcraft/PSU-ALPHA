@@ -70,3 +70,15 @@ string ProteinStructure::getSequence()
 	}
 	return seq;
 }
+
+void ProteinStructure::removeRepeatedChains()
+{	
+	map<string, Chain*>::iterator iter = _chains.begin();
+	string letter = iter->first;
+	Chain* ch = iter->second;
+	++iter;
+	for (; iter != _chains.end(); ++iter)	
+		delete iter->second;
+	_chains.clear();
+	_chains.insert(pair<string, Chain*>(letter, ch));
+}

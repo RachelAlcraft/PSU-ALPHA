@@ -21,12 +21,14 @@ private:
 	
 public:
 	GeometricalDataReport(vector < vector<string>> fileVector) { geoDefinitions = fileVector; }
-	void printReport(PDBFile* pdb, string filename1/*, string filename2*/, string directory, string geodir);
+	void printReport(PDBFile* pdb, string directory, string geodir, string atomdir);
 private:
 	void printOneReport(PDBFile* pdb, string occupant, string filename1);// , string filename2);
-	void printOneReportWithGeoDef(PDBFile* pdb, string occupant, string fileName1);
+	void printOneReportWithGeoDef(PDBFile* pdb, string occupant, string fileName_geo);
+	void printAtomsForGeoDef(PDBFile* pdb, string occupant, string fileName_atoms);
 	vector<pair<string,string>> getGeoDefinitions(string aminoCode, string geoType);
-	string getReportString(AtomGeo* ab, PDBFile* pdb, string occupant);
-	double quickRound(double val);
+	vector<string> getReportString(AtomGeo* ab, PDBFile* pdb, string occupant);
+	string quickRound(double val);
+	string quickInt(int val);
 };
 

@@ -85,3 +85,7 @@ MSC-GeometryAggregator/Release/MSC-GeometryAggregator.log
 PSU-ALPHA/Release/PSU-ALPHA.log
 MSC-CreatePDBGeometry/Release/MSC-CreatePDBGeometry.log
 MSC-GeometryAggregator/Release/MSC-GeometryAggregator.log
+MSC-AnnotateHighResList/logger.txt
+MSC-AnnotateHighResList/logger.txt
+MSC-AnnotateHighResList/xlogger.txt
+MSC-CreatePDBGeometry/logger.txt

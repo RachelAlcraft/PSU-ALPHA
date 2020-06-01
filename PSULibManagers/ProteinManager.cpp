@@ -157,7 +157,7 @@ NucleicAcid* ProteinManager::getOrAddNucleicAcid(string pdbCode, string occupant
 
 }
 
-AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string occupant, string chainId, int aminoId, string aminoCode, int& structure_id, int& residuenum)
+AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string occupant, string chainId, int aminoId, string aminoCode, int& structure_id)
 {
 	try
 	{
@@ -175,7 +175,7 @@ AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string occupant, st
 				structure_id += 1;
 				AminoAcid* aa = new AminoAcid(pdbCode, chainId, aminoId, structure_id, aminoCode);
 				chain->addAminoAcid(aa);
-				++residuenum;
+				//++residuenum;
 				return aa;
 			}
 			else
@@ -232,15 +232,15 @@ map<int, AminoAcid*> ProteinManager::getAminoAcids(string pdbCode, string occupa
 
 }
 
-vector<Atom*>  ProteinManager::getCAlphas(string pdbCode, string occupant, string chainId)
+vector<Atom*>  ProteinManager::getCAlphas(string pdbCode, string occupant, string chainId, string atom)
 {
 	PDBFile* pdb = _pdbfiles[pdbCode];
 	ProteinStructure* ps = pdb->getStructureVersion(occupant);
 	Chain* chain = ps->getChain(chainId);
-	return chain->getCAlphas();	
+	return chain->getCAlphas(atom);	
 }
 
-vector<Atom*> ProteinManager::getCAlphas(string pdbCode, string occupant)
+vector<Atom*> ProteinManager::getCAlphas(string pdbCode, string occupant, string atom)
 {
 	vector<Atom*> calphas;
 	PDBFile* pdb = _pdbfiles[pdbCode];
@@ -249,7 +249,7 @@ vector<Atom*> ProteinManager::getCAlphas(string pdbCode, string occupant)
 	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
 	{
 		Chain* ch = iter->second;
-		vector<Atom*> cas = ch->getCAlphas();
+		vector<Atom*> cas = ch->getCAlphas(atom);
 		for (unsigned int i = 0; i < cas.size(); ++i)
 			calphas.push_back(cas[i]);
 	}	
@@ -473,6 +473,4 @@ bool ProteinManager::hasHydrogens(string pdbCode, string occupant)
 
 	return hasHyd;
 }
-
-
 

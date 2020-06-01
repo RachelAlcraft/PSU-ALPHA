@@ -25,7 +25,7 @@ public:
 	AminoAcid* getAminoAcid(int aminoId);
 	NucleicAcid* getNucleicAcid(int aminoId);
 	map<int, AminoAcid*> getAminoAcids() { return _aminos; }
-	vector<Atom*>  getCAlphas();
+	vector<Atom*>  getCAlphas(string atom);
 	void addAminoAcid(AminoAcid* aa);
 	void addNucleicAcid(NucleicAcid* na);
 };

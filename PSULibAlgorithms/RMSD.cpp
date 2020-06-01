@@ -26,8 +26,8 @@ RMSD::RMSD(PDBFile* pdb1, PDBFile* pdb2, FastaFile* fasta, bool alignment, bool 
 
 void RMSD::SetupCAlphaPairs()
 {//For a very first implementation this will just be the best matching cAlphas
-	vector<Atom*> calphas1 = ProteinManager::getInstance()->getCAlphas(PDB1->pdbCode,"A");
-	vector<Atom*> calphas2 = ProteinManager::getInstance()->getCAlphas(PDB2->pdbCode,"A");
+	vector<Atom*> calphas1 = ProteinManager::getInstance()->getCAlphas(PDB1->pdbCode,"A","CA");
+	vector<Atom*> calphas2 = ProteinManager::getInstance()->getCAlphas(PDB2->pdbCode,"A","CA");
 	
 	int maxposs_calphas = min(calphas1.size(), calphas2.size());
 

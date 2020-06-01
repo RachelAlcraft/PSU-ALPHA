@@ -19,8 +19,16 @@ private:
 public:
 	string pdbCode;
 	string experimentalMethod;
-	int residues;
+	//int residues;
 	int nucleotides;
+	string institution;
+	string software;
+	string date;
+	string proteinclass;
+	string rvalue;
+	string rfree;	
+	string inComplex;
+	bool nullModel;
 //3 stages of initiation
 	bool loadedText;
 	bool loadedAminos;
@@ -44,13 +52,17 @@ public:
 	//Chain* getChain(string chainId);
 	//map<int, Atom*> getAtoms(string pdbCode);
 	//void addChain(Chain* ch);
+	void structureInfo();
 	void loadData();
 	void loadAtoms();
 	void loadBonds();
 	void loadTorsions();
 	//void applyTransformation(GeoTransformations* trans);
 	void printShiftedFile(string);
-	//string getSequence();
+	vector<string> getSequence();
+	string maxChain();
+	void removeRepeatedChains();
+	
 
 	
 
