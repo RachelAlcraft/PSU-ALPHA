@@ -16,9 +16,18 @@ int main()
 
 	// ***********************************************
 	// * USER UNPUT ******** 
-	string pdblist = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_highres_90_annotated.csv";
+	vector<string> pdblists;
+	pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_highres_90_annotated.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_2019_95_annotated.csv");
+	//pdblists.push_back("list_test1.csv");
+	//pdblists.push_back("list_test2.csv");
+	
 	string pdbdir = "F:\\Code\\BbkTransfer\\pdbfiles\\pdbdata\\";		
-	string outputdir = "F:\\Code\\BbkDatabase\\tbl2_geo_measure_and_atom\\DataSets\\Version2\\25May20_High\\";
+	string outputdir = "F:\\Code\\BbkDatabase\\tbl2_geo_measure_and_atom\\DataSets\\Version3\\01June20_2\\";
+
+	bool runCore = true;
+	bool runExtra = true;
+	bool runAtoms = true;
 
 	
 	
@@ -26,37 +35,46 @@ int main()
 	 //***************************************************************************
 	// Execution begins
 
-	string geoOutput = outputdir + "GeoValues\\";
-	string atomOutput = outputdir + "Atoms\\";
-	string calclist = outputdir + "GeoCalc.csv";	
+	//string geoOutput = outputdir + "GeoValues\\";
+	//string atomOutput = outputdir + "Atoms\\";
+	string calclist = outputdir + "GeoCalc.csv";		
 	string aadata = "F:\\PSUA\\Code\\PSU-ALPHA\\Config\\data_aminoinfo.csv";
 	
 	bool success = LogFile::getInstance()->setLogFile("logger.txt", "");
 	LogFile::getInstance()->writeMessage("********** Starting Geometry calculations for PSU-BETA **************");
 	
 	ProteinManager::getInstance()->createAminoAcidData(aadata);
-
 	
-	CSVFile pdblistfile(pdblist, ",", true);	
-	CSVFile geoFile(calclist, ",", true);
+	CSVFile geoFileCore(calclist, ",", true);
 	
-	GeometricalDataReport gdr(geoFile.fileVector);
-
-	for (unsigned int i = 1; i < pdblistfile.fileVector.size(); ++i)
+	for (unsigned int p = 0; p < pdblists.size(); ++p)
 	{
-		string pdb = pdblistfile.fileVector[i][0];		
-		stringstream ss;
-		ss << "-----" << i << " -" << pdb << "--------";
-		LogFile::getInstance()->writeMessage(ss.str());
+		string pdblist = pdblists[p];
+		CSVFile pdblistfile(pdblist, ",", true);
 
-		//string pdb = "3BVX";
-		PDBFile* pdbf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, pdbdir + pdb + ".pdb");
-		pdbf->loadData();
-		pdbf->loadAtoms();
-		pdbf->loadBonds();		
-		gdr.printReport(pdbf, "",geoOutput + pdb, atomOutput + pdb);
 
-		ProteinManager::getInstance()->deletePdbs();//keep memory clear
+		GeometricalDataReport gdr(geoFileCore.fileVector);
+		
+
+		for (unsigned int i = 1; i < pdblistfile.fileVector.size(); ++i)
+		{
+			string pdb = pdblistfile.fileVector[i][0];
+			//if(pdb == "6V98")
+			{
+				stringstream ss;
+				ss << "-----" << i << " -" << pdb << "--------";
+				LogFile::getInstance()->writeMessage(ss.str());
+
+				//string pdb = "3BVX";
+				PDBFile* pdbf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, pdbdir + pdb + ".pdb");
+				pdbf->loadData();
+				pdbf->loadAtoms();
+				pdbf->loadBonds();
+
+				gdr.printReport(pdbf, outputdir, runCore, runExtra, runAtoms);
+				ProteinManager::getInstance()->deletePdbs();//keep memory clear
+			}
+		}
 	}
 	cout << "Finished";    
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>F:\PSUA\Code\PSU-ALPHA\BTLLib\</FILEPATH>
+      <FILENAME>btl_matrix_algorithms.h</FILENAME>
+      <LINE>462</LINE>
+      <COLUMN>14</COLUMN>
+    </SFA>
+    <DEFECTCODE>26498</DEFECTCODE>
+    <DESCRIPTION>The function 'std::numeric_limits&lt;double&gt;::epsilon' is constexpr, mark variable 'theshold' constexpr if compile-time evaluation is desired (con.5).</DESCRIPTION>
+    <FUNCTION>btl::eigen_solution</FUNCTION>
+    <DECORATED>??$eigen_solution@V?$_Vector_iterator@V?$_Vector_val@U?$_Simple_types@N@std@@@std@@@std@@V12@V12@@btl@@YAXV?$_Vector_iterator@V?$_Vector_val@U?$_Simple_types@N@std@@@std@@@std@@0I00@Z</DECORATED>
+    <FUNCLINE>430</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

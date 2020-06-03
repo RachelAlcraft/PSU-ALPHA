@@ -130,7 +130,7 @@ void PDBFile::loadAtoms()
 		if (pos == 0)
 		{
 			Atom* atom = new Atom(pdbCode, line);
-			if (i % 500 == 0)
+			if (i % 2000 == 0)
 				atom->printAtom();
 			int id = atom->atomId;
 
@@ -291,15 +291,42 @@ void PDBFile::createFileVector()
 {
 
 	ifstream myfile(_filename);
-	if (myfile.is_open())
+	try
 	{
-		string line = "";
-		while (getline(myfile, line))
+		if (myfile.is_open())
 		{
-			//decide to delete some data I am not handling TODO!
-			int pos = line.find("HETATM");
-			if (pos < 0)
-				_file.push_back(line);
+			string line = "";
+			while (getline(myfile, line))
+			{
+				//decide to delete some data I am not handling TODO!
+				int pos = line.find("HETATM");
+				if (pos < 0)
+					_file.push_back(line);
+
+			}
+			myfile.close();
+		}		
+	}
+	catch(...)
+	{// try twice
+		ifstream myfile(_filename);
+		try
+		{
+			if (myfile.is_open())
+			{
+				string line = "";
+				while (getline(myfile, line))
+				{
+					//decide to delete some data I am not handling TODO!
+					int pos = line.find("HETATM");
+					if (pos < 0)
+						_file.push_back(line);
+				}
+				myfile.close();
+			}
+		}
+		catch (...)
+		{
 
 		}
 	}

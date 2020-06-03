@@ -93,7 +93,7 @@ void AminoAcid::createBonds(AminoAcid* aaP, AminoAcid* aaPP)
 			//raise an error here
 			stringstream ss;
 			ss << "Some missing atoms on either side :AA=" << aminoCode << " Id=" << aminoId;
-			LogFile::getInstance()->writeMessage(ss.str());
+			//LogFile::getInstance()->writeMessage(ss.str());
 		}
 
 		vector<Atom*> backbones = atomsFromString("CP-N-CA-C-NPP-CAPP");
@@ -450,7 +450,7 @@ vector<AtomGeo*> AminoAcid::getAtomDistance(vector<pair<string, string>> atoms, 
 			{
 				stringstream ss;
 				ss << "-----Some missing bond atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atomsdef;
-				LogFile::getInstance()->writeMessage(ss.str());
+				//LogFile::getInstance()->writeMessage(ss.str());
 			}
 		}
 	}
@@ -481,7 +481,7 @@ vector<AtomGeo*> AminoAcid::getAtomAngles(vector<pair<string, string>> atoms, st
 			{
 				stringstream ss;
 				ss << "-----Some missing angle atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atomsdef;
-				LogFile::getInstance()->writeMessage(ss.str());
+				//LogFile::getInstance()->writeMessage(ss.str());
 			}
 		}
 	}
@@ -512,7 +512,7 @@ vector<AtomGeo*> AminoAcid::getAtomDihedrals(vector<pair<string, string>> atoms,
 			{
 				stringstream ss;
 				ss << "-----Some missing dihedral atoms: Pdb=" << pdbCode << " AA=" << aminoCode << " Id=" << aminoId << " Atoms=" << atomsdef;
-				LogFile::getInstance()->writeMessage(ss.str());
+				//LogFile::getInstance()->writeMessage(ss.str());
 			}
 		}
 	}

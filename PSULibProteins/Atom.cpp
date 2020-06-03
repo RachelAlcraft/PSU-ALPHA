@@ -132,7 +132,7 @@ vector<string> Atom::getObservation()
 	vector<string> observation;
 	observation.push_back(pdbCode);
 	observation.push_back(StringManip::quickInt(atomId));
-	observation.push_back(occupant);
+	observation.push_back(occupant=="X"?"A":occupant);
 	observation.push_back(elementType);
 	observation.push_back(StringManip::quickRound(coords.x));
 	observation.push_back(StringManip::quickRound(coords.y));

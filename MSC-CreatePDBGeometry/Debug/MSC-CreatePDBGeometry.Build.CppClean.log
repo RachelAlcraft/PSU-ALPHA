@@ -2,7 +2,6 @@ f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\vc142.pdb
 f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\vc142.idb
 f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\chain.obj
 f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\atom.obj
-f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\aminoacid.obj
 f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\probabilitydistribution.obj
 f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\geovector.obj
 f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\geotransformation.obj
@@ -33,6 +32,7 @@ f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\pdbfile.obj
 f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\nucleicacid.obj
 f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\hetatom.obj
 f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\fastafile.obj
+f:\psua\code\psu-alpha\msc-createpdbgeometry\debug\aminoacid.obj
 f:\psua\code\psu-alpha\debug\msc-createpdbgeometry.exe
 f:\psua\code\psu-alpha\debug\msc-createpdbgeometry.ilk
 f:\psua\code\psu-alpha\debug\msc-createpdbgeometry.pdb

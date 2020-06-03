@@ -5,53 +5,22 @@
 #include <DataFrame.h>
 
 
-void GeometricalDataReport::printReport(PDBFile* pdb,string directory, string geodir, string atomdir)
-{//produce data frame report for R reporting
-	
-	if (directory != "")
-	{
-		vector<string> pdbs = FoldersFiles::getFilesWithinFolder(directory);
-		for (int i = pdbs.size()-1; i >= 0; --i)
-		{			
-			stringstream status;
-			status << i << " out of " << pdbs.size();
-			string pdb = pdbs[i];
-			try
-			{
-				string file = directory + pdb;				
-				LogFile::getInstance()->writeMessage(status.str() + " - Loading data for PDB1, file=" + pdb);
-				PDBFile* pf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, file);
-				pf->loadData();
-				pf->loadAtoms();
-				pf->loadBonds();
-				if (pf != nullptr)
-				{					
-					map<string, ProteinStructure*> versions = pf->getStructureVersions();
-					for (map<string, ProteinStructure*>::iterator iter = versions.begin(); iter != versions.end(); ++iter)
-					{
-						string geofile = geodir + pdb + "_" + iter->first + ".geo.txt";						
-						string atomfile = atomdir + pdb + "_" + iter->first + ".atom.txt";
-						printOneReportWithGeoDef(pf, iter->first, geofile);
-					}
-				}
-			}
-			catch (...)
-			{
-				LogFile::getInstance()->writeMessage("Error loading pdb file " + pdb);
-			}
-		}		
-	}
-	else
-	{
-		map<string, ProteinStructure*> versions = pdb->getStructureVersions();
-		for (map<string, ProteinStructure*>::iterator iter = versions.begin(); iter != versions.end(); ++iter)
-		{			
-			//printOneReport(pdb, iter->first, fileName1 + "_" + iter->first + ".geo.txt", fileName2 + "_" + iter->first + ".geo.txt");
-			//printOneReportWithGeoDef(pdb, iter->first, fileName1 + "_" + iter->first + "_geo.txt");
-			printOneReportWithGeoDef(pdb, iter->first, geodir + "_" + iter->first + "_geo.txt");
-			printAtomsForGeoDef(pdb, iter->first,atomdir + "_" + iter->first + "_atom.txt");
-		}		
-	}
+void GeometricalDataReport::printReport(PDBFile* pdb, string geodir, bool core, bool extra, bool atoms)
+{//produce data frame report for R reporting	
+	string pdb_code = pdb->pdbCode;
+	map<string, ProteinStructure*> versions = pdb->getStructureVersions();
+	for (map<string, ProteinStructure*>::iterator iter = versions.begin(); iter != versions.end(); ++iter)
+	{			
+		//printOneReport(pdb, iter->first, fileName1 + "_" + iter->first + ".geo.txt", fileName2 + "_" + iter->first + ".geo.txt");
+		//printOneReportWithGeoDef(pdb, iter->first, fileName1 + "_" + iter->first + "_geo.txt");
+		if (extra)
+			printOneReportWithGeoDef(pdb, iter->first, geodir + "Extra\\"  +pdb_code + "_" + iter->first + "_xgeo.txt");
+		if (atoms)
+			printAtomsForGeoDef(pdb, iter->first, geodir + "Atoms\\" + pdb_code + "_" + iter->first + "_atom.txt");
+		if (core)
+			printCoreReportWithGeoDef(pdb, iter->first, geodir + "Core\\" + pdb_code + "_" + iter->first + "_cgeo.txt");
+		
+	}			
 }
 
 void GeometricalDataReport::printOneReportWithGeoDef(PDBFile* pdb, string occupant, string fileName_geo)
@@ -167,6 +136,74 @@ void GeometricalDataReport::printOneReportWithGeoDef(PDBFile* pdb, string occupa
 	
 }
 
+void GeometricalDataReport::printCoreReportWithGeoDef(PDBFile* pdb, string occupant, string fileName_geo)
+{
+	LogFile::getInstance()->writeMessage("Starting Geometric Core Data report for " + pdb->pdbCode);
+	
+	DataFrame geo_calcs(fileName_geo);
+
+	geo_calcs.headerVector.push_back("PdbCode");
+	geo_calcs.headerVector.push_back("Occupant");
+	geo_calcs.headerVector.push_back("Chain");
+	geo_calcs.headerVector.push_back("AminoNo");
+	geo_calcs.headerVector.push_back("GeoAtoms");
+	geo_calcs.headerVector.push_back("Alias");
+	geo_calcs.headerVector.push_back("AminoCode");
+	geo_calcs.headerVector.push_back("AminoNos");
+	geo_calcs.headerVector.push_back("AminoCodes");
+	geo_calcs.headerVector.push_back("AtomNos");
+	geo_calcs.headerVector.push_back("SecStruct");
+	geo_calcs.headerVector.push_back("GeoType");
+	geo_calcs.headerVector.push_back("Value");
+
+	map<string, Chain*> chains = ProteinManager::getInstance()->getChains(pdb->pdbCode, occupant);
+	for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		map<int, AminoAcid*> aminos = ch->getAminoAcids();
+		vector<AtomGeo*> v1;
+		vector<AtomGeo*> v2;
+		vector<AtomGeo*> v3;
+		vector<AtomGeo*> v4;
+		vector<AtomGeo*> v5;
+		vector<AtomGeo*> v6;
+		vector<AtomGeo*> v7;
+
+		for (map<int, AminoAcid*>::iterator biter = aminos.begin(); biter != aminos.end(); ++biter)
+		{
+			AminoAcid* aa = biter->second;
+			v1 = aa->getAtomDistance(getGeoDefinitions(aa->aminoCode, "COREBOND"), "COREBOND");						
+			v2 = aa->getAtomAngles(getGeoDefinitions(aa->aminoCode, "COREANGLE"), "COREANGLE");
+			v3 = aa->getAtomDihedrals(getGeoDefinitions(aa->aminoCode, "COREDIHEDRAL"), "COREDIHEDRAL");
+			
+			// we can delete the pointers to AtomGeo as we go
+			for (unsigned int i = 0; i < v1.size(); ++i)
+			{
+				geo_calcs.fileVector.push_back(getReportString(v1[i], pdb, occupant));
+				delete v1[i];
+				v1[i] = nullptr;
+			}
+
+			for (unsigned int i = 0; i < v2.size(); ++i)
+			{
+				geo_calcs.fileVector.push_back(getReportString(v2[i], pdb, occupant));
+				delete v2[i];
+				v2[i] = nullptr;
+			}
+
+			for (unsigned int i = 0; i < v3.size(); ++i)
+			{
+				geo_calcs.fileVector.push_back(getReportString(v3[i], pdb, occupant));
+				delete v3[i];
+				v3[i] = nullptr;
+			}
+		}
+
+	}
+
+	geo_calcs.print();
+}
+
 
 void GeometricalDataReport::printAtomsForGeoDef(PDBFile* pdb, string occupant, string fileName_atoms)
 {
@@ -190,7 +227,7 @@ void GeometricalDataReport::printAtomsForGeoDef(PDBFile* pdb, string occupant, s
 		Atom* atm = atoms[a];
 		if (atm)
 		{
-			if (atm->occupant == occupant)
+			if (atm->occupant == occupant || (occupant == "A" && atm->occupant == "X"))
 				atom_file.fileVector.push_back(atm->getObservation());
 		}
 	}
@@ -233,77 +270,7 @@ string GeometricalDataReport::quickInt(int val)
 	return ss.str();
 }
 
-void GeometricalDataReport::printOneReport(PDBFile* pdb, string occupant, string fileName1)//, string fileName2)
-{//produce data frame report for R reporting
 
-	
-	LogFile::getInstance()->writeMessage("Starting Scoring Data report for " + pdb->pdbCode);
-
-	stringstream report;	
-	//report << "Chain,AminoAcid,Id,SecStruct,DataType,ExperimentalMethod,Atoms,Value\n";
-	report << "PdbCode,Chain,AminoAcid,AminoNo,AtomNo,AtomNos,SecStruct,GeoType,ExperimentalMethod,GeoAtoms,Value\n";	
-	vector<AtomBond> bonds = ProteinManager::getInstance()->getAtomBonds(pdb->pdbCode, occupant);
-	vector<AtomAngle> angles = ProteinManager::getInstance()->getAtomAngles(pdb->pdbCode, occupant);
-	vector<AtomTorsion> torsions = ProteinManager::getInstance()->getAtomTorsions(pdb->pdbCode, occupant);
-
-	for (unsigned int i = 0; i < bonds.size(); ++i)
-	{
-		report << pdb->pdbCode << "_" << occupant << ",";
-		report << bonds[i].getChain() << ",";
-		report << bonds[i].getAA() << ",";
-		report << bonds[i].getAminoId() << ",";		
-		report << bonds[i].getAtomNos() << ",";
-		report << bonds[i].getSS() << ",";
-		report << "BOND,";
-		report << pdb->experimentalMethod << ",";
-		report << bonds[i].getAtoms() << ",";
-		report << bonds[i].getValue() << "\n";
-
-	}
-	for (unsigned int i = 0; i < angles.size(); ++i)
-	{
-		report << pdb->pdbCode << "_" << occupant << ",";
-		report << angles[i].getChain() << ",";
-		report << angles[i].getAA() << ",";
-		report << angles[i].getAminoId() << ",";	
-		report << angles[i].getAtomNos() << ",";
-		report << angles[i].getSS() << ",";
-		report << "ANGLE,";
-		report << pdb->experimentalMethod << ",";
-		report << angles[i].getAtoms() << ",";
-		report << angles[i].getValue() << "\n";
-
-	}
-	for (unsigned int i = 0; i < torsions.size(); ++i)
-	{
-		report << pdb->pdbCode << "_" << occupant << ",";
-		report << torsions[i].getChain() << ",";
-		report << torsions[i].getAA() << ",";		
-		report << torsions[i].getAminoId() << ",";		
-		report << torsions[i].getAtomNos() << ",";
-		report << torsions[i].getSS() << ",";
-		report << "TORSION,";
-		report << pdb->experimentalMethod << ",";
-		report << torsions[i].getAtoms() << ",";
-		report << torsions[i].getValue() << "\n";
-	}
-
-	//Dual output to the temporary results directory, and also to a database directory for accumulation of data
-	ofstream outfile(fileName1);
-	if (outfile.is_open())
-	{
-		outfile << report.str();
-	}
-
-	/*if (fileName2 != "")
-	{
-		ofstream outfile2(fileName2);
-		if (outfile2.is_open())
-		{
-			outfile2 << report.str();
-		}
-	}*/
-}
 vector<pair<string,string>> GeometricalDataReport::getGeoDefinitions(string aminoCode, string geoType)
 {
 	/*
