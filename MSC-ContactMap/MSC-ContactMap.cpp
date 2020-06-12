@@ -19,11 +19,11 @@ int main()
 	// * USER UNPUT ******** 
 	vector<string> pdblists;
 	pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_highres_90_annotated.csv");
-	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_2019_95_annotated.csv");
+	pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_2019_95_annotated.csv");
 	
 	
 	string pdbdir = "F:\\Code\\BbkTransfer\\pdbfiles\\pdbdata\\";
-	string outputdir = "F:\\Code\\BbkDatabase\\tbl2_geo_contact\\DataSets\\Version1\\03Jun20\\";
+	string outputdir = "F:\\Code\\BbkDatabase\\tbl2_geo_contact\\DataSets\\Version1\\04Jun20\\";
 
 	vector<string> contactsA;
 	vector<string> contactsB;

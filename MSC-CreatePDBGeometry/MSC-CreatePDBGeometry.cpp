@@ -17,17 +17,17 @@ int main()
 	// ***********************************************
 	// * USER UNPUT ******** 
 	vector<string> pdblists;
-	pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_highres_90_annotated.csv");
-	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_2019_95_annotated.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_highres_90_annotated.csv");
+	pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_2019_95_annotated.csv");
 	//pdblists.push_back("list_test1.csv");
 	//pdblists.push_back("list_test2.csv");
 	
 	string pdbdir = "F:\\Code\\BbkTransfer\\pdbfiles\\pdbdata\\";		
-	string outputdir = "F:\\Code\\BbkDatabase\\tbl2_geo_measure_and_atom\\DataSets\\Version3\\01June20_2\\";
+	string outputdir = "F:\\Code\\BbkDatabase\\tbl2_geo_measure_and_atom\\DataSets\\Version4\\04June20_2\\";
 
 	bool runCore = true;
-	bool runExtra = true;
-	bool runAtoms = true;
+	bool runExtra = false;
+	bool runAtoms = false;
 
 	
 	
