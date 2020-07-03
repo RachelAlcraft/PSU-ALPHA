@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <filesystem>
 #include <PDBFile.h>
 #include <ProteinManager.h>
 #include <GeometricalDataReport.h>
@@ -16,18 +17,42 @@ int main()
 
 	// ***********************************************
 	// * USER UNPUT ******** 
-	vector<string> pdblists;
-	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_highres_90_annotated.csv");
-	pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_2019_95_annotated.csv");
-	//pdblists.push_back("list_test1.csv");
-	//pdblists.push_back("list_test2.csv");
+	vector<string> pdblists;		
 	
-	string pdbdir = "F:\\Code\\BbkTransfer\\pdbfiles\\pdbdata\\";		
-	string outputdir = "F:\\Code\\BbkDatabase\\tbl2_geo_measure_and_atom\\DataSets\\Version4\\04June20_2\\";
+	// EXTRA Set
+	pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\IN\\extra_yes_annotated0_0.csv");	
+	
+	// HIGH Set
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\IN\\high3_yes_annotated1_5.csv");	
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\IN\\high3_yes_annotated2_5.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\IN\\high3_yes_annotated3_5.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\IN\\high3_yes_annotated4_5.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\IN\\high3_yes_annotated5_5.csv");
+
+	// 2019 Set
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\2018_yes_annotated1_6.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\2018_yes_annotated2_6.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\2018_yes_annotated3_6.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\2018_yes_annotated4_6.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\2018_yes_annotated5_6.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\2018_yes_annotated6_6.csv");
+
+	// 2018 Set
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\2018_yes_annotatedA.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\2018_yes_annotatedB.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\2018_yes_annotatedC.csv");
+	//pdblists.push_back("F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\2018_yes_annotatedD.csv");
+	
+	vector<string> existslists;
+	//existslists.push_back("F:\\Code\\BbkDatabase_notsynched\\tbl2_geo_measure_and_atom\\DataSets\\Version5\\12Jun20\\");
+	//existslists.push_back("F:\\Code\\BbkDatabase\\tbl2_geo_measure_and_atom\\DataSets\\Version5\\29Jun20\\");
+	
+	string pdbdir = "F:\\Code\\BbkTransfer\\pdbfiles\\pdbdata\\";			
+	string outputdir = "F:\\Code\\BbkDatabase\\tbl2_geo_measure_and_atom\\DataSets\\Version5\\29Jun20\\";
 
 	bool runCore = true;
 	bool runExtra = false;
-	bool runAtoms = false;
+	bool runAtoms = true;
 
 	
 	
@@ -40,7 +65,7 @@ int main()
 	string calclist = outputdir + "GeoCalc.csv";		
 	string aadata = "F:\\PSUA\\Code\\PSU-ALPHA\\Config\\data_aminoinfo.csv";
 	
-	bool success = LogFile::getInstance()->setLogFile("logger.txt", "");
+	bool success = LogFile::getInstance()->setLogFile("logger.txt", outputdir);
 	LogFile::getInstance()->writeMessage("********** Starting Geometry calculations for PSU-BETA **************");
 	
 	ProteinManager::getInstance()->createAminoAcidData(aadata);
@@ -59,23 +84,50 @@ int main()
 		for (unsigned int i = 1; i < pdblistfile.fileVector.size(); ++i)
 		{
 			string pdb = pdblistfile.fileVector[i][0];
-			//if(pdb == "6V98")
+
+			stringstream ss;
+			ss << "----- " << p << " / " << pdblists.size() << " ---- " << i << " / " << pdblistfile.fileVector.size() << " --- " << pdb << "--------";
+			LogFile::getInstance()->writeMessage(ss.str());
+
+			//if the pdb has already been calculated then we don;t want to do it again
+			bool notExists = true;
+			if (existslists.size() > 0)
 			{
-				stringstream ss;
-				ss << "-----" << i << " -" << pdb << "--------";
-				LogFile::getInstance()->writeMessage(ss.str());
-
+				for (unsigned int e = 0; e < existslists.size(); ++e)
+				{
+					string pdbResult = existslists[e] + "core\\" + pdb + "_A_cgeo.txt";
+					CSVFile pdblistfile(pdbResult, ",", false);
+					if (pdblistfile.exists)
+					{
+						notExists = false;
+						LogFile::getInstance()->writeMessage("....... Exists " + pdb);
+					}
+				}
+			}
+			
+			//if(pdb == "1DG6")
+			//if(i > 1459)
+			if (notExists)
+			{				
 				//string pdb = "3BVX";
-				PDBFile* pdbf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, pdbdir + pdb + ".pdb");
-				pdbf->loadData();
-				pdbf->loadAtoms();
-				pdbf->loadBonds();
-
-				gdr.printReport(pdbf, outputdir, runCore, runExtra, runAtoms);
-				ProteinManager::getInstance()->deletePdbs();//keep memory clear
+				CSVFile pdbfile(pdbdir + pdb + ".pdb", ",", false);
+				if (pdbfile.exists)
+				{
+					PDBFile* pdbf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, pdbdir + pdb + ".pdb");
+					pdbf->loadData();
+					pdbf->loadAtoms();
+					pdbf->loadBonds();
+					gdr.printReport(pdbf, outputdir, runCore, runExtra, runAtoms);
+					ProteinManager::getInstance()->deletePdbs();//keep memory clear		
+				}
+				else
+				{
+					LogFile::getInstance()->writeMessage("....No pdb file " + pdb);
+				}
 			}
 		}
 	}
+	LogFile::getInstance()->writeMessage("Completed");
 	cout << "Finished";    
 }
 

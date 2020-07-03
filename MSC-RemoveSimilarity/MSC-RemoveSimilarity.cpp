@@ -25,16 +25,26 @@ The files are taken from: https://www.rcsb.org/pages/general/summaries and https
 using namespace std;
 
 int main()
-{	
+{
+	// ***  USER INPUT *********************************************************
 	string inputPath = "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-RemoveSimilarity\\";
 
-	string inputname = "pdb2019.csv";
-	string outputname = "2019nonsimall.csv";
+	string inputname = "rcsb_pdb_ids_2018.txt";
+	string outputname = "2018_nonsim.csv";
+	string rejectedname = "2018_sim.csv";
+	double resolutionlimit = 0; // 0 for no limit
+
+	// *************************************************************************
+	DataFrame data_rejected(inputPath + rejectedname);
+	data_rejected.headerVector.push_back("PDB");
+	data_rejected.headerVector.push_back("RES");
+	data_rejected.headerVector.push_back("SIM");
+	data_rejected.headerVector.push_back("SIMRES");
 
 	cout << "Load the files\n";
-	//CSVFile sim100(inputPath + "bc-100.out", " ", true);
-	//CSVFile sim95(inputPath + "bc-95.out", " ", true);
-	//CSVFile sim90(inputPath + "bc-90.out", " ", true);
+	CSVFile sim100(inputPath + "bc-100.out", " ", true);
+	CSVFile sim95(inputPath + "bc-95.out", " ", true);
+	CSVFile sim90(inputPath + "bc-90.out", " ", true);
 	CSVFile pdblist(inputPath + inputname, ",", true);
 	//CSVFile entries(inputPath + "entries.idx","\t");
 	CSVFile cmpd_res(inputPath + "cmpd_res.idx", ";", true);
@@ -68,7 +78,7 @@ int main()
 	vector<CSVFile> simFiles;
 	//simFiles.push_back(sim100);
 	//simFiles.push_back(sim95);
-	//simFiles.push_back(sim90);
+	simFiles.push_back(sim90);
 	vector<string> remove_pdb;
 	for (unsigned int s = 0; s < simFiles.size(); ++s)
 	{
@@ -87,17 +97,82 @@ int main()
 			{
 				string pdb = this_row[j]; // but this is a chain, I want just the pdb
 				this_pdb = pdb.substr(0, 4);
+
+				if (this_pdb == "3O4P") // then I want a break point to investigate
+				{
+					int i = 0;
+					i = i + 1;
+				}
 			
 				if (pdb_res.find(this_pdb) != pdb_res.end())
 				{
 					double res = pdb_res[this_pdb];
-					if (res < high_res) // then we want this not the one currently saved
+					if (res == 0)
 					{
-						if (high_pdb != "")
+						// then we don't want it, ir probably is not good data
+						if (std::find(remove_pdb.begin(), remove_pdb.end(), high_pdb) == remove_pdb.end())
+						{
+							if (pdblist.in(this_pdb)) //only include those in our candiate list
+							{
+								vector<string> observation;
+								observation.push_back(this_pdb);
+								stringstream ss;
+								ss << setprecision(4);
+								ss << res;
+								observation.push_back(ss.str());
+								observation.push_back("ZERO");
+								observation.push_back("");
+								data_rejected.fileVector.push_back(observation);
+							}
+
+							remove_pdb.push_back(this_pdb);
+						}
+
+					}
+					else if (resolutionlimit > 0 && res > resolutionlimit)
+					{
+						// then we don't want it
+						if (std::find(remove_pdb.begin(), remove_pdb.end(), high_pdb) == remove_pdb.end())
+						{
+							if (pdblist.in(this_pdb)) //only include those in our candiate list
+							{
+								vector<string> observation;
+								observation.push_back(this_pdb);
+								stringstream ss;
+								ss << setprecision(4);
+								ss << res;
+								observation.push_back(ss.str());
+								observation.push_back("LIMIT");
+								observation.push_back("");
+								data_rejected.fileVector.push_back(observation);
+							}
+
+							remove_pdb.push_back(this_pdb);
+						}
+					}
+					if (res <= high_res) // then we want this not the one currently saved
+					{
+						if (high_pdb != "" && high_pdb != this_pdb)
 						{
 							//cout << "excluding " << highpdb << ":" << highres << " in favour of " << pdb << ":" << res << "\n";							
 							if (std::find(remove_pdb.begin(), remove_pdb.end(), high_pdb) == remove_pdb.end())
 							{
+								if (pdblist.in(high_pdb)) //only include those in our candiate list
+								{
+									vector<string> observation;
+									observation.push_back(high_pdb);
+									stringstream ss;
+									ss << setprecision(4);
+									ss << res;
+									stringstream ssh;
+									ssh << setprecision(4);
+									ssh << high_res;
+									observation.push_back(ssh.str());
+									observation.push_back(this_pdb);
+									observation.push_back(ss.str());
+									data_rejected.fileVector.push_back(observation);
+								}
+
 								remove_pdb.push_back(high_pdb);
 							}
 						}
@@ -106,20 +181,46 @@ int main()
 						high_pdb = this_pdb;
 
 					}
-					else // we want to get rid of this one
+					
+					/*else // we want to get rid of this one
 					{
-						//cout << "excluding " << pdb << ":" << res << " in favour of " << highpdb << ":" << highres << "\n";
-						if (std::find(remove_pdb.begin(), remove_pdb.end(), this_pdb) == remove_pdb.end())
+						if (high_pdb != this_pdb)
 						{
-							remove_pdb.push_back(this_pdb);
+							//cout << "excluding " << pdb << ":" << res << " in favour of " << highpdb << ":" << highres << "\n";
+							if (std::find(remove_pdb.begin(), remove_pdb.end(), this_pdb) == remove_pdb.end())
+							{
+								if (pdblist.in(this_pdb)) //only include those in our candiate list
+								{
+									vector<string> observation;
+									observation.push_back(this_pdb);
+									stringstream ss;
+									ss << setprecision(2);
+									ss << res;									
+									observation.push_back(ss.str());
+									observation.push_back(high_pdb);
+									data_rejected.fileVector.push_back(observation);
+								}
+
+								remove_pdb.push_back(this_pdb);
+							}
 						}
-					}
+					}*/
 				}
 				else
 				{
 					//is it safest to remove this then if there is no resolution? Most likely not x-ray.
 					if (std::find(remove_pdb.begin(), remove_pdb.end(), this_pdb) == remove_pdb.end())
 					{
+						if (pdblist.in(this_pdb)) //only include those in our candiate list
+						{
+							vector<string> observation;
+							observation.push_back(this_pdb);
+							observation.push_back("NONE");
+							observation.push_back(high_pdb);
+							observation.push_back("");
+							data_rejected.fileVector.push_back(observation);
+						}
+
 						remove_pdb.push_back(this_pdb);
 					}
 				}
@@ -142,20 +243,30 @@ int main()
 		string pdb = iter->first;
 		double res = iter->second;
 
-		if (pdblist.in(pdb)) //only include tose in our candiate list
+		if (pdb == "1PJX") // then I want a break point to investigate
 		{
-			//check if it is in the delete list
-			if (std::find(remove_pdb.begin(), remove_pdb.end(), pdb) == remove_pdb.end())
-			{
-				//then add it to our list
-				vector<string> observation;
-				observation.push_back(pdb);
-				stringstream ss;
-				ss << setprecision(2);
-				ss << res;
-				observation.push_back(ss.str());
-				data_nonsim.fileVector.push_back(observation);
+			int i = 0;
+			i = i + 1;
+		}
 
+		if (resolutionlimit == 0 || (resolutionlimit > 0 && res <= resolutionlimit))
+		{
+			if (pdblist.in(pdb)) //only include those in our candiate list
+			{
+				//check if it is in the delete list
+				//if (remove_pdb.find(pdb) == remove+pdb.end())
+				if (std::find(remove_pdb.begin(), remove_pdb.end(), pdb) == remove_pdb.end())
+				{
+					//then add it to our list
+					vector<string> observation;
+					observation.push_back(pdb);
+					stringstream ss;
+					ss << setprecision(4);
+					ss << res;
+					observation.push_back(ss.str());
+					data_nonsim.fileVector.push_back(observation);
+
+				}
 			}
 		}
 	}
@@ -163,6 +274,7 @@ int main()
 	//finally print the list of pdb files that are high res and not 100% sequence similar
 	cout << "Now print\n";
 	data_nonsim.print();
+	data_rejected.print();
 
 
 

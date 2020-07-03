@@ -21,23 +21,25 @@ Also: How many chains, whether there are small molecules
 int main()
 {
 	/*
-	This runs in 2 sections because of memroty problems which I will fix another time!
+	This runs in 2 sections because of memory problems which I will fix another time!
 	*/
 
-	//string set_label = "HIGHRES";
-	string runID = "X";
+	//string set5label = "HIGHRES";
+	int runID = 0;
+	int runOf = 0;
+	stringstream ss;
+	ss << runID << "_" << runOf;
+	string runIDx = ss.str();
 
 	//string filePath = "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-RemoveSimilarity\\";
 	
-	// USER UBNPOUT FILE PATHS AND NAMES
-	//string inputname = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_HighRes_90.csv";
-	//string outputname = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_HighRes_90_annotated";
+	// USER UBNPOUT FILE PATHS AND NAMES	
+	string inputname = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\nonsim_lists\\extra_nonsim.csv";
+	string outputnameYes = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\IN\\extra_yes_annotated";
+	string outputnameNo = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\OUT\\extra_no_annotated";
 
-	string inputname = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_2019_95.csv";
-	string outputname = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_2019_95_annotated";
-
-	//string inputname = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_2018_95.csv";
-	//string outputname = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\list_2018_95_annotated";
+	bool outputIN = true;
+	bool outputOUT = true;
 		
 	string pdbdir = "F:\\Code\\BbkTransfer\\pdbfiles\\pdbdata\\";
 
@@ -45,216 +47,251 @@ int main()
 
 	// CODE BEGINS
 	
-	string annPDBFile = outputname + runID + ".csv";
+	string annPDBFileYes = outputnameYes + runIDx + ".csv";
+	string annPDBFileNo = outputnameNo + runIDx + ".csv";
 
 	CSVFile inPDBs(inputname, ",", true);
-	DataFrame annPDBs(annPDBFile);
+	DataFrame annPDBsYes(annPDBFileYes);
+	DataFrame annPDBsNo(annPDBFileNo);
 	
-	bool success = LogFile::getInstance()->setLogFile("logger.txt", "");
+	bool success = LogFile::getInstance()->setLogFile("logger.txt", "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\");
 	
 	ProteinManager::getInstance()->createAminoAcidData(aadata);
 	
+	vector<string> headerVector;
 
-	annPDBs.headerVector.push_back("PDB"); //pdb code
-	annPDBs.headerVector.push_back("RES"); //the resolution
-	annPDBs.headerVector.push_back("CLASS"); //header class
-	annPDBs.headerVector.push_back("COMPLEX"); //is the structure a complex?
-	annPDBs.headerVector.push_back("RVALUE"); // the r value
-	annPDBs.headerVector.push_back("RFREE");  // the r free value
-	annPDBs.headerVector.push_back("OCCUPANCY"); //any atoms with occupancy less than 1?
-	annPDBs.headerVector.push_back("BFACTOR"); //is there ever a b factor > 30? Y or N
-	annPDBs.headerVector.push_back("HYDROGENS"); //level of detail of resolution such that hydrogen atoms are in the pdb structure
-	annPDBs.headerVector.push_back("STRUCFAC"); //are there structure factors in the pdb
-	annPDBs.headerVector.push_back("CHAINS"); //How many chains
-	annPDBs.headerVector.push_back("RESIDUES"); //how many residies
-	annPDBs.headerVector.push_back("NUCLEOTIDES"); //how many nucleotides
-	annPDBs.headerVector.push_back("DATE"); //what date was it deposited
-	annPDBs.headerVector.push_back("INSTITUTION"); //who deposited it
-	annPDBs.headerVector.push_back("SOFTWARE"); //how was it refined?
-	annPDBs.headerVector.push_back("SEQUENCE"); //how was it refined?
-	annPDBs.headerVector.push_back("EXPMETHOD"); //always xray
+	headerVector.push_back("PDB"); //pdb code
+	headerVector.push_back("RES"); //the resolution
+	headerVector.push_back("CLASS"); //header class
+	headerVector.push_back("COMPLEX"); //is the structure a complex?
+	headerVector.push_back("RVALUE"); // the r value
+	headerVector.push_back("RFREE");  // the r free value
+	headerVector.push_back("OCCUPANCY"); //any atoms with occupancy less than 1?
+	headerVector.push_back("BFACTOR"); //is there ever a b factor > 30? Y or N
+	headerVector.push_back("HYDROGENS"); //level of detail of resolution such that hydrogen atoms are in the pdb structure
+	headerVector.push_back("STRUCFAC"); //are there structure factors in the pdb
+	headerVector.push_back("CHAINS"); //How many chains
+	headerVector.push_back("RESIDUES"); //how many residies
+	headerVector.push_back("NUCLEOTIDES"); //how many nucleotides
+	headerVector.push_back("DATE"); //what date was it deposited
+	headerVector.push_back("INSTITUTION"); //who deposited it
+	headerVector.push_back("SOFTWARE"); //how was it refined?
+	headerVector.push_back("SEQUENCE"); //how was it refined?
+	headerVector.push_back("EXPMETHOD"); //always xray
+	headerVector.push_back("NEGATIVE"); //are there any negatiove amino acid numbers
+	headerVector.push_back("BREAKS"); //are there any breaks in the amino numbering
+	headerVector.push_back("NCS"); // does it have the NCS model setting
+	headerVector.push_back("IDENTICALS"); // are the chains all identical
+
 	//annPDBs.headerVector.push_back("STATUS"); //NA here comments can be annoted later
 
-	for (unsigned int i = 1; i < inPDBs.fileVector.size(); ++i)
+	if (outputIN)
+	{
+		annPDBsYes.print(); // this clears it
+		annPDBsYes.headerVector = headerVector;
+	}
+	if (outputOUT)
+	{
+		annPDBsNo.print(); // this clears it
+		annPDBsNo.headerVector = headerVector;
+	}
+
+	unsigned int start = 0;
+	unsigned int end = inPDBs.fileVector.size();
+
+	if (runID > 0)
+	{
+		int bit = int(end / runOf);
+		start = (runID - 1) * bit;
+		end = bit * runID;
+		if (runID == runOf)
+			end = inPDBs.fileVector.size();
+	}
+	
+	for (unsigned int i = start; i < end; ++i)
 	{
 		vector<string> observation;
 		string pdb = inPDBs.fileVector[i][0];
 
-		//if (pdb == "6JX3")
+		//if (pdb == "6J6V")
 		{
 
-			/* shall we run this pdb?*/
-			bool shallRun = false;
-			string pdbNum = pdb.substr(0, 1);
-			if (runID == "A")
+			
+			//string res = inPDBs.fileVector[i][1];
+			// header problems mneans I cannot actually use my pdb class or the whole project stops building, needs fixing TODO
+			CSVFile pdbfile(pdbdir + pdb + ".pdb", "@", true); //dummy seperator as I want the whole line
+			CSVFile structurefile(pdbdir + pdb + "-sf.cif", "@", false); //dummy seperator only checking file exists
+			string sf = structurefile.exists ? "Y" : "N";
+
+			string res = "NA";
+			string rval = "NA";
+			string rfree = "NA";
+			string occ = "NA";
+			string bfactor = "NA";
+			string hyd = "NA";
+			string chains = "NA";
+			string name = "NA";
+			string complex = "NA";
+			string residues = "NA";
+			string nucleotides = "NA";
+			string date = "NA";
+			string institution = "NA";
+			string software = "NA";
+			string sequence = "NA";
+			string negative = "NA";
+			string breaks = "NA";
+			string ncs = "NA";
+			string identicals = "NA";
+			unsigned int iresidues = 0;
+			int inucleotides = 0;
+
+			/*
+			HEADER    OXIDOREDUCTASE                          17-SEP-98   1BVR
+			COMPND   3 CHAIN: A, B, C, D, E, F;
+			REMARK   3   R VALUE            (WORKING SET) : 0.161
+			REMARK   3   FREE R VALUE                     : 0.178
+			*/
+			stringstream ss;
+			ss << "Annotating " << pdb << " " << i << "/" << end;
+			LogFile::getInstance()->writeMessage(ss.str());
+			//if (true)
+			//{			
+
+
+			//}
+			if (pdbfile.exists)
 			{
-				if (pdbNum == "1" || pdbNum == "2" || pdbNum == "3")
-					shallRun = true;
-			}
-			if (runID == "B")
-			{
-				if (pdbNum == "4" || pdbNum == "5" || pdbNum == "6" || pdbNum == "7")
-					shallRun = true;
-			}
-			if (runID == "X")
-				shallRun = true;
-
-			if (shallRun)
-			{
-				string res = inPDBs.fileVector[i][1];
-				// header problems mneans I cannot actually use my pdb class or the whole project stops building, needs fixing TODO
-				CSVFile pdbfile(pdbdir + pdb + ".pdb", "@", true); //dummy seperator as I want the whole line
-				CSVFile structurefile(pdbdir + pdb + "-sf.cif", "@", false); //dummy seperator only checking file exists
-				string sf = structurefile.exists ? "Y" : "N";
-
-				string rval = "NA";
-				string rfree = "NA";
-				string occ = "NA";
-				string bfactor = "NA";
-				string hyd = "NA";
-				string chains = "NA";
-				string name = "NA";
-				string complex = "NA";
-				string residues = "NA";
-				string nucleotides = "NA";
-				string date = "NA";
-				string institution = "NA";
-				string software = "NA";
-				string sequence = "NA";
-
-				/*
-				HEADER    OXIDOREDUCTASE                          17-SEP-98   1BVR
-				COMPND   3 CHAIN: A, B, C, D, E, F;
-				REMARK   3   R VALUE            (WORKING SET) : 0.161
-				REMARK   3   FREE R VALUE                     : 0.178
-				*/
-				stringstream ss;
-				ss << "Annotating " << pdb << " " << i;
-				LogFile::getInstance()->writeMessage(ss.str());
-				//if (true)
-				//{			
-
-
-				//}
-				if (pdbfile.exists)
-				{
-					//slowly put the functionality into the pdbfile class
-					PDBFile* pdbf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, pdbdir + pdb + ".pdb");
-					pdbf->loadData();
-					pdbf->loadAtoms();
+				//slowly put the functionality into the pdbfile class
+				PDBFile* pdbf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, pdbdir + pdb + ".pdb");
+				pdbf->loadData();
+				pdbf->loadAtoms();
 			
 
-					int inucleotides = pdbf->nucleotides;
-					stringstream ssnuc;
-					ssnuc << inucleotides;
-					nucleotides = ssnuc.str();
+				inucleotides = pdbf->nucleotides;
+				stringstream ssnuc;
+				ssnuc << inucleotides;
+				nucleotides = ssnuc.str();
 
 
-					//occupancy
-					bool occupancy = ProteinManager::getInstance()->hasOccupancy(pdb, "A");
-					occupancy ? occ = "Y" : occ = "N";
+				//occupancy
+				bool occupancy = ProteinManager::getInstance()->hasOccupancy(pdb, "A");
+				occupancy ? occ = "Y" : occ = "N";
 
-					//BFactor
-					double bf = ProteinManager::getInstance()->maxBFactor(pdb, "A");
-					stringstream ssbf;
-					ssbf.precision(5);
-					ssbf << bf;
-					bfactor = ssbf.str();
+				//BFactor
+				double bf = ProteinManager::getInstance()->maxBFactor(pdb, "A");
+				stringstream ssbf;
+				ssbf.precision(5);
+				ssbf << bf;
+				bfactor = ssbf.str();
 
-					//hydrogens - level of detail of resolution such that hydrogen atoms are in the pdb structure
-					bool hydrogens = ProteinManager::getInstance()->hasHydrogens(pdb, "A");
-					hydrogens ? hyd = "Y" : hyd = "N";
+				//hydrogens - level of detail of resolution such that hydrogen atoms are in the pdb structure
+				bool hydrogens = ProteinManager::getInstance()->hasHydrogens(pdb, "A");
+				hydrogens ? hyd = "Y" : hyd = "N";
 
-					institution = pdbf->institution;
-					software = pdbf->software;
+				institution = pdbf->institution;
+				software = pdbf->software;
 
-					bool nullmodel = pdbf->nullModel;
+				bool nullmodel = pdbf->nullModel;
 										
-					vector<string> seqs = pdbf->getSequence();
-					sequence = "";
-					bool differ = false;
-					unsigned int iresidues = 0;
-					for (unsigned int r = 0; r < seqs.size(); ++r)
-					{
-						if (seqs[r].length() > iresidues)
-							iresidues = seqs[r].length();
-					}
-					
-					for (unsigned int r = 0; r < seqs.size(); ++r)
-					{
-						if (r == 0)
-						{
-							sequence = seqs[r];
-						}
-						else
-						{
-							if (seqs[r] != sequence)
-								differ = true;
-						}												
-					}
-
-					sequence = "";
-					if (nullmodel || differ) //then they are independently verified chains or different
-					{
-						for (unsigned int r = 0; r < seqs.size(); ++r)						
-							sequence += seqs[r];						
-					}
-					else // all the chains are the same and we only want 1
-					{
-						if (seqs.size() > 0)
-							sequence = seqs[0];
-					}
-
-					//log any podb files that need chains removed
-					if (seqs.size() > 1)
-					{
-						if (!differ && !nullmodel)
-						{
-							LogFile::getInstance()->writeMessage("This structure has redundant chains");
-						}
-					}
-
-
-
-					stringstream ssres;
-					ssres << iresidues; // this is the max chain not the total residues
-					residues = ssres.str();
-
- 					rval = pdbf->rvalue;
-					rfree = pdbf->rfree;
-					chains = pdbf->maxChain();
-					name = pdbf->proteinclass;
-					complex = pdbf->inComplex;
-					date = pdbf->date;
+				vector<string> seqs = pdbf->getSequence();
+				sequence = "";
+				bool differ = false;					
+				for (unsigned int r = 0; r < seqs.size(); ++r)
+				{
+					if (seqs[r].length() > iresidues)
+						iresidues = seqs[r].length();
+					sequence += seqs[r];
 				}
+					
+				identicals = pdbf->identicalChains() ? "Y" : "N";
+				breaks = pdbf->hasBreaks() ? "Y" : "N";
+				negative = pdbf->hasNegativeAminos() ? "Y" : "N";										
+				ncs = pdbf->hasNCS() ? "Y" : "N";
+					
+				stringstream ssres;
+				ssres << iresidues; // this is the max chain not the total residues
+				residues = ssres.str();
 
-				observation.push_back(pdb);
-				observation.push_back(res);
-				observation.push_back(name);
-				observation.push_back(complex);
-				observation.push_back(rval);
-				observation.push_back(rfree);
-				observation.push_back(occ);
-				observation.push_back(bfactor);
-				observation.push_back(hyd);
-				observation.push_back(sf);
-				observation.push_back(chains);
-				observation.push_back(residues);
-				observation.push_back(nucleotides);
-				observation.push_back(date);
-				observation.push_back(institution);
-				observation.push_back(software);
-				observation.push_back(sequence);
-				observation.push_back("XR");
-				//observation.push_back(set_label);
-				annPDBs.fileVector.push_back(observation);
-
-				ProteinManager::getInstance()->deletePdbs();//keep memory clear
+ 				rval = pdbf->rvalue;
+				rfree = pdbf->rfree;
+				res = pdbf->resolution;
+				chains = pdbf->maxChain();
+				name = pdbf->proteinclass;
+				complex = pdbf->inComplex;
+				date = pdbf->date;
 			}
+
+			observation.push_back(pdb);
+			observation.push_back(res);
+			observation.push_back(name);
+			observation.push_back(complex);
+			observation.push_back(rval);
+			observation.push_back(rfree);
+			observation.push_back(occ);
+			observation.push_back(bfactor);
+			observation.push_back(hyd);
+			observation.push_back(sf);
+			observation.push_back(chains);
+			observation.push_back(residues);
+			observation.push_back(nucleotides);
+			observation.push_back(date);
+			observation.push_back(institution);
+			observation.push_back(software);
+			observation.push_back(sequence);
+			observation.push_back("XR");
+			observation.push_back(negative);
+			observation.push_back(breaks);
+			observation.push_back(ncs);
+			observation.push_back(identicals);
+			//observation.push_back(set_label);
+			//choose if in or out
+			bool bIn = true;
+			if (iresidues <= 30)
+				bIn = false;
+			if (inucleotides > 0)
+				bIn = false;
+			//if (breaks == "Y")
+			//	bIn = false;
+			//if (negative == "Y")
+			//	bIn = false;
+			//if (identicals == "Y" && ncs == "N")
+			//	bIn = false;
+
+			
+			if (bIn)
+			{
+				if (outputIN)
+					annPDBsYes.fileVector.push_back(observation);
+			}
+			else
+			{
+				if (outputOUT)
+					annPDBsNo.fileVector.push_back(observation);
+			}
+
+			ProteinManager::getInstance()->deletePdbs();//keep memory clear
+
+			//Every so often print out to file otherwise it gets too big
+			if (i % 100 == 0)
+			{
+				if (outputIN)
+					annPDBsYes.flush();
+				if (outputOUT)
+					annPDBsNo.flush();
+			}						
 		}
 	}
 	LogFile::getInstance()->writeMessage("Success, now printing");
-	annPDBs.print();
+	if (outputIN)
+	{
+		bool ok = annPDBsYes.flush();
+		cout << "Printed YES - " << (ok ? "OK" : "FAILED") << '/n';
+	}
+	if (outputOUT)
+	{
+		bool ok = annPDBsNo.flush();
+		cout << "Printed NO - " << (ok ? "OK" : "FAILED") << '/n';
+	}
 }
 
 

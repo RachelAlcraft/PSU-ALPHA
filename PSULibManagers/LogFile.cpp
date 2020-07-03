@@ -40,6 +40,7 @@ void LogFile::writeMessage(string msg)
 	{
 		myfile << message.str();
 	}
+	myfile.close();
 
 }
 
@@ -50,9 +51,9 @@ string LogFile::runId()
 
 bool LogFile::setLogFile(string fileName, string path)
 {	
-	_fileName = fileName;
+	_fileName = path + fileName;
 	//Now need to ensure there is a directory here
-	return CreateFolder(path.c_str());
+	return true;//CreateFolder(path.c_str());
 }
 
 

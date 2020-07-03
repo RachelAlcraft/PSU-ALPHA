@@ -19,5 +19,6 @@ public:
 public:
 	DataFrame(string filepath);
 	void print();
+	bool flush();
 };
 

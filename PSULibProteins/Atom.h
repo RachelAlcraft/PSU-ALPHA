@@ -12,7 +12,7 @@ class Atom
 public: //public struct
 	//unique
 	string dataId;
-	int atomId;
+	int atomId = 0;
 	string elementName;
 	string elementType;
 	string occupant;

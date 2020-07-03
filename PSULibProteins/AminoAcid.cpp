@@ -63,10 +63,10 @@ AminoAcid::~AminoAcid()
 	for (map<string, Atom*>::iterator iter = _atoms.begin(); iter != _atoms.end(); ++iter)
 	{
 		//possibly atoms can live in multiple places due to occupancy...
-		//if (iter->second)
-		//	delete iter->second;
+		if (iter->second)
+			delete iter->second;
 	}
-	//_atoms.clear();
+	_atoms.clear();
 }
 
 /*void AminoAcid::createBondsFromGeoDef(AminoAcid* aaP, AminoAcid* aaPP, GeoDataReport& gdr)
@@ -101,9 +101,9 @@ void AminoAcid::createBonds(AminoAcid* aaP, AminoAcid* aaPP)
 	}
 	else
 	{		
-		stringstream ss;
-		ss << "No backbone - chain end :AA=" << aminoCode << " Id=" << aminoId;
-		LogFile::getInstance()->writeMessage(ss.str());
+		//stringstream ss;
+		//ss << "No backbone - chain end :AA=" << aminoCode << " Id=" << aminoId;
+		//LogFile::getInstance()->writeMessage(ss.str());
 	}
 
 	vector<vector<Atom*>> sidechains;

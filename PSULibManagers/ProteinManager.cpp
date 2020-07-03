@@ -167,31 +167,40 @@ AminoAcid* ProteinManager::getOrAddAminoAcid(string pdbCode, string occupant, st
 		PDBFile* pdb = _pdbfiles[pdbCode];
 		ProteinStructure* ps = pdb->getStructureVersion(occupant);
 		Chain* chain = ps->getChain(chainId);
-		if (chain && aminoCode != "UNK")
+		
+		if (aminoId > 0)
 		{
-			AminoAcid* aa = chain->getAminoAcid(aminoId);
-			if (!aa)
+			if (chain && aminoCode != "UNK")
 			{
-				structure_id += 1;
-				AminoAcid* aa = new AminoAcid(pdbCode, chainId, aminoId, structure_id, aminoCode);
-				chain->addAminoAcid(aa);
-				//++residuenum;
-				return aa;
+				AminoAcid* aa = chain->getAminoAcid(aminoId);
+				if (!aa)
+				{
+					structure_id += 1;
+					AminoAcid* aa = new AminoAcid(pdbCode, chainId, aminoId, structure_id, aminoCode);
+					chain->addAminoAcid(aa);
+					//++residuenum;
+					return aa;
+				}
+				else
+				{
+					return aa;
+				}
 			}
 			else
 			{
-				return aa;
+				LogFile::getInstance()->writeMessage("Amino acid not found " + pdbCode + " " + aminoCode);
+				return nullptr;
 			}
 		}
 		else
 		{
-			LogFile::getInstance()->writeMessage("Amino acid not found " + pdbCode);
+			//LogFile::getInstance()->writeMessage("Negative or 0 amino number " + pdbCode);
 			return nullptr;
 		}
 	}
 	catch (...)
 	{
-		LogFile::getInstance()->writeMessage("Amino acid not found " + pdbCode);
+		LogFile::getInstance()->writeMessage("Amino acid not found " + pdbCode + " " + aminoCode);
 		return nullptr;
 	}
 	

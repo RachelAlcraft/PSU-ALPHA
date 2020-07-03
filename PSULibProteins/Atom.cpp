@@ -45,7 +45,10 @@ Atom::Atom(string pdb_code, string atom_string)
 	bfactor = atof(bfac.c_str());
 
 	//77 - 78        LString(2)    element      Element symbol, right-justified.
-	elementType = StringManip::trim(atom_string.substr(76, 2));
+	if (atom_string.length() > 76)
+		elementType = StringManip::trim(atom_string.substr(76, 2));
+	else
+		elementType = "";
 
 	stringstream di;
 	di << pdbCode << chainId << aminoId;
@@ -147,6 +150,7 @@ AtomGeo::AtomGeo()
 {
 	_A1 = nullptr;
 	_A2 = nullptr;
+	_aminoId = 0;
 }
 AtomBond::AtomBond(string aCode, string chain, int aId, string ss, Atom* a1, Atom* a2, string geo, string alias,string geotype) :AtomGeo()
 {

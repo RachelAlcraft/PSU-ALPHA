@@ -1,9 +1,7 @@
-﻿  CSVFile.cpp
-  FoldersFiles.cpp
-  StringManip.cpp
+﻿  DataFrame.cpp
   Generating code
-  0 of 581 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  0 of 617 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    7 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   MSC-RemoveSimilarity.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Release\MSC-RemoveSimilarity.exe

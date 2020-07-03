@@ -10,11 +10,16 @@ ProteinStructure::ProteinStructure(string pdb_code, string occupant_id)
 
 ProteinStructure::~ProteinStructure()
 {
+	map<int, Atom*> atoms = getAtoms(pdbCode);
+			
 	for (map<string, Chain*>::iterator iter = _chains.begin(); iter != _chains.end(); ++iter)
 	{
 		Chain* chain = iter->second;
 		delete chain;
 	}
+	//a check that we did delete everything
+	for (map<int, Atom*>::iterator iter = atoms.begin(); iter != atoms.end(); ++iter)
+		delete iter->second;
 }
 
 Chain* ProteinStructure::getChain(string chainId)
@@ -43,6 +48,19 @@ void ProteinStructure::addChain(Chain* ch)
 	map<string, Chain*>::iterator iter = _chains.find(ch->chainId);
 	if (iter == _chains.end())
 		_chains.insert(pair<string, Chain*>(ch->chainId, ch));
+}
+
+void ProteinStructure::removeChain(string chL)
+{
+	map<string, Chain*> copyCh;
+	
+	for (map<string, Chain*>::iterator iter = _chains.begin(); iter != _chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		if (chL != iter->second->chainId)
+			copyCh.insert(pair<string, Chain*>(ch->chainId, ch));
+	}
+	_chains = copyCh;
 }
 
 void ProteinStructure::applyTransformation(GeoTransformations* trans)

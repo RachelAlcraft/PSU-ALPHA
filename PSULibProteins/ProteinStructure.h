@@ -30,6 +30,7 @@ public:
 	Chain* getChain(string chainId);
 	map<int, Atom*> getAtoms(string pdbCode);
 	void addChain(Chain* ch);
+	void removeChain(string ch);
 	void applyTransformation(GeoTransformations* trans);	
 	string getSequence();
 	void removeRepeatedChains();

@@ -27,6 +27,7 @@ public:
 	string proteinclass;
 	string rvalue;
 	string rfree;	
+	string resolution;
 	string inComplex;
 	bool nullModel;
 //3 stages of initiation
@@ -38,6 +39,10 @@ public:
 private:
 	//map<string, Chain*> _chains;
 	map<string, ProteinStructure*> _proteinVersions;
+	bool idChains = false;
+	bool breaks = false;
+	bool negAminos = false;
+	bool NCS = false;
 
 public:
 	PDBFile(string,string);
@@ -48,6 +53,7 @@ public:
 	void addStructureVersion(string occupant);
 	void removeStructureVersion(string occupant);
 	map<string, ProteinStructure*> getStructureVersions() { return _proteinVersions; }
+	bool areChainsIdentical();
 	//map<string, Chain*> getChains() { return _chains; }
 	//Chain* getChain(string chainId);
 	//map<int, Atom*> getAtoms(string pdbCode);
@@ -62,6 +68,10 @@ public:
 	vector<string> getSequence();
 	string maxChain();
 	void removeRepeatedChains();
+	bool identicalChains() { return idChains; }
+	bool hasBreaks() { return breaks; }
+	bool hasNegativeAminos() { return negAminos; }
+	bool hasNCS() { return NCS; }
 	
 
 	
@@ -70,6 +80,8 @@ public:
 private:
 	void createFileVector();
 	void prepareStructureVersions();
+	void areBreaks();
+	void keepOnlyChainA();
 	
 	
 

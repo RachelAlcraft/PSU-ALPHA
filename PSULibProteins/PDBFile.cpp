@@ -27,18 +27,23 @@ PDBFile::PDBFile(string filename, string pdb_code)
 
 PDBFile::~PDBFile()
 {
+	bool bFirst = true; // only delete the first structure as atoms are shared. Some occupant ataoms will not be cleared...
 	for (map<string, ProteinStructure*>::iterator iter = _proteinVersions.begin(); iter != _proteinVersions.end(); ++iter)
 	{
-		delete iter->second;
+		if (bFirst)
+			delete iter->second;
+		bFirst = false;
 	}
 	_proteinVersions.clear();
+	_file.clear();
 }
 
 void PDBFile::loadData()
 {	
 	createFileVector();	
-	structureInfo();
-	loadedText = true;
+	if (loadedText)
+		structureInfo();
+	
 }
 
 void PDBFile::structureInfo()
@@ -48,10 +53,10 @@ void PDBFile::structureInfo()
 	*/
 	rvalue = "NULL";
 	rfree = "NULL";
+	resolution = "NULL";
 	inComplex = "N";
 	institution = "";
-	nullModel = false;
-	
+		
 	for (unsigned int i = 0; i < _file.size(); ++i)
 	{
 		string line = _file[i];
@@ -62,6 +67,7 @@ void PDBFile::structureInfo()
 		int posRF = line.find("3   FREE R VALUE     ");
 		int posT = line.find("TITLE");	
 		int posM = line.find("NCS MODEL : NULL");
+		int posRes = line.find("REMARK   2 RESOLUTION."); //REMARK   2 RESOLUTION.    1.07 ANGSTROMS.
 		if (i == 0)//header row has date and class in fixed positions
 		{
 			proteinclass = StringManip::removeChar(StringManip::trim(line.substr(10, 40)),","," ");
@@ -94,6 +100,13 @@ void PDBFile::structureInfo()
 					rfree = StringManip::trim(rvec[1]);
 			}
 		}		
+		else if (posRes >= 0)
+		{
+			if (resolution == "NULL")
+			{
+				resolution = StringManip::trim(line.substr(25, 6));
+			}
+		}
 		else if (posT >= 0 && inComplex == "N")
 		{
 			int pos6 = line.find("COMPLEX");
@@ -102,7 +115,7 @@ void PDBFile::structureInfo()
 		else if (posM >= 0)
 		{
 			LogFile::getInstance()->writeMessage("NCS Model=TRUE");
-			nullModel = true;
+			NCS = true;
 		}
 	}	
 }
@@ -182,19 +195,29 @@ void PDBFile::loadAtoms()
 	
 
 	loadedAminos = true;
-	
+
+	//some integrity checks on the data
+	idChains = areChainsIdentical();
+	if (idChains && !NCS)
+		keepOnlyChainA();
+	areBreaks();	
 }
 void PDBFile::loadBonds()
 {
 	addLinks();
 	loadedBonds = true;
 	loadedTorsions = true;
-	vector<string> seqs = getSequence();
+	
+}
+
+bool PDBFile::areChainsIdentical()
+{
+	bool idCh = false;
+	vector<string> seqs = getSequence();	
 	if (seqs.size() > 1)
 	{
-		//if the chains are not independently verified and are all the same then keep only the first
-		string sequence = "";
 		bool differ = false;
+		string sequence = "";
 		for (unsigned int r = 0; r < seqs.size(); ++r)
 		{
 			if (r == 0)
@@ -202,21 +225,11 @@ void PDBFile::loadBonds()
 			else if (seqs[r] != sequence)
 				differ = true;
 		}
-		if (!differ)
-		{
-			if (!nullModel)
-			{
-				LogFile::getInstance()->writeMessage("Identical chains with no NCS setting present");
-				removeRepeatedChains();
-			}
-			else
-			{
-				LogFile::getInstance()->writeMessage("Identical chains but NCS setting present");
-			}
-		}
-		
+		idCh = !differ;
 	}
+	return idCh;
 }
+
 void PDBFile::loadTorsions()
 {//currently done as paert of loadBonds
 }
@@ -289,7 +302,7 @@ string PDBFile::getFileString()
 
 void PDBFile::createFileVector()
 {
-
+	loadedText = false;
 	ifstream myfile(_filename);
 	try
 	{
@@ -305,6 +318,7 @@ void PDBFile::createFileVector()
 
 			}
 			myfile.close();
+			loadedText = true;
 		}		
 	}
 	catch(...)
@@ -323,6 +337,7 @@ void PDBFile::createFileVector()
 						_file.push_back(line);
 				}
 				myfile.close();
+				loadedText = true;
 			}
 		}
 		catch (...)
@@ -336,37 +351,92 @@ void PDBFile::prepareStructureVersions()
 {
 }
 
+void PDBFile::keepOnlyChainA()
+{
+	for (map<string, ProteinStructure*>::iterator iterp = _proteinVersions.begin(); iterp != _proteinVersions.end(); ++iterp)
+	{
+		string occupant = iterp->first;
+		ProteinStructure* ps = iterp->second;
+		map<string, Chain*> chains = ps->getChains();
+		vector<string> letters;
+		for (map<string, Chain*>::iterator iterc = chains.begin(); iterc != chains.end(); ++iterc)
+		{
+			Chain* chain = iterc->second;
+			letters.push_back(chain->chainId);						
+		}
+		for (unsigned int i = 1; i < letters.size(); ++i) // or, keep only the first chain
+			ps->removeChain(letters[i]);
+	}
+}
+
+void PDBFile::areBreaks()
+{	
+	for (map<string, ProteinStructure*>::iterator iterp = _proteinVersions.begin(); iterp != _proteinVersions.end(); ++iterp)
+	{
+		string occupant = iterp->first;
+		ProteinStructure* ps = iterp->second;
+		map<string, Chain*> chains = ps->getChains();
+		for (map<string, Chain*>::iterator iterc = chains.begin(); iterc != chains.end(); ++iterc)
+		{
+			Chain* chain = iterc->second;
+			map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdbCode, occupant, chain->chainId);
+			int last_no = 0;
+			for (map<int, AminoAcid*>::iterator iteraa = aminos.begin(); iteraa != aminos.end(); ++iteraa)
+			{				
+				int amino_no = iteraa->first;
+				if (amino_no < 1)// 0 or below
+					negAminos = true;
+				else if ((amino_no - last_no) != 1 && last_no != 0)
+					breaks = true;
+				
+				last_no = amino_no;
+			}
+		}
+	}
+}
+
 void PDBFile::addLinks()
 {
-	for (map<string, ProteinStructure*>::iterator iter = _proteinVersions.begin(); iter != _proteinVersions.end(); ++iter)
+	for (map<string, ProteinStructure*>::iterator iterp = _proteinVersions.begin(); iterp != _proteinVersions.end(); ++iterp)
 	{
-		string occupant = iter->first;
-		ProteinStructure* ps = iter->second;		
+		string occupant = iterp->first;
+		ProteinStructure* ps = iterp->second;		
 		map<string, Chain*> chains = ps->getChains();
-		for (map<string, Chain*>::iterator iter = chains.begin(); iter != chains.end(); ++iter)
+		for (map<string, Chain*>::iterator iterc = chains.begin(); iterc != chains.end(); ++iterc)
 		{
-			Chain* chain = iter->second;
+			Chain* chain = iterc->second;
 			map<int, AminoAcid*> aminos = ProteinManager::getInstance()->getAminoAcids(pdbCode, occupant,chain->chainId);
 			AminoAcid* lastaa = NULL;
 			AminoAcid* nextaa = NULL;
+			int last_no = 0;
 			map<int, AminoAcid*>::iterator iteraa = aminos.begin();
-			while (iteraa != aminos.end())
+			while (iteraa != aminos.end())						
 			{
 				AminoAcid* aa = iteraa->second;
+				int amino_no = iteraa->first;
+				if ((amino_no - last_no) > 1 && last_no != 0)
+					breaks = true;
+				last_no = amino_no;
+
 				++iteraa;
 				if (iteraa != aminos.end())
 				{
 					nextaa = iteraa->second;
 					if (lastaa && iteraa != aminos.end())//For now ignore first and last of each chain as per chimera ramachandran plots
 					{
-						//aa->createBonds(lastaa, nextaa);
-						aa->createBonds(lastaa, nextaa);
+						// there might be chain breaks
+						AminoAcid* useLast = nullptr;
+						AminoAcid* useNext = nullptr;
+						if ((aa->aminoId - lastaa->aminoId) == 1)
+							useLast = lastaa;
+						if ((nextaa->aminoId - aa->aminoId) == 1)
+							useNext = nextaa;
+
+						aa->createBonds(useLast, useNext);
 						aa->createScoringAtoms();
 					}
 				}
-
 				lastaa = aa;
-
 			}
 		}
 	}
@@ -414,18 +484,21 @@ vector<string> PDBFile::getSequence()
 {
 	vector<string> sequences;
 	ProteinStructure* ps = getStructureVersion("A");
-	map<string, Chain*> chains = ps->getChains();
-	map<string, Chain*>::iterator iterch = chains.begin();
-	for (iterch; iterch != chains.end(); ++iterch)
+	if (ps != nullptr)
 	{
-		string chainseq = "";
-		map<int, AminoAcid*> aminos = iterch->second->getAminoAcids();
-		map<int, AminoAcid*>::iterator iteraa = aminos.begin();
-		for (iteraa; iteraa != aminos.end(); ++iteraa)
+		map<string, Chain*> chains = ps->getChains();
+		map<string, Chain*>::iterator iterch = chains.begin();
+		for (iterch; iterch != chains.end(); ++iterch)
 		{
-			chainseq += iteraa->second->AminoLetter;
+			string chainseq = "";
+			map<int, AminoAcid*> aminos = iterch->second->getAminoAcids();
+			map<int, AminoAcid*>::iterator iteraa = aminos.begin();
+			for (iteraa; iteraa != aminos.end(); ++iteraa)
+			{
+				chainseq += iteraa->second->AminoLetter;
+			}
+			sequences.push_back(chainseq);
 		}
-		sequences.push_back(chainseq);
 	}
 	return sequences;
 }

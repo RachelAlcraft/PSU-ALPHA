@@ -11,20 +11,4 @@
     <DECORATED>??$eigen_solution@V?$_Vector_iterator@V?$_Vector_val@U?$_Simple_types@N@std@@@std@@@std@@V12@V12@@btl@@YAXV?$_Vector_iterator@V?$_Vector_val@U?$_Simple_types@N@std@@@std@@@std@@0I00@Z</DECORATED>
     <FUNCLINE>430</FUNCLINE>
     <PATH></PATH>
-  </DEFECT><DEFECT>
-    <SFA>
-      <FILEPATH>F:\PSUA\Code\PSU-ALPHA\PSULibProteins\</FILEPATH>
-      <FILENAME>Atom.cpp</FILENAME>
-      <LINE>146</LINE>
-      <COLUMN>9</COLUMN>
-    </SFA>
-    <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'AtomGeo::_aminoId' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
-    <FUNCTION>AtomGeo::{ctor}</FUNCTION>
-    <DECORATED>??0AtomGeo@@QAE@XZ</DECORATED>
-    <FUNCLINE>146</FUNCLINE>
-    <ADDITIONALINFO>
-      <targetSymbol>AtomGeo::_aminoId</targetSymbol>
-    </ADDITIONALINFO>
-    <PATH></PATH>
   </DEFECT></DEFECTS>
