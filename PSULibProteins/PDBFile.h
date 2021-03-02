@@ -41,6 +41,7 @@ private:
 	map<string, ProteinStructure*> _proteinVersions;
 	bool idChains = false;
 	bool breaks = false;
+	bool insertions = false;
 	bool negAminos = false;
 	bool NCS = false;
 
@@ -70,6 +71,7 @@ public:
 	void removeRepeatedChains();
 	bool identicalChains() { return idChains; }
 	bool hasBreaks() { return breaks; }
+	bool hasInsertions();
 	bool hasNegativeAminos() { return negAminos; }
 	bool hasNCS() { return NCS; }
 	

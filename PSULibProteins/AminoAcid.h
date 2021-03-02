@@ -75,6 +75,7 @@ public:
 	vector<AtomBond> getAtomBonds() { return _bonds; }
 	vector<AtomAngle> getAtomAngles() { return _angles; }
 	vector<AtomTorsion> getAtomTorsions() { return _torsions; }
+	bool hasInsertions();
 //New GeoDefinitions
 	vector<AtomGeo*> getAtomDistance(vector<pair<string,string>> atoms,string geotype);
 	//vector<AtomGeo*> getAtomCAlphas(vector<string> atoms, string geotype);

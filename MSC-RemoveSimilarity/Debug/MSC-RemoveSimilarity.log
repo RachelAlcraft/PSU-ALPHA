@@ -1,2 +1,7 @@
-﻿  MSC-RemoveSimilarity.cpp
+﻿  CSVFile.cpp
+  DataFrame.cpp
+  FoldersFiles.cpp
+  StringManip.cpp
+  MSC-RemoveSimilarity.cpp
+  Generating Code...
   MSC-RemoveSimilarity.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Debug\MSC-RemoveSimilarity.exe

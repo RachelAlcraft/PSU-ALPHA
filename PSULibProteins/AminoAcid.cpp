@@ -426,6 +426,17 @@ void AminoAcid::createScoringAtoms()
 	}
 }
 
+bool AminoAcid::hasInsertions()
+{
+	bool bInsertions = false;
+	for (map<string, Atom*>::iterator iter = _atoms.begin(); iter != _atoms.end(); ++iter)
+	{		
+		if (iter->second)
+			bInsertions = bInsertions || iter->second->bInsertion;
+	}
+	return bInsertions;
+}
+
 //Geometric definitions features
 vector<AtomGeo*> AminoAcid::getAtomDistance(vector<pair<string, string>> atoms, string geotype)
 {

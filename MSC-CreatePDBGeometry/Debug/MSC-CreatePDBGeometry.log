@@ -1,4 +1,41 @@
-﻿  MSC-CreatePDBGeometry.cpp
-  The contents of <filesystem> are only available with C++17 or later.
+﻿  LeastSquares.cpp
+  RMSD.cpp
+  ScoringFunction.cpp
+  CSVFile.cpp
+  DataFrame.cpp
+  FoldersFiles.cpp
+  StringManip.cpp
+  InputParams.cpp
+  LogFile.cpp
+  ProteinManager.cpp
+  GeoCloud.cpp
+  GeoCoords.cpp
+  GeoShape.cpp
+  GeoPlane.cpp
+  GeoTransformation.cpp
+  GeoVector.cpp
+  ProbabilityDistribution.cpp
+  AminoAcid.cpp
+  Atom.cpp
+  Chain.cpp
+  Running Code Analysis for C/C++...
+  Generating Code...
+  Compiling...
+  FASTAFile.cpp
+  HetAtom.cpp
+  NucleicAcid.cpp
+  PDBFile.cpp
+  ProteinStructure.cpp
+  Torsion.cpp
+  CAlphaReport.cpp
+  GeometricalAggregationReport.cpp
+  GeometryObservation.cpp
+  RamaReport.cpp
+  RMSDReport.cpp
+  GeometricalDataReport.cpp
+  MSC-CreatePDBGeometry.cpp
+  The contents of <filesystem> are available only with C++17 or later.
+  Running Code Analysis for C/C++...
+  Generating Code...
   MSC-CreatePDBGeometry.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Debug\MSC-CreatePDBGeometry.exe
 F:\PSUA\Code\PSU-ALPHA\BTLLib\btl_matrix_algorithms.h(462): warning C26498: The function 'std::numeric_limits<double>::epsilon' is constexpr, mark variable 'theshold' constexpr if compile-time evaluation is desired (con.5).

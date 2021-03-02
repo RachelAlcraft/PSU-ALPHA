@@ -452,6 +452,17 @@ void PDBFile::removeRepeatedChains()
 	}
 }
 
+bool PDBFile::hasInsertions()
+{
+	bool bInsertions = false;
+	for (map<string, ProteinStructure*>::iterator iter = _proteinVersions.begin(); iter != _proteinVersions.end(); ++iter)
+	{		
+		ProteinStructure* ps = iter->second;
+		bInsertions = bInsertions || ps->hasInsertions();
+	}
+	return bInsertions;
+}
+
 ProteinStructure* PDBFile::getStructureVersion(string occupant)
 {
 

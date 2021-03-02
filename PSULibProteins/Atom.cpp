@@ -23,6 +23,12 @@ Atom::Atom(string pdb_code, string atom_string)
 	chainId = StringManip::trim(atom_string.substr(21, 1));
 	//23 - 26        Integer       resSeq       Residue sequence number.
 	aminoId = atol(StringManip::trim(atom_string.substr(22, 5)).c_str());
+
+	//27        Insertion of mmutations
+	string insertion = StringManip::trim(atom_string.substr(26, 1)).c_str();
+	if (insertion != "")
+		bInsertion = true;
+	
 	//31 - 38        Real(8.3)     x            Orthogonal coordinates for X in Angstroms.
 	//39 - 46        Real(8.3)     y            Orthogonal coordinates for Y in Angstroms.
 	//47 - 54        Real(8.3)     z            Orthogonal coordinates for Z in Angstroms.

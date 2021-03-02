@@ -19,6 +19,7 @@ public: //public struct
 	double occupancy;
 	double bfactor;
 	bool isAmino;
+	bool bInsertion = false;
 	
 	//Parent
 	string pdbCode;	

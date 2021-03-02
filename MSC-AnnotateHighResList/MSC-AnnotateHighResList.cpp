@@ -25,18 +25,21 @@ int main()
 	*/
 
 	//string set5label = "HIGHRES";
-	int runID = 0;
-	int runOf = 0;
+	int runID = 1;
+	int runOf = 1;
 	stringstream ss;
 	ss << runID << "_" << runOf;
 	string runIDx = ss.str();
 
 	//string filePath = "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-RemoveSimilarity\\";
 	
-	// USER UBNPOUT FILE PATHS AND NAMES	
-	string inputname = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\nonsim_lists\\extra_nonsim.csv";
-	string outputnameYes = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\IN\\extra_yes_annotated";
-	string outputnameNo = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\OUT\\extra_no_annotated";
+	// USER INPUT FILE PATHS AND NAMES	
+	//string inputname = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\nonsim_lists\\2019_nonsim.csv";
+	//string outputnameYes = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\IN\\2019_yes_annotated";
+	//string outputnameNo = "F:\\Code\\BbkProject\\Thesis\\Method\\02_DataSets\\OUT\\2019_no_annotated_mutations";
+	string inputname = "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\InOut\\high_nonsim90.csv";
+	string outputnameYes = "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\InOut\\high_yes";
+	string outputnameNo = "F:\\PSUA\\Code\\PSU-ALPHA\\MSC-AnnotateHighResList\\InOut\\high_no";
 
 	bool outputIN = true;
 	bool outputOUT = true;
@@ -80,6 +83,7 @@ int main()
 	headerVector.push_back("EXPMETHOD"); //always xray
 	headerVector.push_back("NEGATIVE"); //are there any negatiove amino acid numbers
 	headerVector.push_back("BREAKS"); //are there any breaks in the amino numbering
+	headerVector.push_back("INSERTIONS"); //are there any insertions due to mutations, eg 3hgp at residue 36
 	headerVector.push_back("NCS"); // does it have the NCS model setting
 	headerVector.push_back("IDENTICALS"); // are the chains all identical
 
@@ -110,7 +114,7 @@ int main()
 	
 	for (unsigned int i = start; i < end; ++i)
 	{
-		vector<string> observation;
+		
 		string pdb = inPDBs.fileVector[i][0];
 
 		//if (pdb == "6J6V")
@@ -140,6 +144,7 @@ int main()
 			string sequence = "NA";
 			string negative = "NA";
 			string breaks = "NA";
+			string insertions = "NA";
 			string ncs = "NA";
 			string identicals = "NA";
 			unsigned int iresidues = 0;
@@ -154,18 +159,15 @@ int main()
 			stringstream ss;
 			ss << "Annotating " << pdb << " " << i << "/" << end;
 			LogFile::getInstance()->writeMessage(ss.str());
-			//if (true)
-			//{			
-
-
-			//}
+		
 			if (pdbfile.exists)
 			{
+				vector<string> observation;
 				//slowly put the functionality into the pdbfile class
 				PDBFile* pdbf = ProteinManager::getInstance()->getOrAddPDBFile(pdb, pdbdir + pdb + ".pdb");
 				pdbf->loadData();
 				pdbf->loadAtoms();
-			
+
 
 				inucleotides = pdbf->nucleotides;
 				stringstream ssnuc;
@@ -192,105 +194,120 @@ int main()
 				software = pdbf->software;
 
 				bool nullmodel = pdbf->nullModel;
-										
+
 				vector<string> seqs = pdbf->getSequence();
 				sequence = "";
-				bool differ = false;					
+				bool differ = false;
 				for (unsigned int r = 0; r < seqs.size(); ++r)
 				{
 					if (seqs[r].length() > iresidues)
 						iresidues = seqs[r].length();
 					sequence += seqs[r];
 				}
-					
+
 				identicals = pdbf->identicalChains() ? "Y" : "N";
 				breaks = pdbf->hasBreaks() ? "Y" : "N";
-				negative = pdbf->hasNegativeAminos() ? "Y" : "N";										
+				insertions = pdbf->hasInsertions() ? "Y" : "N";
+				negative = pdbf->hasNegativeAminos() ? "Y" : "N";
 				ncs = pdbf->hasNCS() ? "Y" : "N";
-					
+
 				stringstream ssres;
 				ssres << iresidues; // this is the max chain not the total residues
 				residues = ssres.str();
 
- 				rval = pdbf->rvalue;
+				rval = pdbf->rvalue;
 				rfree = pdbf->rfree;
 				res = pdbf->resolution;
 				chains = pdbf->maxChain();
 				name = pdbf->proteinclass;
 				complex = pdbf->inComplex;
 				date = pdbf->date;
+
+
+				observation.push_back(pdb);
+				observation.push_back(res);
+				observation.push_back(name);
+				observation.push_back(complex);
+				observation.push_back(rval);
+				observation.push_back(rfree);
+				observation.push_back(occ);
+				observation.push_back(bfactor);
+				observation.push_back(hyd);
+				observation.push_back(sf);
+				observation.push_back(chains);
+				observation.push_back(residues);
+				observation.push_back(nucleotides);
+				observation.push_back(date);
+				observation.push_back(institution);
+				observation.push_back(software);
+				observation.push_back(sequence);
+				observation.push_back("XR");
+				observation.push_back(negative);
+				observation.push_back(breaks);
+				observation.push_back(insertions);
+				observation.push_back(ncs);
+				observation.push_back(identicals);
+				//observation.push_back(set_label);
+				//choose if in or out
+				bool bIn = true;
+				if (iresidues <= 30)
+					bIn = false;
+				if (inucleotides > 0)
+					bIn = false;
+				//if (breaks == "Y")
+				//	bIn = false;
+				//if (negative == "Y")
+				//	bIn = false;
+				//if (identicals == "Y" && ncs == "N")
+				//	bIn = false;
+
+				if (bIn) // just trying to remove acccidentally included mutations DELETE			
+				{
+					if (insertions == "Y" && res != "NA")
+						bIn = false;
+
+				}
+				else
+				{
+					bIn = true; // it is not, but we already know that
+				}
+
+
+
+				if (bIn)
+				{
+					if (outputIN)
+						annPDBsYes.fileVector.push_back(observation);
+				}
+				else
+				{
+					if (outputOUT)
+						annPDBsNo.fileVector.push_back(observation);
+				}
+
+				ProteinManager::getInstance()->deletePdbs();//keep memory clear
+
+				//Every so often print out to file otherwise it gets too big
+				if (i % 100 == 0)
+				{
+					if (outputIN)
+						annPDBsYes.flush();
+					if (outputOUT)
+						annPDBsNo.flush();
+				}
 			}
-
-			observation.push_back(pdb);
-			observation.push_back(res);
-			observation.push_back(name);
-			observation.push_back(complex);
-			observation.push_back(rval);
-			observation.push_back(rfree);
-			observation.push_back(occ);
-			observation.push_back(bfactor);
-			observation.push_back(hyd);
-			observation.push_back(sf);
-			observation.push_back(chains);
-			observation.push_back(residues);
-			observation.push_back(nucleotides);
-			observation.push_back(date);
-			observation.push_back(institution);
-			observation.push_back(software);
-			observation.push_back(sequence);
-			observation.push_back("XR");
-			observation.push_back(negative);
-			observation.push_back(breaks);
-			observation.push_back(ncs);
-			observation.push_back(identicals);
-			//observation.push_back(set_label);
-			//choose if in or out
-			bool bIn = true;
-			if (iresidues <= 30)
-				bIn = false;
-			if (inucleotides > 0)
-				bIn = false;
-			//if (breaks == "Y")
-			//	bIn = false;
-			//if (negative == "Y")
-			//	bIn = false;
-			//if (identicals == "Y" && ncs == "N")
-			//	bIn = false;
-
-			
-			if (bIn)
-			{
-				if (outputIN)
-					annPDBsYes.fileVector.push_back(observation);
-			}
-			else
-			{
-				if (outputOUT)
-					annPDBsNo.fileVector.push_back(observation);
-			}
-
-			ProteinManager::getInstance()->deletePdbs();//keep memory clear
-
-			//Every so often print out to file otherwise it gets too big
-			if (i % 100 == 0)
-			{
-				if (outputIN)
-					annPDBsYes.flush();
-				if (outputOUT)
-					annPDBsNo.flush();
-			}						
 		}
 	}
 	LogFile::getInstance()->writeMessage("Success, now printing");
 	if (outputIN)
 	{
 		bool ok = annPDBsYes.flush();
-		cout << "Printed YES - " << (ok ? "OK" : "FAILED") << '/n';
+		cout << "Printed YES - " << (ok ? "OK" : "FAILED") << '\n';
 	}
 	if (outputOUT)
 	{
 		bool ok = annPDBsNo.flush();
-		cout << "Printed NO - " << (ok ? "OK" : "FAILED") << '/n';
+		cout << "Printed NO - " << (ok ? "OK" : "FAILED") << '\n';
 	}
 }
 

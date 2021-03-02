@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-RemoveSimilarity", "MSC
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MSC-ContactMap", "MSC-ContactMap\MSC-ContactMap.vcxproj", "{D37B9A42-DCBD-4BEE-9615-77277A4240FD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PHD-RemoveSimilarity", "PHD-RemoveSimilarity\PHD-RemoveSimilarity.vcxproj", "{B83FF7E0-70BB-4DE1-9CD9-658A9566625C}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		BTLLib\BTLLib.vcxitems*{02071cbc-b77f-4650-b097-d2e5b6ac823d}*SharedItemsImports = 4
@@ -56,6 +58,7 @@ Global
 		PSULibReports\PSULibReports.vcxitems*{4d312e7a-2f28-411e-9232-97467e6d54e6}*SharedItemsImports = 4
 		BTLLib\BTLLib.vcxitems*{568648aa-2549-4936-96ff-4639c4285340}*SharedItemsImports = 9
 		PSULibHelpers\PSULibHelpers.vcxitems*{73ec3ec4-52b5-4d17-b623-27ba5154e908}*SharedItemsImports = 9
+		PSULibHelpers\PSULibHelpers.vcxitems*{b83ff7e0-70bb-4de1-9cd9-658a9566625c}*SharedItemsImports = 4
 		PSULibProteins\PSULibProteins.vcxitems*{bd4d8915-ee81-4efa-a220-e5d604cc2c92}*SharedItemsImports = 9
 		BTLLib\BTLLib.vcxitems*{d37b9a42-dcbd-4bee-9615-77277a4240fd}*SharedItemsImports = 4
 		PSULibAlgorithms\PSULibAlgorithms.vcxitems*{d37b9a42-dcbd-4bee-9615-77277a4240fd}*SharedItemsImports = 4
@@ -138,6 +141,14 @@ Global
 		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Release|x64.Build.0 = Release|x64
 		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Release|x86.ActiveCfg = Release|Win32
 		{D37B9A42-DCBD-4BEE-9615-77277A4240FD}.Release|x86.Build.0 = Release|Win32
+		{B83FF7E0-70BB-4DE1-9CD9-658A9566625C}.Debug|x64.ActiveCfg = Debug|x64
+		{B83FF7E0-70BB-4DE1-9CD9-658A9566625C}.Debug|x64.Build.0 = Debug|x64
+		{B83FF7E0-70BB-4DE1-9CD9-658A9566625C}.Debug|x86.ActiveCfg = Debug|Win32
+		{B83FF7E0-70BB-4DE1-9CD9-658A9566625C}.Debug|x86.Build.0 = Debug|Win32
+		{B83FF7E0-70BB-4DE1-9CD9-658A9566625C}.Release|x64.ActiveCfg = Release|x64
+		{B83FF7E0-70BB-4DE1-9CD9-658A9566625C}.Release|x64.Build.0 = Release|x64
+		{B83FF7E0-70BB-4DE1-9CD9-658A9566625C}.Release|x86.ActiveCfg = Release|Win32
+		{B83FF7E0-70BB-4DE1-9CD9-658A9566625C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,2 +1,37 @@
-﻿  PDBFile.cpp
+﻿  LeastSquares.cpp
+  RMSD.cpp
+  ScoringFunction.cpp
+  CSVFile.cpp
+  DataFrame.cpp
+  FoldersFiles.cpp
+  StringManip.cpp
+  InputParams.cpp
+  LogFile.cpp
+  ProteinManager.cpp
+  GeoCloud.cpp
+  GeoCoords.cpp
+  GeoShape.cpp
+  GeoPlane.cpp
+  GeoTransformation.cpp
+  GeoVector.cpp
+  ProbabilityDistribution.cpp
+  CAlphaReport.cpp
+  GeometricalAggregationReport.cpp
+  GeometryObservation.cpp
+  Generating Code...
+  Compiling...
+  RamaReport.cpp
+  RMSDReport.cpp
+  GeometricalDataReport.cpp
+  AminoAcid.cpp
+  Atom.cpp
+  Chain.cpp
+  FASTAFile.cpp
+  HetAtom.cpp
+  NucleicAcid.cpp
+  PDBFile.cpp
+  ProteinStructure.cpp
+  Torsion.cpp
+  MSC-GeometryAggregator.cpp
+  Generating Code...
   MSC-GeometryAggregator.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Debug\MSC-GeometryAggregator.exe

@@ -50,6 +50,17 @@ void ProteinStructure::addChain(Chain* ch)
 		_chains.insert(pair<string, Chain*>(ch->chainId, ch));
 }
 
+bool ProteinStructure::hasInsertions()
+{
+	bool bInsertions = false;
+	for (map<string, Chain*>::iterator iter = _chains.begin(); iter != _chains.end(); ++iter)
+	{
+		Chain* ch = iter->second;
+		bInsertions = bInsertions || ch->hasInsertions();
+	}
+	return bInsertions;
+}
+
 void ProteinStructure::removeChain(string chL)
 {
 	map<string, Chain*> copyCh;

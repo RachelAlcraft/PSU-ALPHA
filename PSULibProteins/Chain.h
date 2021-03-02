@@ -28,5 +28,6 @@ public:
 	vector<Atom*>  getCAlphas(string atom);
 	void addAminoAcid(AminoAcid* aa);
 	void addNucleicAcid(NucleicAcid* na);
+	bool hasInsertions();
 };
 

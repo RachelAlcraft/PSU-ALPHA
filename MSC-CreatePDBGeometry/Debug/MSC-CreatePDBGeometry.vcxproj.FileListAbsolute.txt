@@ -1,0 +1,2 @@
+F:\PSUA\Code\PSU-ALPHA\Debug\MSC-CreatePDBGeometry.exe.lastcodeanalysissucceeded
+F:\PSUA\Code\PSU-ALPHA\MSC-CreatePDBGeometry\Debug\NativeCodeAnalysis.read.1.tlog

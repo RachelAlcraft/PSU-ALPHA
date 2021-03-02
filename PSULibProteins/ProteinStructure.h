@@ -34,6 +34,7 @@ public:
 	void applyTransformation(GeoTransformations* trans);	
 	string getSequence();
 	void removeRepeatedChains();
+	bool hasInsertions();
 private:
 	
 

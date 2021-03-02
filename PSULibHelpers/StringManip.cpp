@@ -38,7 +38,7 @@ vector<string> StringManip::stringToVector(string input, string delim)
 	string newin = input;
 	vector<string> vals;
 	int pos = newin.find(delim);
-	while (pos > -1)
+	while (pos > -1) 
 	{
 		string val = newin.substr(0, pos);
 		if (val != "")

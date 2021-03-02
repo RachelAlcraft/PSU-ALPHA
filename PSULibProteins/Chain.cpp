@@ -26,6 +26,17 @@ AminoAcid* Chain::getAminoAcid(int aminoId)
 		return iter->second;		
 }
 
+bool Chain::hasInsertions()
+{
+	bool bInsertions = false;
+	for (map<int, AminoAcid*>::iterator iter = _aminos.begin(); iter != _aminos.end(); ++iter)
+	{
+		AminoAcid *aa = iter->second;
+		bInsertions = bInsertions || aa->hasInsertions();
+	}
+	return bInsertions;
+}
+
 NucleicAcid* Chain::getNucleicAcid(int nucleicId)
 {
 	map<int, NucleicAcid*>::iterator iter = _nucleics.find(nucleicId);
