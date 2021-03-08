@@ -267,10 +267,10 @@ int main()
 						bIn = false;
 
 				}
-				else
-				{
-					bIn = true; // it is not, but we already know that
-				}
+				//else
+				//{
+				//	bIn = true; // it is not, but we already know that
+				//}
 
 
 

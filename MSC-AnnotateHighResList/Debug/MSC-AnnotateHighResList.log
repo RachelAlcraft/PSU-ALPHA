@@ -1,28 +1,2 @@
-﻿  CSVFile.cpp
-  DataFrame.cpp
-  FoldersFiles.cpp
-  StringManip.cpp
-  AminoAcid.cpp
-  Atom.cpp
-  Chain.cpp
-  FASTAFile.cpp
-  HetAtom.cpp
-  NucleicAcid.cpp
-  PDBFile.cpp
-  ProteinStructure.cpp
-  Torsion.cpp
-  InputParams.cpp
-  LogFile.cpp
-  ProteinManager.cpp
-  GeoCloud.cpp
-  GeoCoords.cpp
-  GeoShape.cpp
-  GeoPlane.cpp
-  Generating Code...
-  Compiling...
-  GeoTransformation.cpp
-  GeoVector.cpp
-  ProbabilityDistribution.cpp
-  MSC-AnnotateHighResList.cpp
-  Generating Code...
+﻿  MSC-AnnotateHighResList.cpp
   MSC-AnnotateHighResList.vcxproj -> F:\PSUA\Code\PSU-ALPHA\Debug\MSC-AnnotateHighResList.exe
